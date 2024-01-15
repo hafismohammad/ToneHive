@@ -36,30 +36,16 @@
  <!--Body-->               
             <form id="verifyotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="verify-otp">
 
-                <div class="mb-3">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Email address"
-                        aria-describedby="emailHelp">
+                <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
+
+                <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
+                    <input itemid="otpverify" type="verify-otp" style="width:300px; " class="form-control" name="verify-otp" id="verify-otp">
+
                 </div>
-
-                <p><div id="error1" style="display: none;" class="alert alert-danger err"></div></p>
-
-                <div class="mb-3">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-                </div>
-
-                <p><div id="error2" style="display: none;" class="alert alert-danger err"></div></p>
-
-                <div class="mb-3" style="display: flex; justify-content: space-between;">
-                    <input itemid="otpverify" type="verify-otp" style="width: 200px;" class="form-control" name="verify-otp" id="verify-otp">
-
-                    <p><div id="error3" style="display: none;" class="alert alert-danger err"></div></p>
-
-
-                    <button type="submitotp" class="btn  btn-primary btn-block btn-secondary">VERIFY OTP</button>
-                </div>
+                <p><div id="error3" style="display: none;" class="alert alert-danger err"></div></p>
                 
                 <div class="mt-5 d-flex justify-content-center ">
-                    <button type="submit" class="btn  btn-primary btn-block btn-secondary">CONTINUE</button>
+                    <button type="submit" class="btn  btn-primary btn-block btn-secondary">VERIFY OTP</button>
                 </div>
                 <!-- <p>Back to login <a href="/">Login</a></p> -->
                 

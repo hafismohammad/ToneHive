@@ -35,7 +35,12 @@
             <div>
 <!--Body-->
             <form id="regForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/register">
-                <h2 class="d-flex justify-content-center">Sign up</h2>
+                <% if(locals.message) { %>
+                    <div class="alert alert-success">
+                      <%= locals.message %>
+                    </div>
+                    <% } %>
+                <h2 class="d-flex justify-content-center py-5">Sign up</h2>
 
                 <div class="mb-3">
                     <input type="name" class="form-control" name="name" id="name" placeholder="Name"

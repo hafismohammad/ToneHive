@@ -35,7 +35,12 @@
             <div>
  <!--Body-->               
             <form id="logForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/">
-                <h2 class="d-flex justify-content-center">Login</h2>
+                <h2 class="d-flex justify-content-center py-5">Login</h2>
+                <% if(locals.message) { %>
+                    <div class="alert alert-success">
+                      <%= locals.message %>
+                    </div>
+                    <% } %>
                 <div class="mb-3">
 
                     <input type="email" class="form-control" name="email" id="email" placeholder="Email address"
