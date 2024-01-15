@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose")
 const path = require("path")
 const nocache = require("nocache");
+const nodemailer = require("nodemailer")
 const session = require("express-session")
 
 // Mongodb connections

@@ -14,6 +14,7 @@ router.get("/userHome", userControllers.homeLoad)
 router.get("/logout", userControllers.userLogout)
 
 router.get("/verify-otp", userControllers.verifyOTPLoad)
+router.post("/verify-otp", userControllers.verifiedUser)
 
 
 
