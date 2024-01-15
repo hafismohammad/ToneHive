@@ -31,7 +31,7 @@ const loginLoad = function (req, res) {
     if (req.session.user) {
         res.redirect("/userHome");
     } else if (req.session.admin) {
-        res.redirect("/")
+        res.redirect("/")//?
     } else {
         res.render("user/page-login")
     }
@@ -145,6 +145,7 @@ const verifyOTPLoad = async (req, res) => {
 
         const userData = await User.findOne({ _id: req.session.user });
         const email = userData.email;
+       
 
         function sendOtpEmail(email, uOtp) {
             const mailOptions = {
@@ -187,27 +188,34 @@ const verifyOTPLoad = async (req, res) => {
 //     }
 // } 
 
-const verifiedUser = (req, res) => {
+const verifiedUser = async (req, res) => {
     try {
-        const { email, userEnteredOtp } = req.body;
-        const user = users[email];
+        const userEnteredOtp = req.body.otp;
+        console.log(userEnteredOtp);
+        
+       
+      //  const { email, userEnteredOtp } = req.body;
+       // const user = User[email];
+       const user = await User.findOne(req.session.email)
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const { otp } = user;
 
-        if (userEnteredOtp === otp) {
-            res.json({ message: 'OTP verification successful' });
+        if (userEnteredOtp === req.session.otp) {
+            res.redirect("/userHome"); // Pass user data to the view if needed
         } else {
-            res.status(401).json({ message: 'Invalid OTP' });
+            res.redirect("/verify-otp");
+            // Optionally, you can also send a JSON response
+            // res.status(401).json({ message: 'Invalid OTP' });
         }
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
+
 module.exports = {
     loginLoad,
     logedUser,
