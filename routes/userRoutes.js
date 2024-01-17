@@ -13,8 +13,13 @@ router.get("/userHome", userControllers.homeLoad)
 
 router.get("/logout", userControllers.userLogout)
 
+// otp login
 router.get("/verify-otp", userControllers.verifyOTPLoad)
 router.post("/verify-otp", userControllers.verifiedUser)
+
+// otp register
+//router.get("/verify-otp", userControllers.verifyOTPLoad)
+//router.post("/verify-otp", userControllers.verifiedUser)
 
 
 

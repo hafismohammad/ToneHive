@@ -53,7 +53,7 @@ const logedUser = async (req, res) => {
                 console.log(req.body);
                 if (logedUser.isAdmin === 1) {
                     req.session.admin = id
-                    res.redirect("/page-adminHome")
+                    res.redirect("/adminhome")
                 } else {
                     req.session.user = id
                     res.redirect("/verify-otp")
@@ -134,18 +134,26 @@ const transporter = nodemailer.createTransport({
 
 const verifyOTPLoad = async (req, res) => {
     try {
-        // Extract the email from the request or use your user authentication logic
-        // Replace with your actual logic to get the user's email
-
+        
         // Generate a random OTP
         const otp = generateRandomOtp();
         const uOtp = otp;
 
         req.session.otp = otp;
 
+        //   setTimeout(() => {
+        //     console.log("OTP Expired" + req.session.otp);
+        //     req.session.destroy()
+        //     if (req.session){
+        //      console.log(req.session.otp);
+        //     }
+        // },20000)
+        
+
         const userData = await User.findOne({ _id: req.session.user });
         const email = userData.email;
-       
+        
+
 
         function sendOtpEmail(email, uOtp) {
             const mailOptions = {
@@ -163,10 +171,8 @@ const verifyOTPLoad = async (req, res) => {
                 }
             });
         }
+      
 
-
-
-        // Save the user's email and OTP in memory
 
         // Send the OTP to the user's email
         sendOtpEmail(email, uOtp);
@@ -180,22 +186,12 @@ const verifyOTPLoad = async (req, res) => {
 }
 
 
-// const verifyOTPLoad = (req, res) => {
-//     try {
-//        res.render("user/page-verify-otp")
-//     } catch (error) {
-//         console.log(error);
-//     }
-// } 
 
 const verifiedUser = async (req, res) => {
     try {
         const userEnteredOtp = req.body.otp;
         console.log(userEnteredOtp);
         
-       
-      //  const { email, userEnteredOtp } = req.body;
-       // const user = User[email];
        const user = await User.findOne(req.session.email)
 
         if (!user) {
@@ -204,9 +200,12 @@ const verifiedUser = async (req, res) => {
 
 
         if (userEnteredOtp === req.session.otp) {
-            res.redirect("/userHome"); // Pass user data to the view if needed
+  
+           res.redirect("/userHome"); // Pass user data to the view if needed
         } else {
-            res.redirect("/verify-otp");
+            res.redirect("/verify-otp").status(400).json({ valid: false, message: 'Invalid OTP' });
+
+           // res.redirect("/verify-otp");
             // Optionally, you can also send a JSON response
             // res.status(401).json({ message: 'Invalid OTP' });
         }

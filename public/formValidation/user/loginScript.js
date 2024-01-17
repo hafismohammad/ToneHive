@@ -21,18 +21,17 @@ function emailValidate(e){
    }else
    {
         error1.style.display = "none";
-        error2.innerHTML = "";
+        error1.innerHTML = "";
    }
 }
 function passwordValidate(e) {
     const passwordVal = passwordid.value;
-    const alpha = /[a-zA-Z]/;
-    const digit = /\d/;
-
-    if (passwordVal.length < 8) {
+    const alpha =  /[a-zA-Z]/
+    const digit = /\d/
+    if(passwordVal.length < 8)
+    {
         error2.style.display = "block";
         error2.innerHTML = "Must enter at least 8 characters";
-
         setTimeout(() => {
             error2.style.display = "none";
             error2.innerHTML = "";
@@ -63,10 +62,12 @@ logFormId.addEventListener("submit", function(e) {
     // if(error1.innerHTML || error2.innerHTML || error3.innerHTML || error4.innerHTML) {
     //     e.preventDefault()
     //    }
-    // if(error1.innerHTML === "" || error2.innerHTML === "")
+
+    //if(error1.innerHTML === "" || error2.innerHTML === "")
     // {
     //     e.preventDefault()
     // }
+
     if(
         error1.innerHTML === "Please enter a valid email address" || error2.innerHTML === "Must enter at least 8 characters" ||
         error2.innerHTML === "Should contain Numbers and Alphabets!!"

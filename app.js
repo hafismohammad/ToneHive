@@ -12,6 +12,7 @@ mongoose.connection.on("connected", (req, res) => {
 })
 // Import routes
 const userRoute = require("./routes/userRoutes");
+const adminRute = require("./routes/adminRoutes")
 
 
 
@@ -39,7 +40,8 @@ app.use(
 app.use(nocache())
 
 // User routes
-app.use("/", userRoute);                                  
+app.use("/", userRoute);     
+app.use("/adminhome", adminRute)                             
 
 
 

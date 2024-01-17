@@ -30,17 +30,17 @@ function emailValidation(e) {
     const emailPattrn = /^([a-zA-Z0-9._-]+)@([a-zA-Z.-]+).([a-zA-z]{2,4})$/ 
     if(!emailPattrn.test(emailVal))
     {
-        error1.style.display = "block";
-        error1.innerHTML = "Please enter valid email address";
+        error2.style.display = "block";
+        error2.innerHTML = "Please enter valid email address";
 
         setTimeout(() => {
-            error.style.display = "none";
-            error1.innerHTML = "";
+            error2.style.display = "none";
+            error2.innerHTML = "";
         }, 3000);
     }else
     {
-        error.style.display = "none";
-        error1.innerHTML = "";
+        error2.style.display = "none";
+        error2.innerHTML = "";
     }
 
 }
@@ -104,17 +104,18 @@ function passwordValidate(e) {
 
 
 nameid.addEventListener("blur", nameValidate)
-emailid.addEventListener("blur", emailValidate)
+emailid.addEventListener("blur", emailValidation)
 mobileid.addEventListener("blur", mobileValidate)
 passwordid.addEventListener("blur", passwordValidate)
 
 
 regformid.addEventListener("submit", function(e) {
     nameValidate()
-    emailValidate()
+    emailValidation()
     mobileValidate()
     passwordValidate()
     if(error1.innerHTML || error2.innerHTML || error3.innerHTML || error4.innerHTML) {
+
      e.preventDefault()
     }
  })
