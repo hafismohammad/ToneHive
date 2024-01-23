@@ -5,6 +5,7 @@ const verifyOtpForm = document.getElementById("verifyotpForm");
 // Assuming userEnteredOtp is obtained from the server side, not in the client-side script
 const userEnteredOtp = "<your_server_obtained_otp_value>";
 
+
 function otpValidate() {
     const otpValue = otpVerify.value.trim();
 
@@ -43,6 +44,6 @@ verifyOtpForm.addEventListener("submit", function (e) {
     if (!isOtpValid) {
         e.preventDefault(); // Prevent form submission if validation fails
     }
-    
+
 });
 
