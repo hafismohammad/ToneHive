@@ -29,7 +29,8 @@ router.get("/unlist-Category/:catid",adminControllers.unlistedCategory)
 
 
 // product list 
-router.get("/products", adminControllers.productsLoad)
+router.get("/products",adminControllers.productsLoad)
+router.post("/addproduct",adminControllers.addProducts)
 
 
 

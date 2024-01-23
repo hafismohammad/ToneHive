@@ -18,7 +18,7 @@ const securePassword = async (password) => {
 const homeLoad = async (req, res) => {
     try {
         if (req.session.user) {
-        const category = await Category.find()
+        const category = await Category.find({isList:false})
         res.render("user/page-userHome", {category:category})
         } else {
             redirect("/")

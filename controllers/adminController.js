@@ -1,6 +1,7 @@
 const { render } = require("ejs");
 const User = require("../models/userModel")
 const Category = require("../models/categoryModel");
+const Products = require("../models/productModel")
 const session = require("express-session");
 const { set } = require("mongoose");
 //const categoryHelper = require("../helpers/categoryHelper")
@@ -19,7 +20,7 @@ const dashboardLoad = async (req, res) => {
 const customerLoad = async (req, res) => {
     try {
      // const userData = await User.find({isAdmin:0})
-      const userData =await User.find();
+      const userData =await User.find({isAdmin:0});
         res.render("admin/page-customers",{user:userData})
     } catch (error) {
         console.log(error);
@@ -100,8 +101,8 @@ try {
 
 const  addProductCategory = async (req, res) => {
   try {
-    const { categoryName, description, list} = req.body;
-    console.log( categoryName, description, list);
+    const { categoryName, list} = req.body;
+    console.log( categoryName, list);
     const existingCategory = await Category.findOne({ name: categoryName });
 
     if (existingCategory) {
@@ -112,7 +113,6 @@ const  addProductCategory = async (req, res) => {
 
     const category = await Category.create({
         name:categoryName,
-        description, description,
         list:list
     });
     res.redirect("/adminhome/productCatrgory?success=Category Added")
@@ -137,7 +137,6 @@ const editCategoryLoad = async (req, res) => {
 
 const editedCategory = async (req, res) => {
     try {
-        id = req.session.id 
         const name = req.body.name;
         console.log(name);
         console.log(req.session.id );
@@ -188,17 +187,62 @@ try {
 
 // products
 const productsLoad = async (req, res) => {
+    const data = req.query.success;
+    const productData = await Products.find()
     try {
-        // const id = req.query.CategoryId;
-        // req.session.id=id;
-        // const categoryData = await Category.findById({_id:id})
-        // console.log(categoryData);
-        //  res.render("admin/page-editCategory", {cat:categoryData}) 
+        res.render("admin/page-productList", {data:data, productData:productData})
         
     } catch (error) {
         console.log(error);
     }
 }
+const addProducts = async (req, res) => {
+    try {
+        const {
+            product_name,
+            product_description,
+            product_CategoryId,
+            product_price,
+            product_quantity,
+            product_image,
+            product_status
+        } = req.body;
+
+        // Check if the product already exists
+        const existingProduct = await Products.findOne({
+            name: product_name,
+            description: product_description,
+            CategoryId: product_CategoryId,
+            price: product_price,
+            quantity: product_quantity,
+            image: product_image,
+            product_status: product_status
+        });
+
+        if (existingProduct) {
+            return res.render("admin/page-addProduct", { error: "Product already exists" });
+        }
+
+        // If the product doesn't exist, add it to the database
+        const newProduct = await Products.create({
+            name: product_name,
+            description: product_description,
+            CategoryId: product_CategoryId,
+            price: product_price,
+            quantity: product_quantity,
+            image: product_image,
+            product_status: product_status
+        });
+
+        res.redirect("/adminhome/products?success=Product Added");
+    } catch (error) {
+        console.log(error);
+        res.render("admin/page-addProduct", { error: "Error adding product" });
+    }
+};
+
+module.exports = addProducts;
+
    
 
 
@@ -217,5 +261,6 @@ module.exports = {
     editedCategory,
     deletecategory,
     listedCategory,
-    unlistedCategory
+    unlistedCategory,
+    addProducts
 }
