@@ -1,76 +1,47 @@
-// const emailid = document.getElementById("email");
-// const passwordid = document.getElementById("password");
-// const otpverifyid = document.getElementById("verify-otp");
-// const error1 = document.getElementById("error1");
-// const error2 = document.getElementById("error2");
-// const error3 = document.getElementById("error3");
-// const verifyotpFormid = document.getElementById("verifyotpForm");
+const otpVerify = document.getElementById("verify-otp");
+const error1 = document.getElementById("error1");
+const verifyOtpForm = document.getElementById("verifyotpForm");
 
-// function emailValidation(e) {
-//     const emailVal = emailid.value;
-//     const emailPattrn = /^([a-zA-Z0-9._-]+)@([a-zA-Z.-]+).([a-zA-z]{2,4})$/ 
-//     if(!emailPattrn.test(emailVal))
-//     {
-//         error1.style.display = "block";
-//         error1.innerHTML = "Please enter valid email address";
+// Assuming userEnteredOtp is obtained from the server side, not in the client-side script
+const userEnteredOtp = "<your_server_obtained_otp_value>";
 
-//         setTimeout(() => {
-//             error.style.display = "none";
-//             error1.innerHTML = "";
-//         }, 3000);
-//     }else
-//     {
-//         error.style.display = "none";
-//         error1.innerHTML = "";
-//     }
+function otpValidate() {
+    const otpValue = otpVerify.value.trim();
 
-// }
-// function passwordValidate(e) {
-//     const passwordVal = passwordid.value;
-//     const alpha = /[a-zA-Z]/;
-//     const digit = /\d/;
+    if (otpValue === "") {
+        error1.style.display = "block";
+        error1.innerHTML = "Please enter OTP";
 
-//     if (passwordVal.length < 8) {
-//         error2.style.display = "block";
-//         error2.innerHTML = "Must enter at least 8 characters";
+        setTimeout(() => {
+            error1.style.display = "none";
+            error1.innerHTML = "";
+        }, 3000);
+        return false; // Indicate validation failure
+    } else if (otpValue !== userEnteredOtp) {
+        error1.style.display = "block";
+        error1.innerHTML = "Please enter a valid OTP";
 
-//         setTimeout(() => {
-//             error2.style.display = "none";
-//             error2.innerHTML = "";
-//         }, 3000);
-//     } else if (!alpha.test(passwordVal) || !digit.test(passwordVal)) {
-//         error2.style.display = "block";
-//         error2.innerHTML = "Should contain Numbers and Alphabets!!";
+        setTimeout(() => {
+            error1.style.display = "none";
+            error1.innerHTML = "";
+        }, 3000);
+        return false; // Indicate validation failure
+    } else {
+        error1.style.display = "none";
+        error1.innerHTML = "";
+        return true; // Indicate validation success
+    }
+}
 
-//         setTimeout(() => {
-//             error2.style.display = "none";
-//             error2.innerHTML = "";
-//         }, 3000);
-//     } else {
-//         error2.style.display = "none";
-//         error2.innerHTML = "";
-//     }
-// }
+otpVerify.addEventListener("blur", otpValidate);
 
+verifyOtpForm.addEventListener("submit", function (e) {
+    // Run the OTP validation function and store the result
+    const isOtpValid = otpValidate();
 
-// // function otpValidation() {
-// //     const verifyotpVal = otpverifyid.value;
+    // Check if OTP validation failed
+    if (!isOtpValid) {
+        e.preventDefault(); // Prevent form submission if validation fails
+    }
+});
 
-// // }
-
-// emailid.addEventListener("blur", emailValidate)
-// passwordid.addEventListener("blur", passwordValidate)
-
-
-// verifyotpFormid.addEventListener("submit", function(e) {
-// emailValidate();
-// passwordValidate();
-
-
-// if(
-//     error1.innerHTML === "Please enter a valid email address" || error2.innerHTML === "Must enter at least 8 characters" ||
-//         error2.innerHTML === "Should contain Numbers and Alphabets!!"
-// ){
-//     e.preventDefault()
-// }
-// })

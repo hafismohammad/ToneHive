@@ -4,7 +4,7 @@
 <!--Body-->
             <form id="regForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/register">
                 <% if(locals.message) { %>
-                    <div class="alert alert-success">
+                    <div class="alert alert-danger">
                       <%= locals.message %>
                     </div>
                     <% } %>

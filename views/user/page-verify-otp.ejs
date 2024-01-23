@@ -2,61 +2,84 @@
 
 
  <!--Body-->               
-            <form id="verifyotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/verify-otp">
+           <!--Body-->               
+<form id="verifyotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/verify-otp">
+  
+  <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
 
-                <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
+  <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
+      <input itemid="otpverify" type="number" style="width:300px; " class="form-control" name="otp" id="verify-otp">
 
-                <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
-                    <input itemid="otpverify" type="number" style="width:300px; " class="form-control" name="otp" id="verify-otp">
+  </div>
+  <p><div id="error1" style="display: none;" class="alert alert-danger err"></div></p>
+  
+  <div class="mt-5 d-flex justify-content-center ">
+      <button type="submit" class="btn  btn-primary btn-block btn-secondary margin">VERIFY OTP</button>
+  </div>
+  <div class="mt-5">
+      <span  id="otpTimer">Time Remaining: 30 seconds</span>
+      <button id="resendButton" onclick="resendOTP()" style="display: none;">Resend OTP</button>
+  </div>
+  
+  
+</form>
+</div>
 
-                </div>
-                <p><div id="error3" style="display: none;" class="alert alert-danger err"></div></p>
-                
-                <div class="mt-5 d-flex justify-content-center ">
-                    <button type="submit" class="btn  btn-primary btn-block btn-secondary margin">VERIFY OTP</button>
-                </div>
-                <div class="mt-5">
-                    <span  id="otpTimer">Time Remaining: 30 seconds</span>
-                    <button onclick="resendOTP()">Resend OTP</button>
-                </div>
-                
-                
-            </form>
-        </div>
+<script src="/public/formValidation/user/verifyotpScript.js"></script>
 
-        <script src="/public/formValidation/user/verifyotpScript.js"></script>
 
 <!--footer-->
 
 <%- include('../layouts/footer.ejs') %>
 
+<!-- JavaScript for the OTP Timer -->
 <script>
-    // JavaScript for the OTP Timer
-    let timeRemaining = 30; // Set the initial time in seconds
-    const timerElement = document.getElementById('otpTimer');
-  
-    function updateTimer() {
-      if (timeRemaining > 0) {
-        timerElement.textContent = `Time Remaining: ${timeRemaining} seconds`;
-        timeRemaining--;
-        setTimeout(updateTimer, 1000); // Update the timer every second
-      } else {
-        timerElement.textContent = 'OTP Expired';
-        // Handle expiration (e.g., disable the "Submit" button)
+  let timeRemaining = 30;
+  const timerElement = document.getElementById('otpTimer');
+  const resendButton = document.getElementById('resendButton');
+
+  function updateTimer() {
+    if (timeRemaining > 0) {
+      timerElement.textContent = `Time Remaining: ${timeRemaining} seconds`;
+      timeRemaining--;
+      setTimeout(updateTimer, 1000); // Update the timer every second
+    } else {
+      timerElement.textContent = 'OTP Expired';
+      // Handle expiration (e.g., disable the "Submit" button)
+      if (resendButton) {
+        resendButton.style.display = 'inline'; // Show the Resend OTP button
       }
     }
-  
-    // Call updateTimer() when you generate the OTP
-    updateTimer();
-  
-    // JavaScript for the Resend Button
-    
-    function resendOTP() {
-      // Implement logic to generate a new OTP, update the timestamp, and send it to the user
-      // Reset the timer
-      timeRemaining = 30;
-      // Call updateTimer() again to restart the timer
-      updateTimer();
-    }
-  </script>
+  }
 
+  // Call updateTimer() when you generate the OTP or on page load
+  updateTimer();
+
+  function resendOTP() {
+    // Implement logic to generate a new OTP and send it to the user
+    const newOTP = generateOTP();
+    sendOTPToUser(newOTP);
+
+    // Reset the timer
+    timeRemaining = 30;
+
+    // Hide the Resend OTP button
+    if (resendButton) {
+      resendButton.style.display = 'none';
+    }
+
+    // Call updateTimer() again to restart the timer
+    updateTimer();
+  }
+
+  // Example function to generate a random 6-digit OTP
+  function generateOTP() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  // Example function to simulate sending OTP to the user (replace this with your actual implementation)
+  function sendOTPToUser(otp) {
+    console.log(`Sending OTP to the user: ${otp}`);
+    // Implement logic to send the OTP to the user (e.g., via email, SMS, etc.)
+  }
+</script>

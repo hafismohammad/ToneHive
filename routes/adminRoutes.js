@@ -6,18 +6,34 @@ const adminControllers = require("../controllers/adminController")
 const { route } = require('./userRoutes');
 
 
-router.get("/", adminControllers.dashboardLoad);
+router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
 // router.put("/",adminControllers)
 
-router.get("/customers",adminControllers.customerLoad)
 
+// customers side
+router.get("/customers",adminAuth.isLogout,adminControllers.customerLoad)
 router.get('/edituser',adminAuth.isLogout,adminControllers.edituserload)
-router.post('/edituser', adminControllers.edituser)
+router.post('/edituser',adminControllers.edituser)
+router.get('/deleteuser',adminAuth.isLogout,adminControllers.deleteUser)
+router.get('/blockuser/:userid',adminControllers.blockuser);
+router.get('/unblockuser/:userid',adminControllers.unblockuser);
 
-router.get('/deleteuser', adminAuth.isLogout,adminControllers.deleteUser)
+// category 
+router.get("/productCatrgory",adminControllers.productCatrgory)
+router.post("/createCategory",adminControllers.addProductCategory)
+router.get("/editCategory",adminControllers.editCategoryLoad)
+router.post("/editCategory",adminControllers.editedCategory)
+router.get("/deletecategory",adminControllers.deletecategory)
+router.get("/listedcategory/:catid",adminControllers.listedCategory)
+router.get("/unlistedcategory/:catid",adminControllers.unlistedCategory)
 
-router.get('/blockuser', adminControllers.blockuser)
-router.get('/unblockuser', adminControllers.unblockuser)
+
+// product list 
+router.get("/products", adminControllers.productsLoad)
+
+
+
+
 
 
 

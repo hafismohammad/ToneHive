@@ -2,7 +2,7 @@
 const isLogin = async(req,res,next)=>{
     try {
       if(req.session.user){
-        res.redirect('/userhome')
+        res.redirect('/userHome')
       }else{
         next()
       }
@@ -23,7 +23,28 @@ const isLogout = async(req,res,next)=>{
     }
 }
 
+// const isVerify = async(req,res,next)=>{
+//   try {
+//     if(req.session.user){
+//       res.redirect('/verify-otp')
+//     }else{
+//       next()
+//     }
+//   } catch (error) {
+//    console.log(error)   
+//   }
+// }
+const otpTimeOut = (req, res, next) => {
+if(Date.now() >= req.session.otpExpirationTime){
+  res.redirect(`/verify-otp?message=${"Invalid OTP"}`);
+}else{
+  next();
+}
+}
+
 module.exports = {
     isLogin,
-    isLogout
+    isLogout,
+    otpTimeOut,
+
 }

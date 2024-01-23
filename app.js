@@ -24,6 +24,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static(path.join(__dirname, "/public")));
 app.use("/assets", express.static(path.join(__dirname, "/public/assets")));
+// app.use("/admin-assets", express.static(path.join(__dirname, "/public/admin-assets")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
