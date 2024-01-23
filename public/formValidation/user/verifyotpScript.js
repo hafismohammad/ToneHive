@@ -43,5 +43,6 @@ verifyOtpForm.addEventListener("submit", function (e) {
     if (!isOtpValid) {
         e.preventDefault(); // Prevent form submission if validation fails
     }
+    
 });
 
