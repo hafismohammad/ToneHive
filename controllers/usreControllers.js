@@ -4,7 +4,7 @@ const Category = require("../models/categoryModel")
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
-/////////////
+/////////////////
 const securePassword = async (password) => {
     try {
         const passwordHash = await bcrypt.hash(password, 10);
