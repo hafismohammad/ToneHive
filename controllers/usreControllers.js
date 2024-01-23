@@ -1,5 +1,6 @@
 const { render } = require("ejs");
 const User = require("../models/userModel")
+const Category = require("../models/categoryModel")
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
@@ -14,10 +15,11 @@ const securePassword = async (password) => {
     }
 }
 
-const homeLoad = (req, res) => {
+const homeLoad = async (req, res) => {
     try {
         if (req.session.user) {
-            res.render("user/page-userHome")
+        const category = await Category.find()
+        res.render("user/page-userHome", {category:category})
         } else {
             redirect("/")
         }

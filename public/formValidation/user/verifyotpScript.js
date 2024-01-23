@@ -6,21 +6,13 @@ const verifyOtpForm = document.getElementById("verifyotpForm");
 const userEnteredOtp = "<your_server_obtained_otp_value>";
 
 
+
 function otpValidate() {
     const otpValue = otpVerify.value.trim();
 
     if (otpValue === "") {
         error1.style.display = "block";
         error1.innerHTML = "Please enter OTP";
-
-        setTimeout(() => {
-            error1.style.display = "none";
-            error1.innerHTML = "";
-        }, 3000);
-        return false; // Indicate validation failure
-    } else if (otpValue !== userEnteredOtp) {
-        error1.style.display = "block";
-        error1.innerHTML = "Please enter a valid OTP";
 
         setTimeout(() => {
             error1.style.display = "none";
