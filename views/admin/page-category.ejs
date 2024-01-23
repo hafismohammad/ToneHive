@@ -251,31 +251,24 @@
                                                 <td><br><%= i+1 %></br></td>
                                                 <td><br><%= category[i].name %></br></td>
                                                 <td><br><%= category[i].list ? 'Listed' : 'Unlisted' %></br></td>
-                                              <td>
-                                               <% if (category.isList) { %>
-                                                    <!-- Display unblock button -->
-                                                    <button onclick="listUnlistcat('<%= category._id %>','List Category')"
-                                                        type="button" class="btn btn-success px-3">List</button>
-
-                                             <% } else { %>
-                                                  <!-- Display block button -->
-                                                   <button onclick="listUnlistcat('<%= category._id %>','Unlist Category')"
-                                                    type="button" class="btn btn-success px-3">Unlist</button>
-                                          
-                                                </td> 
-                                                <% } %>
-                                             
-                                               
+                                                <td>
+                                                    <% if (category[i].isList) { %>
+                                                        <!-- Display unblock button -->
+                                                        <button onclick="listUnlistcat('<%= category[i]._id %>','List-Category')" type="button" class="btn btn-success px-3">List</button>
+                                                    <% } else { %>
+                                                        <!-- Display block button -->
+                                                        <button onclick="listUnlistcat('<%= category[i]._id %>','Unlist-Category')" type="button" class="btn btn-success px-3">Unlist</button>
+                                                    <% } %>
+                                                </td>
                                                 <td class="d-flex justify-content-center align-items-center">
-                                                   
                                                     <a href="/adminhome/editcategory?CategoryId=<%= category[i]._id %>"><button class="btn btn-primary">Edit</button></a>
-                                                   <a href="/adminhome/deletecategory?catId=<%= category[i]._id %>"> <button class="btn btn-danger">Delete</button></a>
-                                                   
+                                                    <a href="/adminhome/deletecategory?catId=<%= category[i]._id %>"><button class="btn btn-danger">Delete</button></a>
                                                 </td>
                                             </tr>
                                         <% } %>
                                     <% } %>
-                                </tbody>
+                                    </tbody>
+                                    
                             </table>
                         </div>
                        
@@ -314,20 +307,21 @@
 
     <script>
         function listUnlistcat(catId, Action){
+          
             Swal.fire({
                 title: "Are you sure?",
-                // text: "Once deleted, you will not be able to recover this imaginary file!",
+               // text: "Once deleted, you will not be able to recover this imaginary file!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: `Yes,${Action}`,
                 cancelButtonText: 'Cancel',
                 allowOutsideClick: true, // Allow closing when clicking outside the alert
-            }).then((result) => {
-                if(result.isConfirmed){
-                    fetch(`/adminhome/${Action}/${catId}`, { method:"GET" })
-                    .then((res) => {
-                        if(res.ok){
-                            swal({
+            }).then((result) => { 
+                if (result.isConfirmed) {
+                    fetch(`/adminhome/${Action}/${catId}`, { method: "GET" })
+                        .then(res => {
+                            if (res.ok) {
+                                swal({
                                     title: `${Action}`,
                                     text: "You clicked the button!",
                                     icon: "success",
@@ -335,24 +329,30 @@
                                 });
                                 setTimeout(()=>{
                                     window.location.reload();
-                                },2000)
-                        }else {
+                                },1000)
+                               
+                            } else {
                                 swal({
                                     title: "somthing went wrong!",
                                     text: "You clicked the button!",
                                     icon: "error",
                                 });
-                        }
-                    })
-                }else {
+                            }
+                        })
+                    // Perform the block/unblock action here
+                    // You can call a function, make an AJAX request, etc.
+                    // For now, let's just log the action to the console
+                    console.log(`Customer ${isBlocking ? 'blocked' : 'unblocked'} successfully.`);
+                } else {
                     swal({
                         title: "canceled !",
                         text: "You clicked the button!",
                         icon: "cancel",
                     });
                 }
-            })
+            });
         }
+    
     </script>
 
 </body>

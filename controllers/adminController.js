@@ -162,10 +162,21 @@ const deletecategory = async (req, res) =>{
     }
 }
 
+const unlistedCategory = async (req, res) => {
+    const catId = req.params.catid;
+    try {
+        const isList = await Category.findByIdAndUpdate(catId,{$set:{isList:true}});
+        console.log(isList);
+        res.json({success:true})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const listedCategory = async (req, res) => {
     const catId = req.params.catid;
 try {
-    await Category.findByIdAndUpdate(catId,{$set:{isList:false}})
+    await Category.findByIdAndUpdate(catId,{isList:false})
     res.json({success:true});
      
     
@@ -173,16 +184,6 @@ try {
     console.log(error);
 }
 } 
-
-const unlistedCategory = async (req, res) => {
-    const catId = req.params.catid;
-    try {
-        await Category.findByIdAndUpdate(catId,{isList:true})
-        res.json({success:true})
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 
 // products

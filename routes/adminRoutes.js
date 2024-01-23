@@ -24,8 +24,8 @@ router.post("/createCategory",adminControllers.addProductCategory)
 router.get("/editCategory",adminControllers.editCategoryLoad)
 router.post("/editCategory",adminControllers.editedCategory)
 router.get("/deletecategory",adminControllers.deletecategory)
-router.get("/listedcategory/:catid",adminControllers.listedCategory)
-router.get("/unlistedcategory/:catid",adminControllers.unlistedCategory)
+router.get("/list-Category/:catid",adminControllers.listedCategory)
+router.get("/unlist-Category/:catid",adminControllers.unlistedCategory)
 
 
 // product list 
