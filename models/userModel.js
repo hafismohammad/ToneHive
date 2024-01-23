@@ -27,11 +27,7 @@ const userSchema = new mongoose.Schema({
         default: false ,
         return:true
     },
-    isUnblock: {
-        type: Boolean,
-        default: false,
-        required: true 
-    }
+   
     
 })
 

@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
+const userAuth = require('../middleware/userAuth')
 const userControllers = require("../controllers/usreControllers")
 
 
-router.get("/", userControllers.loginLoad)
+router.get("/",userControllers.loginLoad)
 router.post("/", userControllers.logedUser)
 
-router.get("/register", userControllers.registerLoad)
+router.get("/register", userAuth.isLogin,userControllers.registerLoad)
 router.post("/register", userControllers.registeredUser)
 
 router.get("/userHome", userControllers.homeLoad)

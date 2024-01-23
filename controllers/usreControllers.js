@@ -31,7 +31,7 @@ const loginLoad = function (req, res) {
     if (req.session.user) {
         res.redirect("/userHome");
     } else if (req.session.admin) {
-        res.redirect("/")//?
+        res.redirect("/adminhome")//?
     } else {
         res.render("user/page-login")
     }
@@ -134,7 +134,7 @@ const transporter = nodemailer.createTransport({
 
 const verifyOTPLoad = async (req, res) => {
     try {
-        
+
         // Generate a random OTP
         const otp = generateRandomOtp();
         const uOtp = otp;

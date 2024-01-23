@@ -23,9 +23,13 @@
         <div>
 
 
-           
-            <div class="container mt-5">
-                <table class="table table-dark table-striped table-hover w-75" style="margin-left: 300px; margin-top: 30px;">
+          <section class="vh-100 gradient-custom">
+            <div class="container py-1 h-100">
+              <div class="row d-flex justify-content-center align-items-center w-100 h-100">
+                <div class="col-md-12">
+                  <div class="mb-md-5 mt-md-4 px-5 py-5">
+       
+                <table class="table btn-danger table-striped table-hover w-75" style="margin-left: 300px; margin-top: 30px;">
                     <tr class="w-100">
                     
                       <td>Name</td>
@@ -33,7 +37,7 @@
                       <td>Mobile</td>
                       <td>Edit User</td>
                       <td>Delete User</td>
-                      <td>Action</td>
+                      <td>Status</td>
 
                   </tr>
                   <%if(typeof user !== 'undefined'){%>
@@ -71,29 +75,35 @@
                 <%})}%>
               </table>
 
+           
 
 
-
-      <div class="container ">
-        <table>
-            <tr>
-              <td>
-                <a href="/adminhome/customers"><button type="button" class="btn btn-outline-primary">Customers</button></a>
-              </td>
-            </tr>
-            <tr>
-             <td>
-                <a href="#"><button type="button" class="btn btn-outline-primary">Product</button></a>
-             </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="/"><button type="button" class="btn btn-outline-primary">Back</button></a>
-                </td>
-               
-             </tr>
-        </table>             
-    </div>
+              <div class="container mt-5">
+                <table>
+                    <tr>
+                       <td>
+                        <a href="/adminhome/customers"><button type="button" class="btn btn-info px-3">Customers</button></a>
+                       </td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <a href="#"><button type="button" class="btn btn-info px-3">Product</button></a>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/adminhome"><button type="button" class="btn btn-outline-primary">Back</button></a>
+                        </td>
+                        </tr>
+                </table>
+       
+            </div>
+               </div>     
+              </div>
+              </div>
+              </section>  
                    
-             
-                   
+              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+            </body>
+            </html>
