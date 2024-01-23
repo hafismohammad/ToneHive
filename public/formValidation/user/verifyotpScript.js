@@ -45,5 +45,15 @@ verifyOtpForm.addEventListener("submit", function (e) {
         e.preventDefault(); // Prevent form submission if validation fails
     }
 
+    
+verifyOtpForm.addEventListener("submit", function (e) {
+    // Run the OTP validation function and store the result
+    const isOtpValid = otpValidate();
+
+    // Check if OTP validation failed
+    if (!isOtpValid) {
+        e.preventDefault(); // Prevent form submission if validation fails
+    }
+
 });
 
