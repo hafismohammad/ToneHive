@@ -89,28 +89,33 @@
             </div> <!-- card end// -->
 
             <div class="card mb-4">
-                <!-- <div class="card-header">
+                <div class="card-header">
                     <h4>Organization</h4>
-                </div> -->
+                </div>
                 <div class="card-body">
                     <div class="row gx-2">
                        
-                        <!-- <div class="col-sm-6 mb-3">
+                        <div class="col-sm-6 mb-3">
                             <label class="form-label">Sub-category</label>
-                            <select class="form-select">
-                                <option> Nissan </option>
-                                <option> Honda </option>
-                                <option> Mercedes </option>
-                                <option> Chevrolet </option>
+                            <select class="form-select" style="width: auto;" name="category">
+                                <!-- Add this before the loop -->
+
+                                <% for (let i = 0; i < category.length; i++) { %>
+                                    <% if (category[i].isList == false) { %>
+                                        <option value="<%= category[i]._id %>">
+                                            <%= category[i].name %>
+                                        </option>
+                                    <% } %>
+                                <% } %>
                             </select>
-                        </div> -->
-                        <!-- <div class="mb-4">
+                        </div>
+                        
+                        <div class="mb-4">
                             <label for="product_name" class="form-label">Tags</label>
                             <input type="text" class="form-control">
-                        </div> -->
-                    </div> <!-- row.// -->
-                </div>
-            </div> <!-- card end// -->
+                        </div>
+                    </div> 
+            </div> 
             <div>
                 <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add
                     Product</button> <!-- ms-auto d-block to move button to right-->

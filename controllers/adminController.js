@@ -180,7 +180,9 @@ const productsLoad = async (req, res) => {
     try {
         const Pdata = req.query.success;
         const productData = await Products.find()
-        res.render("admin/page-productList", { data: Pdata, productData: productData })
+       const category = await Category.find()
+    
+        res.render("admin/page-productList", { data: Pdata, productData: productData, category:category})
 
     } catch (error) {
         console.log(error);
@@ -190,12 +192,15 @@ const productsLoad = async (req, res) => {
 
 const addProductLoad = async (req, res) => {
     try {
-        res.render("admin/page-addProduct")
+        const category = await Category.find()
+        res.render("admin/page-addProduct", {category:category})
     } catch (error) {
         console.log(error);
         res.render("admin/page-addProduct")
     }
 }
+
+
 
 const addProducts = async (req, res) => {
     try {
@@ -203,10 +208,10 @@ const addProducts = async (req, res) => {
         const {
             name,
             description,
-            CategoryId,
+            category,
             price,
             quantity,
-            discount,
+           
 
         } = req.body;
         const image = req.files.map(el=>el.filename)
@@ -216,12 +221,12 @@ const addProducts = async (req, res) => {
         const product = {
             name:name,
             description:description,
-            CategoryId:CategoryId,
+            category:category,
             price:price,
             quantity:quantity,
             image:image,
         }
-console.log("image",product.image);
+//console.log("image",product.image);
         // Check if the product already exists
         const existingProduct = await Products.findOne({name:name,});
     
