@@ -2,8 +2,10 @@ const { render } = require("ejs");
 const User = require("../models/userModel")
 const Category = require("../models/categoryModel");
 const Products = require("../models/productModel")
+const multer = require('multer');
 const session = require("express-session");
 const { set } = require("mongoose");
+
 //const categoryHelper = require("../helpers/categoryHelper")
 
 const dashboardLoad = async (req, res) => {
@@ -159,7 +161,21 @@ const listedCategory = async (req, res) => {
 }
 
 
-// products
+// products & image upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname); 
+    }
+});
+
+const upload = multer({
+    storage: storage,
+});
+
+
 const productsLoad = async (req, res) => {
     try {
         const Pdata = req.query.success;
@@ -183,16 +199,18 @@ const addProductLoad = async (req, res) => {
 
 const addProducts = async (req, res) => {
     try {
+        console.log("hello opera");
         const {
             name,
             description,
             CategoryId,
             price,
             quantity,
-            image,
             discount,
 
         } = req.body;
+        const image = req.files.map(el=>el.filename)
+        console.log(image)
         console.log(req.body.name,req.body.description);
 
         const product = {
@@ -203,7 +221,7 @@ const addProducts = async (req, res) => {
             quantity:quantity,
             image:image,
         }
-
+console.log("image",product.image);
         // Check if the product already exists
         const existingProduct = await Products.findOne({name:name,});
     
@@ -243,5 +261,6 @@ module.exports = {
     listedCategory,
     unlistedCategory,
     addProductLoad,
-    addProducts
+    addProducts,
+    upload,
 }

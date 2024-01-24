@@ -22,9 +22,10 @@ const productSchema = new mongoose.Schema({
         type:Intl,  
         required:true
     },
-    image:[{
-        type:String,
-    }],
+    image:{
+        type:Array,
+        required:true
+    },
     discount:{
         type:String,
     },

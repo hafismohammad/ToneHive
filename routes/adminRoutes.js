@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const adminAuth = require('../middleware/adminAuth')
 const userStatus = require('../middleware/userChecking')
+
 const adminControllers = require("../controllers/adminController")
 const { route } = require('./userRoutes');
 
@@ -27,7 +28,8 @@ router.get("/unlist-Category/:catid",adminControllers.unlistedCategory)
 // product list 
 router.get("/products",adminControllers.productsLoad)
 router.get("/addproduct",adminControllers.addProductLoad)
-router.post('/addproduct',adminControllers.addProducts)
+router.post('/addproduct', adminControllers.upload.array("image"), adminControllers.addProducts);
+
 
 
 
