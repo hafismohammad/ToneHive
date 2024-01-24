@@ -87,7 +87,7 @@ const registeredUser = async (req, res) => {
         // console.log(req.body);
         const userIn = {
             name: req.body.name,
-            email: req.body.email,
+            email: req.body.email,  
             mobile: req.body.mobile,
             password: spassword,
             isAdmin: 0,

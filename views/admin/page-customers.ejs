@@ -269,8 +269,7 @@
                         <td>Name</td>
                         <td>Email</td>
                         <td>Mobile</td>
-                        <td>Edit User</td>
-                        <td>Delete User</td>
+                        
                         <td>Status</td>
 
                     </tr>
@@ -287,19 +286,7 @@
                                     <%= person.mobile%>
                                 </td>
 
-                                <td>
-                                    <a href="/adminhome/edituser?userid=<%=person._id%>">
-                                        <button type="button" class="btn btn-info px-3">
-                                            Edit
-                                        </button></a>
-                                </td>
-                                <td>
-                                    <a href="/adminhome/deleteuser?userid=<%=person._id%>">
-                                        <button type="button" class="btn btn-danger px-3">
-                                            Delete
-                                        </button></a>
-
-                                </td>
+                               
                                 <td>
                                     <% if (person.isBlocked) { %>
                                         <!-- Display unblock button -->

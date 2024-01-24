@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
         type:String,
        //   required:true
     },
-    catagory_id:{
+    category_id:{
        type: mongoose.Schema.Types.ObjectId,
        ref: 'category',
         
@@ -24,11 +24,9 @@ const productSchema = new mongoose.Schema({
     },
     image:[{
         type:String,
-       
     }],
     discount:{
         type:String,
-        required:true
     },
     product_status:{
         type:Boolean,

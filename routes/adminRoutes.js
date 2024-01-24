@@ -5,16 +5,12 @@ const userStatus = require('../middleware/userChecking')
 const adminControllers = require("../controllers/adminController")
 const { route } = require('./userRoutes');
 
-
+// admin dashboard
 router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
-// router.put("/",adminControllers)
-
 
 // customers side
 router.get("/customers",adminAuth.isLogout,adminControllers.customerLoad)
 router.get('/edituser',adminAuth.isLogout,adminControllers.edituserload)
-router.post('/edituser',adminControllers.edituser)
-router.get('/deleteuser',adminAuth.isLogout,adminControllers.deleteUser)
 router.get('/blockuser/:userid',adminControllers.blockuser);
 router.get('/unblockuser/:userid',adminControllers.unblockuser);
 
@@ -30,7 +26,8 @@ router.get("/unlist-Category/:catid",adminControllers.unlistedCategory)
 
 // product list 
 router.get("/products",adminControllers.productsLoad)
-router.post("/addproduct",adminControllers.addProducts)
+router.get("/addproduct",adminControllers.addProductLoad)
+router.post('/addproduct',adminControllers.addProducts)
 
 
 

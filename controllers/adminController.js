@@ -8,7 +8,7 @@ const { set } = require("mongoose");
 
 const dashboardLoad = async (req, res) => {
     try {
-       
+
         res.render("admin/page-adminDashboard")
     } catch (error) {
         console.log(error);
@@ -19,68 +19,42 @@ const dashboardLoad = async (req, res) => {
 
 const customerLoad = async (req, res) => {
     try {
-     // const userData = await User.find({isAdmin:0})
-      const userData =await User.find({isAdmin:0});
-        res.render("admin/page-customers",{user:userData})
+        const userData = await User.find({ isAdmin: 0 });
+        res.render("admin/page-customers", { user: userData })
     } catch (error) {
         console.log(error);
     }
 }
 
-const edituserload = async function(req, res) {
-    
-    const id=req.query.userid;
-    req.session.id=id
+const edituserload = async function (req, res) {
+
+    const id = req.query.userid;
+    req.session.id = id
     // console.log(id)
-    const userData = await User.findById({_id:id});
-    res.render('admin/page-editUser',{user:userData})
+    const userData = await User.findById({ _id: id });
+    res.render('admin/page-editUser', { user: userData })
 }
 
-const edituser = async function(req, res) {
-    try {
-      
-        id = req.session.id
-        console.log(id);
-        const name = req.body.name
-        const email = req.body.email
-        const updateduser = await User.findOneAndUpdate({email:email},{$set:{name:name , email:email }})
-
-        res.redirect('/adminhome/customers')
-    }
-   
-    catch (error) {
-      console.log(error);
-    }
-    } 
-
-    const deleteUser = async function(req, res) {
-        try {
-         const id = req.query.userid
-         const deleteuser = await User.deleteOne({_id:id})
-         res.redirect('/adminhome/customers')
-        } catch (error) {
-         console.log(error);
-        }
-     }
 const blockuser = async (req, res) => {
     const userId = req.params.userid;
     console.log(userId);
-try {
-    await User.findByIdAndUpdate(userId,{$set:{isBlocked:true}});
-    res.json({success:true});
-   // console.log(`User blocked successfully.`);
-} catch (error) {   
-    console.log(error);
+    try {
+        await User.findByIdAndUpdate(userId, { $set: { isBlocked: true } });
+        res.json({ success: true });
+        // console.log(`User blocked successfully.`);
+    } catch (error) {
+        console.log(error);
 
-}}
+    }
+}
 
-const  unblockuser = async (req, res) => {
+const unblockuser = async (req, res) => {
     const userId = req.params.userid;
     try {
         console.log(`Unblocking user with ID: ${userId}`);
         await User.findByIdAndUpdate(userId, { isBlocked: false });
-        res.json({success:true});
-       // console.log(`User unblocked successfully.`);
+        res.json({ success: true });
+        // console.log(`User unblocked successfully.`);
 
     } catch (error) {
         console.log(error);
@@ -89,72 +63,72 @@ const  unblockuser = async (req, res) => {
 
 
 // product category
-const productCatrgory = async(req, res) =>{
-try {
-    const data = req.query.success;
-    const category = await Category.find();
-    res.render("admin/page-category", {data:data,category:category})
-} catch (error) {
-    console.log(error);
-}
-}
-
-const  addProductCategory = async (req, res) => {
-  try {
-    const { categoryName, list} = req.body;
-    console.log( categoryName, list);
-    const existingCategory = await Category.findOne({ name: categoryName });
-
-    if (existingCategory) {
-       
-        return res.redirect("/adminhome/productCatrgory?error=DuplicateCategory");
-    }
-
-
-    const category = await Category.create({
-        name:categoryName,
-        list:list
-    });
-    res.redirect("/adminhome/productCatrgory?success=Category Added")
-    console.log(category);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-
-const editCategoryLoad = async (req, res) => {
-   try {
-    const id = req.query.CategoryId;
-    req.session.id=id
-    const catData = await Category.findById({_id:id})
-    res.render("admin/page-editCategory", {editCat:catData});
-   } catch (error) {
-    console.log(error);
-   }
-}
-
-
-const editedCategory = async (req, res) => {
+const productCatrgory = async (req, res) => {
     try {
-        const name = req.body.name;
-        console.log(name);
-        console.log(req.session.id );
-       const updatedCat = await Category.findOneAndUpdate({_id:req.body.catId},{$set:{name:name}})
-       console.log('Request body:', req.body);
-     
-   
-       res.redirect("/adminhome/productCatrgory")
+        const data = req.query.success;
+        const category = await Category.find();
+        res.render("admin/page-category", { data: data, category: category })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const addProductCategory = async (req, res) => {
+    try {
+        const { categoryName, list } = req.body;
+
+        const existingCategory = await Category.findOne({ name: categoryName });
+
+        if (existingCategory) {
+
+            return res.redirect("/adminhome/productCatrgory?error=DuplicateCategory");
+        }
+
+
+        const category = await Category.create({
+            name: categoryName,
+            list: list
+        });
+        res.redirect("/adminhome/productCatrgory?success=Category Added")
+        //console.log(category);
     } catch (error) {
         console.log(error);
     }
 }
 
 
-const deletecategory = async (req, res) =>{
+const editCategoryLoad = async (req, res) => {
     try {
-    const id = req.query.catId
-        const deleteCat = await Category.deleteOne({_id:id})
+        const id = req.query.CategoryId;
+        req.session.id = id
+        const catData = await Category.findById({ _id: id })
+        res.render("admin/page-editCategory", { editCat: catData });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const editedCategory = async (req, res) => {
+    try {
+        const name = req.body.name;
+        // console.log(name);
+        // console.log(req.session.id );
+        const updatedCat = await Category.findOneAndUpdate({ _id: req.body.catId }, { $set: { name: name } })
+        console.log('Request body:', req.body);
+
+
+        res.redirect("/adminhome/productCatrgory")
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const deletecategory = async (req, res) => {
+    try {
+        const id = req.query.catId
+        const deleteCat = await Category.deleteOne({ _id: id })
         res.redirect("/adminhome/productCatrgory")
     } catch (error) {
         console.log(error);
@@ -164,9 +138,9 @@ const deletecategory = async (req, res) =>{
 const unlistedCategory = async (req, res) => {
     const catId = req.params.catid;
     try {
-        const isList = await Category.findByIdAndUpdate(catId,{$set:{isList:true}});
+        const isList = await Category.findByIdAndUpdate(catId, { $set: { isList: true } });
         console.log(isList);
-        res.json({success:true})
+        res.json({ success: true })
     } catch (error) {
         console.log(error);
     }
@@ -174,84 +148,90 @@ const unlistedCategory = async (req, res) => {
 
 const listedCategory = async (req, res) => {
     const catId = req.params.catid;
-try {
-    await Category.findByIdAndUpdate(catId,{isList:false})
-    res.json({success:true});
-     
-    
-} catch (error) {
-    console.log(error);
+    try {
+        await Category.findByIdAndUpdate(catId, { isList: false })
+        res.json({ success: true });
+
+
+    } catch (error) {
+        console.log(error);
+    }
 }
-} 
 
 
 // products
 const productsLoad = async (req, res) => {
-    const data = req.query.success;
-    const productData = await Products.find()
     try {
-        res.render("admin/page-productList", {data:data, productData:productData})
-        
+        const Pdata = req.query.success;
+        const productData = await Products.find()
+        res.render("admin/page-productList", { data: Pdata, productData: productData })
+
     } catch (error) {
         console.log(error);
     }
 }
+
+
+const addProductLoad = async (req, res) => {
+    try {
+        res.render("admin/page-addProduct")
+    } catch (error) {
+        console.log(error);
+        res.render("admin/page-addProduct")
+    }
+}
+
 const addProducts = async (req, res) => {
     try {
         const {
-            product_name,
-            product_description,
-            product_CategoryId,
-            product_price,
-            product_quantity,
-            product_image,
-            product_status
+            name,
+            description,
+            CategoryId,
+            price,
+            quantity,
+            image,
+            discount,
+
         } = req.body;
+        console.log(req.body.name,req.body.description);
 
-        // Check if the product already exists
-        const existingProduct = await Products.findOne({
-            name: product_name,
-            description: product_description,
-            CategoryId: product_CategoryId,
-            price: product_price,
-            quantity: product_quantity,
-            image: product_image,
-            product_status: product_status
-        });
-
-        if (existingProduct) {
-            return res.render("admin/page-addProduct", { error: "Product already exists" });
+        const product = {
+            name:name,
+            description:description,
+            CategoryId:CategoryId,
+            price:price,
+            quantity:quantity,
+            image:image,
         }
 
+        // Check if the product already exists
+        const existingProduct = await Products.findOne({name:name,});
+    
+        if (existingProduct) {
+            return res.redirect("/adminhome/products?error=Duplicate Product");
+        }
+        else{
+            const newProduct = await Products.create(product);
+            res.redirect("/adminhome/products?success=Product Added");
+        }
         // If the product doesn't exist, add it to the database
-        const newProduct = await Products.create({
-            name: product_name,
-            description: product_description,
-            CategoryId: product_CategoryId,
-            price: product_price,
-            quantity: product_quantity,
-            image: product_image,
-            product_status: product_status
-        });
-
-        res.redirect("/adminhome/products?success=Product Added");
+    
     } catch (error) {
-        console.log(error);
-        res.render("admin/page-addProduct", { error: "Error adding product" });
+        console.error("Error adding product:", error);
+        res.render("admin/page-addProduct", { error: "Error adding product. Please try again later." });
     }
 };
 
-module.exports = addProducts;
 
-   
+
+
+
 
 
 module.exports = {
     dashboardLoad,
     customerLoad,
     edituserload,
-    edituser,
-    deleteUser,
     blockuser,
     unblockuser,
     productCatrgory,
@@ -262,5 +242,6 @@ module.exports = {
     deletecategory,
     listedCategory,
     unlistedCategory,
+    addProductLoad,
     addProducts
 }
