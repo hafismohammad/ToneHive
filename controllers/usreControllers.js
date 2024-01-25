@@ -1,10 +1,11 @@
 const { render } = require("ejs");
 const User = require("../models/userModel")
 const Category = require("../models/categoryModel")
+const Product = require("../models/productModel")
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
-
+const Products=require('../models/productModel')
 const securePassword = async (password) => {
     try {
         const passwordHash = await bcrypt.hash(password, 10);
@@ -19,7 +20,17 @@ const homeLoad = async (req, res) => {
     try {
         if (req.session.user) {
         const category = await Category.find({isList:false})
-        res.render("user/page-userHome", {category:category})
+        
+       // const products = await Product.find({product_status:false})
+        const productData = await Products.aggregate([{
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "category",
+            }
+        }])
+        res.render("user/page-userHome", {category:category,products:productData})
         } else {
             redirect("/")
         }
@@ -257,6 +268,17 @@ const resendOtp = async (req, res) => {
 // }
 }
 
+const productViews = async (req, res) => {
+    try {
+        const id=req.query.id
+       
+        const productData = await Products.findOne({_id:id})
+        res.render("user/page-viewProduct",{products:productData})
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     loginLoad,
     logedUser,
@@ -266,5 +288,6 @@ module.exports = {
     userLogout,
     verifyOTPLoad,
     verifiedUser,
-    resendOtp
+    resendOtp,
+    productViews
 }

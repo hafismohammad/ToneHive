@@ -106,7 +106,13 @@
                             <select class="form-select" style="width: auto;" name="category">
                                 <!-- Add this before the loop -->
                               
-                               
+                                <% for (let i = 0; i < category.length; i++) { %>
+                                    <% if (category[i].isList == false || category[i]._id.equals(productData._id)) { %>
+                                        <option value="<%= category[i]._id %>" selected>
+                                            <%= category[i].name %>
+                                        </option>
+                                    <% } %>
+                                <% } %>
                             </select>
                         </div>
                         

@@ -113,8 +113,9 @@ const listOrUnlistProducts = async (req, res) => {
 const editProductLoad = async (req, res) => {
     try {
         const id=req.params.id
+        const category=await Category.find();
         const productData = await Products.findOne({_id:id})
-        res.render("admin/page-editProdut", {productData:productData})
+        res.render("admin/page-editProdut", {productData:productData,category:category})
     } catch (error) {
         console.log(error);
     }

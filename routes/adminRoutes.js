@@ -10,8 +10,6 @@ const productControllers = require("../controllers/productControllers")
 const { route } = require('./userRoutes');
 
 
-
-
 // admin dashboard
 router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
 
@@ -44,7 +42,7 @@ router.get("/products",productControllers.productsLoad)
 
 router.get("/addproduct",productControllers.addProductLoad)
 
-router.post('/addproduct', productControllers.upload.array("image"), productControllers.addProducts);
+router.post('/addproduct', productControllers.upload.array("image",4), productControllers.addProducts);
 
 // router.get("/list-Product/:prodid",productControllers.listProducts);
 
