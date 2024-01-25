@@ -45,7 +45,7 @@ const editCategoryLoad = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-}
+}                       
 
 
 const editedCategory = async (req, res) => {
@@ -54,7 +54,7 @@ const editedCategory = async (req, res) => {
         // console.log(name);
         // console.log(req.session.id );
         const updatedCat = await Category.findOneAndUpdate({ _id: req.body.catId }, { $set: { name: name } })
-        console.log('Request body:', req.body);
+       // console.log('Request body:', req.body);
 
 
         res.redirect("/adminhome/productCatrgory")

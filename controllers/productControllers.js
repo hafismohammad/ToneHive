@@ -42,7 +42,6 @@ const productsLoad = async (req, res) => {
 const addProductLoad = async (req, res) => {
     try {
         const category = await Category.find()
-        console.log(category)
         res.render("admin/page-addProduct", { category: category })
 
     } catch (error) {
@@ -121,9 +120,12 @@ const editProductLoad = async (req, res) => {
     }
 }
 
-const editedProdut = async (req, res) => {
+const editedProduct = async (req, res) => {
     try {
-        
+        const name = req.body.name
+        console.log(name)
+        const editedProducts = await Products.findOneAndUpdate({_id: req.body.prodId}, { $set:{name:name}})
+        res.redirect("/adminhome/products")
     } catch (error) {
         console.log(error);
     }
@@ -137,6 +139,6 @@ module.exports = {
     upload,
     listOrUnlistProducts,
     editProductLoad,
-    editedProdut
+    editedProduct
 
 }

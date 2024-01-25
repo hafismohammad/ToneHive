@@ -54,7 +54,7 @@ router.patch('/list-product/:prodid',productControllers.listOrUnlistProducts);
 
 router.get("/editproduct/:id",productControllers.editProductLoad)
 
-router.put("/editprodut",productControllers.editedProdut)
+router.post("/editprodut",productControllers.editedProduct)
 
 
 
