@@ -78,7 +78,7 @@ const unlistedCategory = async (req, res) => {
     const catId = req.params.catid;
     try {
         const isList = await Category.findByIdAndUpdate(catId, { $set: { isList: true } });
-        console.log(isList);
+       // console.log(isList);
         res.json({ success: true })
     } catch (error) {
         console.log(error);

@@ -20,14 +20,16 @@ const upload = multer({
 const productsLoad = async (req, res) => {
     try {
         const Pdata = req.query.success;
-        const productData = await Products.aggregate([{$lookup:{
-            from:"categories",
-            localField:"category",
-            foreignField:"_id",
-            as:"category",
-        }}])
+        const productData = await Products.aggregate([{
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "category",
+            }
+        }])
 
-        
+
 
         res.render("admin/page-productList", { data: Pdata, productData: productData })
 
@@ -42,7 +44,7 @@ const addProductLoad = async (req, res) => {
         const category = await Category.find()
         console.log(category)
         res.render("admin/page-addProduct", { category: category })
-       
+
     } catch (error) {
         console.log(error);
         res.render("admin/page-addProduct")
@@ -53,7 +55,7 @@ const addProductLoad = async (req, res) => {
 
 const addProducts = async (req, res) => {
     try {
-        
+
         const {
             name,
             description,
@@ -74,7 +76,7 @@ const addProducts = async (req, res) => {
             category: category,
             price: price,
             quantity: quantity,
-            discount:discount,
+            discount: discount,
             image: image,
         }
         //console.log("image",product.image);
@@ -88,7 +90,6 @@ const addProducts = async (req, res) => {
             const newProduct = await Products.create(product);
             res.redirect("/adminhome/products?success=Product Added");
         }
-        // If the product doesn't exist, add it to the database
 
     } catch (error) {
         console.error("Error adding product:", error);
@@ -96,10 +97,34 @@ const addProducts = async (req, res) => {
     }
 };
 
+const listOrUnlistProducts = async (req, res) => {
+    const prodId = req.params.prodid;
+    try {
+        const result = await Products.findOne({ _id: prodId });
+        result.product_status = !result.product_status;
+        result.save();
+        res.json({ success: true });
+
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+const editProduct = async (req, res) => {
+    try {
+        res.render("admin/page-editProdut")
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     productsLoad,
     addProductLoad,
     addProducts,
-    upload
+    upload,
+    listOrUnlistProducts,
+    editProduct
 
 }
