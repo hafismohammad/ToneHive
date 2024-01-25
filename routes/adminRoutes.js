@@ -52,7 +52,10 @@ router.post('/addproduct', productControllers.upload.array("image"), productCont
 
 router.patch('/list-product/:prodid',productControllers.listOrUnlistProducts);
 
-router.get("/editproduct",productControllers.editProduct)
+router.get("/editproduct/:id",productControllers.editProductLoad)
+
+router.put("/editprodut",productControllers.editedProdut)
+
 
 
 

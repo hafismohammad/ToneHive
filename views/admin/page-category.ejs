@@ -378,7 +378,7 @@
             }, 3000);
 
             return false;
-        }else if(/^\d+$/.test(validCat)){
+        }else if(/^(-?\d+)$/.test(validCat)){
             error1.style.display = "block";
             error1.innerHTML = "Please enter a category name without numbers"; 
             
@@ -386,6 +386,7 @@
                 error1.style.display = "none";
                 error1.innerHTML = "";
             }, 3000);
+            return false;
         }
 
         return true;

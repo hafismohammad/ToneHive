@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-9">
             <div class="content-header">
-                <h2 class="content-title">Add New Product</h2>
+                <h2 class="content-title">Edit Product</h2>
             </div>
         </div>
         <div class="col-lg-6">
@@ -38,39 +38,41 @@
                     <h4>Basic</h4>
                 </div>
                 <div class="card-body">
-                    <form   action="/adminHome/addproduct" method="post" enctype="multipart/form-data" >
+                 
+                    <form   action="/adminHome/addproduct" method="put" >
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Product Name</label>
-                            <input type="text" name="name" placeholder="Type here" class="form-control"
+                            <input value="<%= productData.name %>" type="text" name="name" placeholder="Type here" class="form-control"
                                 id="product_name">
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Product description</label>
-                            <textarea placeholder="Type here" name="description" class="form-control"
-                                rows="4"></textarea>
+                            <input value="<%= productData.description%>"  placeholder="Type here" name="description" class="form-control"
+                                rows="4"></input>
                         </div>
                         <div class="mb-4">
                             <label class="form-label" for="product_price">Price</label>
-                            <input type="text" placeholder="price" name="price" class="form-control" id="product_price">
+                            <input value="<%= productData.price %>" type="text" placeholder="price" name="price" class="form-control" id="product_price">
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="product_quantity" class="form-label">Quantity</label>
-                                    <input type="text" name="quantity" placeholder="nos" class="form-control"
+                                    <input value="<%= productData.quantity %>" type="text" name="quantity" placeholder="nos" class="form-control"
                                         id="product_quantity">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="product_discount" class="form-label">Discount</label>
-                                    <input type="number" name="discount" placeholder="%" class="form-control"
+                                    <input value="<%= productData.discount %>" type="number" name="discount" placeholder="%" class="form-control"
                                         id="product_discount">
                                 </div>
                             </div>
 
                           
                         </div>
+                    
 
                 </div>
             </div> <!-- card end// -->
@@ -91,7 +93,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Organization</h4>
+                    <h4>Select Category</h4>
                 </div>
                 <div class="card-body">
                     <div class="row gx-2">
@@ -101,24 +103,15 @@
                             <select class="form-select" style="width: auto;" name="category">
                                 <!-- Add this before the loop -->
                               
-                                <% for (let i = 0; i < category.length; i++) { %>
-                                    <% if (category[i].isList == false) { %>
-                                        <option value="<%= category[i]._id %>">
-                                            <%= category[i].name %>
-                                        </option>
-                                    <% } %>
-                                <% } %>
+                               
                             </select>
                         </div>
                         
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Tags</label>
-                            <input type="text" class="form-control">
-                        </div>
+                       
                     </div> 
             </div> 
             <div>
-                <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add
+                <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Edit
                     Product</button> <!-- ms-auto d-block to move button to right-->
             </div>
         </div>

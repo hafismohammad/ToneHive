@@ -111,13 +111,24 @@ const listOrUnlistProducts = async (req, res) => {
 
 }
 
-const editProduct = async (req, res) => {
+const editProductLoad = async (req, res) => {
     try {
-        res.render("admin/page-editProdut")
+        const id=req.params.id
+        const productData = await Products.findOne({_id:id})
+        res.render("admin/page-editProdut", {productData:productData})
     } catch (error) {
         console.log(error);
     }
 }
+
+const editedProdut = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 module.exports = {
     productsLoad,
@@ -125,6 +136,7 @@ module.exports = {
     addProducts,
     upload,
     listOrUnlistProducts,
-    editProduct
+    editProductLoad,
+    editedProdut
 
 }
