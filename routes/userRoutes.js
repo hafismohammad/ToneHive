@@ -25,7 +25,7 @@ router.post("/verify-otp",userAuth.otpTimeOut, userControllers.verifiedUser)
 
 router.get("/resend-otp",userControllers.resendOtp)
 
-router.get("/productView",userControllers.productViews)
+router.get("/productView/",userControllers.productViews)
 
 // otp register
 //router.get("/verify-otp", userControllers.verifyOTPLoad)

@@ -71,7 +71,8 @@ const logedUser = async (req, res) => {
                     req.session.user = id
                     res.redirect("/verify-otp")
                 }else{
-                    res.redirect("/")
+                    console.log("This user not exist");
+                    res.redirect("/",{error: "This user not exist"})
                 }
 
             } else {
