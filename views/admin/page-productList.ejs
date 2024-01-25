@@ -261,15 +261,17 @@
                                <% for( let i = 0; i < productData.length; i++ ) { %>
                             
                                     <tr>
-                                        <td style="vertical-align: middle; " width="10%">
+                                        <td style="vertical-align: middle;" width="10%">
+                                            <% console.log("Product Image:", productData[i].image); %>
                                             <% if (Array.isArray(productData[i].image) && productData[i].image.length > 0) { %>
-                                              <img class="img-thumbnail" width="80" src="/uploads/product-images/<%= productData[i].image[0] %>" alt="no image available">
-                                            <% } else if (products[i].image) { %>
-                                              <img class="img-thumbnail" width="80" src="/uploads/product-images/<%= productData[i].image %>" alt="no image available">
+                                                <img class="img-thumbnail" width="80" src="/uploads/<%= productData[i].image[0] %>" alt="no image available">
+                                            <% } else if (productData[i].image) { %>
+                                                <img class="img-thumbnail" width="80" src="/uploads/<%= productData[i].image %>" alt="no image available">
                                             <% } else { %>
-                                              <span>No image available</span>
+                                                <span>No image available</span>
                                             <% } %>
-                                          </td>
+                                        </td>
+                                        
                                           
                                         <td style="vertical-align: middle; padding-left: 1.5rem;" width="17%"><%= productData[i].name %></td>
                                         
@@ -277,12 +279,13 @@
                                             <% if (!productData[i].category) { %>
                                                 <span class="text-danger">No Category</span>
                                             <% } else { %>
-                                                <% if (Array.isArray(productData[i].category) && productData[i].category.length > 0) { %>
-                                                    <%= productData[i].category.map(cat => category.name).join(', ') %>
-                                                <% } else if (!Array.isArray(productData[i].category)) { %>
-                                                    <%= productData[i].category.name %>
+                                                <% if (Array.isArray(productData[i].category)) { %>
+                                                    <% for (let j = 0; j < productData[i].category.length; j++) { %>
+                                                        <%= productData[i].category[j].name %>
+                                                        <% if (j < productData[i].category.length - 1) { %>, <% } %>
+                                                    <% } %>
                                                 <% } else { %>
-                                                    <span class="text-danger">No Category</span>
+                                                    <%= productData[i].category.name %>
                                                 <% } %>
                                             <% } %>
                                         </td>

@@ -4,31 +4,35 @@ const adminAuth = require('../middleware/adminAuth')
 const userStatus = require('../middleware/userChecking')
 
 const adminControllers = require("../controllers/adminController")
+//
+const customerController = require("../controllers/customerController")
+const categoryControllers = require("../controllers/categoryControllers")
+const productControllers = require("../controllers/productControllers")
 const { route } = require('./userRoutes');
 
 // admin dashboard
 router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
 
 // customers side
-router.get("/customers",adminAuth.isLogout,adminControllers.customerLoad)
-router.get('/edituser',adminAuth.isLogout,adminControllers.edituserload)
-router.get('/blockuser/:userid',adminControllers.blockuser);
-router.get('/unblockuser/:userid',adminControllers.unblockuser);
+router.get("/customers",adminAuth.isLogout,customerController.customerLoad)
+router.get('/edituser',adminAuth.isLogout,customerController.edituserload)
+router.get('/blockuser/:userid',customerController.blockuser);
+router.get('/unblockuser/:userid',customerController.unblockuser);
 
 // category 
-router.get("/productCatrgory",adminControllers.productCatrgory)
-router.post("/createCategory",adminControllers.addProductCategory)
-router.get("/editCategory",adminControllers.editCategoryLoad)
-router.post("/editCategory",adminControllers.editedCategory)
-router.get("/deletecategory",adminControllers.deletecategory)
-router.get("/list-Category/:catid",adminControllers.listedCategory)
-router.get("/unlist-Category/:catid",adminControllers.unlistedCategory)
+router.get("/productCatrgory",categoryControllers.productCatrgory)
+router.post("/createCategory",categoryControllers.addProductCategory)
+router.get("/editCategory",categoryControllers.editCategoryLoad)
+router.post("/editCategory",categoryControllers.editedCategory)
+router.get("/deletecategory",categoryControllers.deletecategory)
+router.get("/list-Category/:catid",categoryControllers.listedCategory)
+router.get("/unlist-Category/:catid",categoryControllers.unlistedCategory)
 
 
 // product list 
-router.get("/products",adminControllers.productsLoad)
-router.get("/addproduct",adminControllers.addProductLoad)
-router.post('/addproduct', adminControllers.upload.array("image"), adminControllers.addProducts);
+router.get("/products",productControllers.productsLoad)
+router.get("/addproduct",productControllers.addProductLoad)
+router.post('/addproduct', productControllers.upload.array("image"), productControllers.addProducts);
 
 
 
