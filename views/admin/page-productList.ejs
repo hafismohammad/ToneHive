@@ -264,9 +264,9 @@
                                         <td style="vertical-align: middle;" width="10%">
                                             <% console.log("Product Image:", productData[i].image); %>
                                             <% if (Array.isArray(productData[i].image) && productData[i].image.length > 0) { %>
-                                                <img class="img-thumbnail" width="80" src="/uploads/<%= productData[i].image[0] %>" alt="no image available">
+                                                <img class="img-thumbnail" width="80" src="/public/uploads/<%= productData[i].image[0] %>" alt="no image available">
                                             <% } else if (productData[i].image) { %>
-                                                <img class="img-thumbnail" width="80" src="/uploads/<%= productData[i].image %>" alt="no image available">
+                                                <img class="img-thumbnail" width="80" src="/public/uploads/<%= productData[i].image %>" alt="no image available">
                                             <% } else { %>
                                                 <span>No image available</span>
                                             <% } %>
@@ -292,6 +292,7 @@
                                         
                                         <td style="vertical-align: middle; padding-left: 2rem;" width="12%">₹<%= productData[i].price %></td>
                                         <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%"><%= productData[i].quantity %></td>
+                                        <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%">%<%= productData[i].discount %></td>
                                       
                                         <td style="vertical-align: middle; padding-left: 1.5rem;" width="10%"><a href="/admin/edit-product/<%= productData[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
             

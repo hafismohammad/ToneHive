@@ -63,7 +63,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="product_discount" class="form-label">Discount</label>
-                                    <input type="text" name="discount" placeholder="%" class="form-control"
+                                    <input type="number" name="discount" placeholder="%" class="form-control"
                                         id="product_discount">
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                             <label class="form-label">Sub-category</label>
                             <select class="form-select" style="width: auto;" name="category">
                                 <!-- Add this before the loop -->
-
+                              
                                 <% for (let i = 0; i < category.length; i++) { %>
                                     <% if (category[i].isList == false) { %>
                                         <option value="<%= category[i]._id %>">
