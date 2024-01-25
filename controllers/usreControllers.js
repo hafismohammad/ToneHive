@@ -71,7 +71,7 @@ const logedUser = async (req, res) => {
                     req.session.user = id
                     res.redirect("/verify-otp")
                 }else{
-                    console.log("hi")
+                    res.redirect("/")
                 }
 
             } else {
