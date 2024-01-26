@@ -308,10 +308,12 @@ function discountVal(e) {
             error5.style.display = "none";
             error5.innerHTML = "";
         }, 3000);
+        return false
     }else
     {
         error5.style.display = "none";
         error5.innerHTML = "";
+        return true
     }
 }
 
@@ -331,11 +333,10 @@ editFormid.addEventListener("submit", function (e) {
        const validprince=   priceVal();
        const validdiscount =  discountVal();
        const valitdquantity  = quantityVal();
-        
 
         // Check if category validation failed
         if (!validprince || !validname ||!validdescription || !validdiscount || !valitdquantity){
-            e.preventDefault(); // Prevent form submission if validation fails
+             e.preventDefault(); // Prevent form submission if validation fails
         }
     });
 </script>

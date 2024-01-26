@@ -4,12 +4,27 @@ const path = require("path")
 const nocache = require("nocache");
 const nodemailer = require("nodemailer")
 const session = require("express-session")
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 // Mongodb connections
 mongoose.connect("mongodb://localhost:27017/ToneHiveDBS")
 mongoose.connection.on("connected", (req, res) => {
     console.log("Connected to mongodb");
 })
+
+// Create a MongoDB session store
+const store = new MongoDBStore({
+  uri: "mongodb://localhost:27017/ToneHiveDBS",
+  collection: 'sessions', // the collection where sessions will be stored
+  expires: 1000 * 60 * 60 * 24 * 7, // session expiration time (7 days)
+});
+
+// Catch errors
+store.on('error', function (error) {
+  console.log(error);
+});
+
+
 // Import routes
 const userRoute = require("./routes/userRoutes");
 const adminRute = require("./routes/adminRoutes")
@@ -37,6 +52,8 @@ app.use(
       secret: "1231fdsdfssg33435",
       resave: false,
       saveUninitialized: true,
+      store: store,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }, // cookie expiration time (7 days)
     })
   );
 

@@ -4,23 +4,23 @@ const userSchema = new mongoose.Schema({
     
     name:{
         type:String,
-        return:true
+        required:true,
     },
     email:{
         type:String,
-        return:true
+        required:true,
     },
     mobile:{
         type:String,
-        return:true
+        required:true,
     },
     password:{
         type:String,
-        return:true
+        required:true,
     },
     isAdmin:{
         type:Number,
-        return:true
+        required:true,
     },
     isBlocked:{
         type:Boolean,
