@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const userAuth = require('../middleware/userAuth')
 const userControllers = require("../controllers/usreControllers")
+const otpControllers = require("../controllers/otpControler")
 
 
 
@@ -19,11 +20,11 @@ router.get("/userHome",userAuth.isLogout,userControllers.homeLoad)
 router.get("/logout", userControllers.userLogout)
 
 // otp login
-router.get("/verify-otp" ,userControllers.verifyOTPLoad)
+router.get("/verify-otp",otpControllers.verifyOTPLoad)
 
-router.post("/verify-otp",userAuth.otpTimeOut, userControllers.verifiedUser)
+router.post("/verify-otp",userAuth.otpTimeOut, otpControllers.verifiedUser)
 
-router.get("/resend-otp",userControllers.resendOtp)
+router.get("/resend-otp",otpControllers.resendOtp)
 
 router.get("/productView/",userControllers.productViews)
 

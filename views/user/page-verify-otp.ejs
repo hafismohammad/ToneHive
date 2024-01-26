@@ -6,6 +6,11 @@
 <form id="verifyotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/verify-otp">
   
   <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
+  <% if(locals.message) { %>
+    <div class="alert alert-danger">
+      <%= locals.message %>
+    </div>
+    <% } %>
 
   <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
       <input itemid="otpverify" type="number" style="width:300px; " class="form-control" name="otp" id="verify-otp">
