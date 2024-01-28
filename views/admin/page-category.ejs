@@ -201,9 +201,16 @@
             </div>
             <%if(typeof data !== 'undefined'){%>
             <div class="col-6">
-                <p class="text-success"><%= data%></p>
+                <p id="success" class="text-success"><%= data%></p>
             </div>
             <%}%>
+          
+             <% if (typeof  error !== 'undefined') { %>
+                  <div id="error" class="col-6">
+                   <p class="text-danger"><%= error %></p>
+              </div>
+             <% } %>
+
             <div class="card">
               <div class="card-body">
                 <div class="row">
@@ -364,6 +371,17 @@
     const catName = document.getElementById("categoryName"); 
     const error1 = document.getElementById("error1");
     const myForm = document.getElementById("myForm");
+    const success = document.getElementById("success")
+    const error = document.getElementById("error")
+
+      setTimeout(() => {
+        success.style.display = 'none'
+      }, 2000);
+
+      setTimeout(() => {
+        error.style.display = 'none'
+      }, 2000);
+
 
     function catValidation() {
         const validCat = catName.value.trim();

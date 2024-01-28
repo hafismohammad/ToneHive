@@ -30,7 +30,24 @@ const homeLoad = async (req, res) => {
                 as: "category",
             }
         }])
-        res.render("user/page-userHome", {category:category,products:productData})
+        
+
+        const activeProducts = productData
+        .map((item) => {
+            const category = item.category[0]
+            if (category  && category.isList) {
+                
+            const category = item.category[0]
+                if(item.product_status){
+                    return item
+                }
+            }else {
+                return null;
+            }   
+        }).filter(Boolean)
+     // console.log(activeProducts);
+       
+        res.render("user/page-userHome", {category:category,products:productData,activeProducts:activeProducts})
         } else {
             redirect("/")
         }
@@ -149,6 +166,5 @@ module.exports = {
     registerLoad,
     registeredUser,
     userLogout,
-   
     productViews
 }

@@ -120,17 +120,19 @@ const editProductLoad = async (req, res) => {
         console.log(error);
     }
 }
-
 const editedProduct = async (req, res) => {
-    try {
-        const name = req.body.name
-        console.log(name)
-        const editedProducts = await Products.findOneAndUpdate({_id: req.body.prodId}, { $set:{name:name}})
-        res.redirect("/adminhome/products")
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    const name = req.body.name;
+    const category = req.body.category;
+    await Products.findByIdAndUpdate({_id: req.body.prodId}, {$set:{name:name, category:category}})
+    
+    res.redirect("/adminhome/products")
+  } catch (error) {
+    console.log(error);
+  }
 }
+
+
 
 
 module.exports = {

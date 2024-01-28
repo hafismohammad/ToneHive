@@ -16,7 +16,7 @@ router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
 // customers side
 router.get("/customers",adminAuth.isLogout,customerController.customerLoad)
 
-router.get('/edituser',adminAuth.isLogout,customerController.edituserload)
+//router.get('/edituser',adminAuth.isLogout,customerController.edituserload)
 
 router.get('/blockuser/:userid',customerController.blockuser);
 

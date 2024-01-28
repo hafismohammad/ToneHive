@@ -11,7 +11,7 @@ const categoryModel = mongoose.Schema({
  
     isList:{
         type:Boolean,
-        default:false
+        default:true
     },
 
 })

@@ -88,7 +88,7 @@
         <div class="col-lg-3">
             <div class="card mb-4">
                 <!-- <div class="card-header">
-                    <h4>Media</h4>
+                    <h4>Media</h4> 
                 </div> -->
                 <div class="card-body">
                     <div class="input-upload">
@@ -102,7 +102,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Organization</h4>
+                    <h4>Select Category</h4>
                 </div>
                 <div class="card-body">
                     <div class="row gx-2">
@@ -113,7 +113,7 @@
                                 <!-- Add this before the loop -->
                               
                                 <% for (let i = 0; i < category.length; i++) { %>
-                                    <% if (category[i].isList == false) { %>
+                                    <% if (category[i].isList == true) { %>
                                         <option value="<%= category[i]._id %>">
                                             <%= category[i].name %>
                                         </option>
@@ -339,4 +339,4 @@ editFormid.addEventListener("submit", function (e) {
              e.preventDefault(); // Prevent form submission if validation fails
         }
     });
-</script>
+

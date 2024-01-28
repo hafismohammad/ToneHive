@@ -5,8 +5,10 @@ const Category = require("../models/categoryModel");
 const productCatrgory = async (req, res) => {
     try {
         const data = req.query.success;
+        const error = req.query.error || ''
+       
         const category = await Category.find();
-        res.render("admin/page-category", { data: data, category: category })
+        res.render("admin/page-category", {  data: data,error:error, category: category })
     } catch (error) {
         console.log(error);
     }
@@ -21,6 +23,7 @@ const addProductCategory = async (req, res) => {
         if (existingCategory) {
 
             return res.redirect("/adminhome/productCatrgory?error=DuplicateCategory");
+
         }
 
 

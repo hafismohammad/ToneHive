@@ -6,23 +6,25 @@
 <form id="verifyotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/verify-otp">
   
   <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
-  <% if(locals.message) { %>
-    <div class="alert alert-danger">
-      <%= locals.message %>
-    </div>
-    <% } %>
+ 
 
   <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
       <input itemid="otpverify" type="number" style="width:300px; " class="form-control" name="otp" id="verify-otp">
 
   </div>
+  <% if(locals.message) { %>
+    <div id="error" class="alert alert-danger">
+      <%= locals.message %>
+    
+    </div>
+    <% } %>
   <p><div id="error1" style="display: none;" class="alert alert-danger err"></div></p>
   
   <div class="mt-5 d-flex justify-content-center ">
       <button type="submit" class="btn  btn-primary btn-block btn-secondary margin">VERIFY OTP</button>
   </div>
   <div class="mt-5">
-      <span  id="otpTimer">Time Remaining: 30 seconds</span>
+      <span  id="otpTimer">Time Remaining: 20 seconds</span>
       <button id="resendButton" onclick="resendOTP()" style="display: none;">Resend OTP</button>
   </div>
   
@@ -30,7 +32,7 @@
 </form>
 </div>
 
-<script src="/public/formValidation/user/verifyotpScript.js"></script>
+<!-- <script src="/public/formValidation/user/verifyotpScript.js"></script> -->
 
 
 <!--footer-->
@@ -39,20 +41,26 @@
 
 <!-- JavaScript for the OTP Timer -->
 <script>
-  let timeRemaining = 30;
+  let timeRemaining = 20;
   const timerElement = document.getElementById('otpTimer');
   const resendButton = document.getElementById('resendButton');
+  const error = document.getElementById("error")
+
+
+setTimeout(() => {
+  error.style.display = 'none'
+}, 2000);
 
   function updateTimer() {
     if (timeRemaining > 0) {
       timerElement.textContent = `Time Remaining: ${timeRemaining} seconds`;
       timeRemaining--;
-      setTimeout(updateTimer, 1000); // Update the timer every second
+      setTimeout(updateTimer, 1000); 
     } else {
       timerElement.textContent = 'OTP Expired';
-      // Handle expiration (e.g., disable the "Submit" button)
+     
       if (resendButton) {
-        resendButton.style.display = 'inline'; // Show the Resend OTP button
+        resendButton.style.display = 'inline';
       }
     }
   }
@@ -66,7 +74,7 @@
     sendOTPToUser(newOTP);
 
     // Reset the timer
-    timeRemaining = 30;
+    timeRemaining = 20;
 
     // Hide the Resend OTP button
     if (resendButton) {
@@ -85,4 +93,50 @@
     console.log(`Sending OTP to the user: ${otp}`);
     // Implement logic to send the OTP to the user (e.g., via email, SMS, etc.)
   }
+
+  const otpVerify = document.getElementById("verify-otp");
+const error1 = document.getElementById("error1");
+const verifyOtpForm = document.getElementById("verifyotpForm");
+
+// Assuming userEnteredOtp is obtained from the server side, not in the client-side script
+const userEnteredOtp = "<your_server_obtained_otp_value>";
+
+
+
+function otpValidate() {
+    const otpValue = otpVerify.value.trim();
+
+    if (otpValue === "") {
+        error1.style.display = "block";
+        error1.innerHTML = "Please enter OTP";
+
+        setTimeout(() => {
+            error1.style.display = "none";
+            error1.innerHTML = "";
+        }, 3000);
+        return false; // Indicate validation failure
+    } else {
+        error1.style.display = "none";
+        error1.innerHTML = "";
+        return true; // Indicate validation success
+    }
+}
+
+otpVerify.addEventListener("blur", otpValidate);
+
+verifyOtpForm.addEventListener("submit", function (e) {
+    // Run the OTP validation function and store the result
+    const isOtpValid = otpValidate();
+
+    // Check if OTP validation failed
+    if (!isOtpValid) {
+        e.preventDefault(); // Prevent form submission if validation fails
+    }
+
+    
+});
+
+
+
+
 </script>

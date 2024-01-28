@@ -94,6 +94,13 @@
                 </div>
             </div> <!-- card end// -->
 
+            <!-- <div id="imageList" class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Selected Images</h5>
+                    <div id="selectedImages" class="selected-images-container"></div>
+                </div>
+            </div> -->
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h4>Select Category</h4>
@@ -104,15 +111,14 @@
                         <div class="col-sm-6 mb-3">
                             <label class="form-label">Sub-category</label>
                             <select class="form-select" style="width: auto;" name="category">
-                                <!-- Add this before the loop -->
-                              
-                                <% for (let i = 0; i < category.length; i++) { %>
-                                    <% if (category[i].isList == false || category[i]._id.equals(productData._id)) { %>
-                                        <option value="<%= category[i]._id %>" selected>
-                                            <%= category[i].name %>
-                                        </option>
-                                    <% } %>
-                                <% } %>
+                              <% for( let i = 0; i < category.length; i++ ) { %>
+
+                              <option value="<%= category[i]._id %>" <% if(category[i]._id.equals(productData.category)) {%> Selected <% } %>>
+
+                                <%= category[i].name %>
+                            </option>
+                              <% } %>
+
                             </select>
                         </div>
                         

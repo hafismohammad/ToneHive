@@ -29,8 +29,9 @@ router.get("/resend-otp",otpControllers.resendOtp)
 router.get("/productView/",userControllers.productViews)
 
 // otp register
-//router.get("/verify-otp", userControllers.verifyOTPLoad)
-//router.post("/verify-otp", userControllers.verifiedUser)
+router.get("/otpRegister", otpControllers.otpRegisterLoad)
+
+router.post("/otpRegister", otpControllers.otpRegisterPost)
 
 
 

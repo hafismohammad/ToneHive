@@ -10,14 +10,14 @@ const customerLoad = async (req, res) => {
     }
 }
 
-const edituserload = async function (req, res) {
+// const edituserload = async function (req, res) {
 
-    const id = req.query.userid;
-    req.session.id = id
-    // console.log(id)
-    const userData = await User.findById({ _id: id });
-    res.render('admin/page-editUser', { user: userData })
-}
+//     const id = req.query.userid;
+//     req.session.id = id
+//     // console.log(id)
+//     const userData = await User.findById({ _id: id });
+//     res.render('admin/page-editUser', { user: userData })
+// }
 
 const blockuser = async (req, res) => {
     const userId = req.params.userid;
@@ -47,7 +47,7 @@ const unblockuser = async (req, res) => {
 
 module.exports = {
     customerLoad,
-    edituserload,
+   // edituserload,
     blockuser,
     unblockuser
 }

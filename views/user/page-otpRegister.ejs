@@ -1,14 +1,20 @@
 <%- include('../layouts/header.ejs') %>
 
  <!--Body-->               
-            <form id="verifyotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/verify-Regotp">
+            <form id="regotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/otpRegister">
 
                 <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
 
                 <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
+                  
                     <input itemid="otpverify" type="number" style="width:300px; " class="form-control" name="otp" id="verify-otp">
 
                 </div>
+                <% if(locals.message){ %>
+                    <div id="error" class="alert alert-danger">
+                         <%= locals.message %>
+                    </div>
+                    <% } %>
                 <p><div id="error3" style="display: none;" class="alert alert-danger err"></div></p>
                 
                 <div class="mt-5 d-flex justify-content-center ">
@@ -19,8 +25,17 @@
             </form>
         </div>
         
-        <script src="/public/formValidation/user/verifyotpScript.js"></script>
+        <!-- <script src="/public/formValidation/user/verifyotpScript.js"></script> -->
 
+<script>
+const error = document.getElementById('error')
+const form = document.getElementById('regotpForm')
+
+setTimeout(() => {
+    error.style.display = 'none'
+}, 2000);
+
+</script>
 
 <!--footer-->
 <%- include('../layouts/footer.ejs') %>

@@ -288,11 +288,12 @@
                                                     <%= productData[i].category.name %>
                                                 <% } %>
                                             <% } %>
+                                           
                                         </td>
                                         
                                         <td style="vertical-align: middle; padding-left: 2rem;" width="12%">₹<%= productData[i].price %></td>
                                         <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%"><%= productData[i].quantity %></td>
-                                        <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%">%<%= productData[i].discount %></td>
+                                        <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%"><%= productData[i].discount %>%</td>
                                       
                                         <td style="vertical-align: middle; padding-left: 1.5rem;" width="10%"><a href="/adminhome/editproduct/<%= productData[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
                                          

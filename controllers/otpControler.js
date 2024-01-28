@@ -37,13 +37,7 @@ const verifyOTPLoad = async (req, res) => {
 
             req.session.otp = otp;
             console.log(otp);
-            //   setTimeout(() => {
-            //     console.log("OTP Expired" + req.session.otp);
-            //     req.session.destroy()
-            //     if (req.session){
-            //      console.log(req.session.otp);
-            //     }
-            // },20000)
+           
 
 
             const userData = await User.findOne({ _id: req.session.user });
@@ -87,25 +81,17 @@ const verifyOTPLoad = async (req, res) => {
 const verifiedUser = async (req, res) => {
     try {
         const userEnteredOtp = req.body.otp;
-        console.log(userEnteredOtp);
+        //const user = await User.findOne(req.session.email)
 
-        const user = await User.findOne(req.session.email)
+        const email = req.body.email; // Assuming email is sent in the request body
+        const userData = await User.findOne({ email: email }); // Constructing the filter object correctly
+          if(userEnteredOtp === req.session.otp){
+          res.redirect("/userHome")
+          }else{
+            res.render("user/page-verify-otp",{message: 'Invalid OTP'})
+          }
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-
-        if (userEnteredOtp === req.session.otp) {
-
-            res.redirect("/userHome"); // Pass user data to the view if needed
-        } else {
-            res.redirect("/verify-otp").status(400).json({ valid: false, message: 'Invalid OTP' });
-
-            // res.redirect("/verify-otp");
-            // Optionally, you can also send a JSON response
-            // res.status(401).json({ message: 'Invalid OTP' });
-        }
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -133,21 +119,65 @@ const resendOtp = async (req, res) => {
         console.log(error);
         res.status(500).send('Internal Server Error');
     }
-//        // Implement logic to generate and send a new OTP
-//   const newOTP = generateRandomOtp(); // You need to define this function
-//   const email = req.body.email; // Assuming you have a way to get the user's email
-//   sendOtpEmail(email, newOTP); // Implement this function to send the new OTP
-
-//   // Respond to the client indicating that the OTP has been resent
-//   res.status(200).json({ message: 'OTP resent successfully' });
-// }
 }
+const otpRegisterLoad = async (req, res) => {
+    try {
+        const otp = generateRandomOtp();
+        console.log(otp);
+        const userData = await User.findOne();
+        const email = userData.email;
 
 
+        function sendOtpEmail(email, otp) {
+            const mailOptions = {
+                from: 'hafismhdthaleekara764@gmail.com',
+                to: email,
+                subject: 'OTP Verification In Register Side',
+                text: `Your OTP is: ${otp}`
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error("Error sending OTP email", error.message);
+                } else {
+                    console.log("Register Side OTP mail sent", info.response);
+                }
+            });
+        }
+        sendOtpEmail(email, otp);
+
+        // Store OTP in session
+        req.session.otp = otp;
+        req.session.email = email;
+       // req.session.otpExpirationTime = Date.now() + 20 * 1000
+
+        res.render("user/page-otpRegister", { email });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const otpRegisterPost = (req, res) => {
+    try {
+        const userEnteredOtp = req.body.otp;
+        const storedOtp = req.session.otp;
+
+        if (userEnteredOtp === storedOtp) {
+            res.render("user/page-register");
+        } else {
+            res.render("user/page-otpRegister",{message: "Invalid OTP"});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 module.exports ={
     verifyOTPLoad,
     verifiedUser,
     resendOtp,
+    otpRegisterLoad,
+    otpRegisterPost
+    
 }
 
