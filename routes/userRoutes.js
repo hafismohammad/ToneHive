@@ -3,6 +3,7 @@ const router = express.Router()
 const userAuth = require('../middleware/userAuth')
 const userControllers = require("../controllers/usreControllers")
 const otpControllers = require("../controllers/otpControler")
+const cartControllers = require("../controllers/cartControllers")
 
 
 
@@ -28,10 +29,17 @@ router.get("/resend-otp",otpControllers.resendOtp)
 
 router.get("/productView/",userControllers.productViews)
 
+router.get("/userProfile",userControllers.userProfile)
+
 // otp register
 router.get("/otpRegister", otpControllers.otpRegisterLoad)
 
 router.post("/otpRegister", otpControllers.otpRegisterPost)
+
+// cart
+router.get("/cart",cartControllers.cartLoad)
+
+router.post("/cart",cartControllers.addToCart)
 
 
 

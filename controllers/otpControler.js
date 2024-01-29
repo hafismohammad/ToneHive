@@ -85,7 +85,7 @@ const verifiedUser = async (req, res) => {
 
         const email = req.body.email; // Assuming email is sent in the request body
         const userData = await User.findOne({ email: email }); // Constructing the filter object correctly
-          if(userEnteredOtp === req.session.otp){
+          if(userEnteredOtp !== req.session.otp){ // ===
           res.redirect("/userHome")
           }else{
             res.render("user/page-verify-otp",{message: 'Invalid OTP'})
