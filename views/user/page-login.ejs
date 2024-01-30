@@ -1,4 +1,4 @@
-<%- include('../layouts/header.ejs') %>
+.<%- include('../layouts/header.ejs') %>
 
  <!--Body-->               
             <form id="logForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/">
@@ -7,6 +7,11 @@
                     <div class="alert alert-success">
                       <%= locals.message %>
                     </div>
+                    <% } %>
+                    <% if(locals.error){ %>
+                        <div id="error" class="alert alert-danger">
+                            <%= locals.error %>
+                        </div>
                     <% } %>
                 <div class="mb-3">
 
@@ -30,6 +35,14 @@
                   </div>
             </form>
         </div>
+
+        <script>
+            const error = document.getElementById('error')
+
+            setTimeout(() => {
+                error.style.display = 'none'
+            }, 3000);
+        </script>
 
         <script src="/public/formValidation/user/loginScript.js"></script>
 

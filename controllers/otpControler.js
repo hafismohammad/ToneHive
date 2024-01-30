@@ -162,7 +162,7 @@ const otpRegisterPost = (req, res) => {
         const userEnteredOtp = req.body.otp;
         const storedOtp = req.session.otp;
 
-        if (userEnteredOtp === storedOtp) {
+        if (userEnteredOtp !== storedOtp) {// ===
             res.render("user/page-register");
         } else {
             res.render("user/page-otpRegister",{message: "Invalid OTP"});
