@@ -78,6 +78,7 @@ const loginLoad = function (req, res) {
 const logedUser = async (req, res) => {
     const logEmail = req.body.email;
     const logPassword = req.body.password;
+    console.log(logEmail);
     try {
 
         const logedUser = await User.findOne({
@@ -89,10 +90,10 @@ const logedUser = async (req, res) => {
             const comparePass = await bcrypt.compare(logPassword, logedUser.password);
             if (comparePass) {
                 console.log(req.body);
-                if (logedUser.isAdmin === 1) {
-                    req.session.admin = id
-                    res.redirect("/adminhome")
-                } else if(logedUser.isBlocked==false){
+                // if (logedUser.isAdmin === 1) {
+                //     req.session.admin = id
+                //     res.redirect("/adminhome")
+                 if(logedUser.isBlocked==false){
                     req.session.user = id
                     res.redirect("/verify-otp")
                 }else{

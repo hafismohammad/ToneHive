@@ -60,8 +60,9 @@ app.use(
 app.use(nocache())
 
 // User routes
-app.use("/", userRoute);     
-app.use("/adminhome", adminRute)                             
+app.use("/", userRoute);   
+app.use('/admin', adminRute)  
+//app.use("/adminhome", adminRute)                             
 
 
 

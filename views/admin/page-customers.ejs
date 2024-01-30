@@ -49,7 +49,7 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/adminhome"> <i class="icon material-icons md-home"></i>
+                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
@@ -67,13 +67,13 @@
                 </div>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="/adminhome/products"> <i class="icon material-icons md-shopping_bag"></i>
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
 
                 </li>
                 <li class="menu-item has-submenu ">
-                    <a class="menu-link" href="/adminhome/productCatrgory"> <i
+                    <a class="menu-link" href="/admin/productCatrgory"> <i
                             class="icon material-icons md-shopping_cart"></i>
                         <span class="text">category</span>
                     </a>
@@ -353,7 +353,7 @@
                 allowOutsideClick: true, // Allow closing when clicking outside the alert
             }).then((result) => { 
                 if (result.isConfirmed) {
-                    fetch(`/adminhome/${Action}/${userId}`, { method: "GET" })
+                    fetch(`/admin/${Action}/${userId}`, { method: "GET" })
                         .then(res => {
                             if (res.ok) {
                                 swal({

@@ -21,7 +21,21 @@ const isLogout = async(req,res,next)=>{
       console.log(errror)  
     }
 }
+
+const adminAuthenticationChecking=async (req,res,next)=>{
+    try{
+        console.log(req.session.admin,"try");
+        if(req.session.admin){ 
+            res.redirect("/admin/dashboard");
+        }else{
+            next()
+        }
+    }catch(error){
+        res.status(500).send("Internal error occured")
+    }
+}
 module.exports = {
     isLogin,
-    isLogout
+    isLogout,
+    adminAuthenticationChecking
 }
