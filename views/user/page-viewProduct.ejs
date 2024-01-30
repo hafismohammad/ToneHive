@@ -135,7 +135,8 @@
                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                     </div>
                                     <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                        <button id="addToCartBtn" type="button" class="button button-add-to-cart" >Add to cart here</button>
+
                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                         <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                     </div>
@@ -544,20 +545,11 @@
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
-                                            <form action="/cart" method="post">
-                                                <input type="hidden" value="<%= products.id %>">
                                             <div class="product-extra-link2">
-                                                <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                                <button id="addToCartBtn" type="submit" class="button button-add-to-cart" data-product-id="<%= products._id %>">Add to cart</button>
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                                 <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                             </div>
-                                             </form>
-                                            <form action="/cart" method="post">
-                                                <input type="hidden" value="<%= products.id %>">
-                                                <div class="product-action-1 show">
-                                                    <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
-                                                </div>
-                                            </form>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
                                             <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
@@ -1150,3 +1142,72 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
 </html>
+
+
+<script>
+    document.getElementById('addToCartBtn').addEventListener('click', AddToCart);
+
+    function AddToCart() {
+        const productId = this.getAttribute('data-product-id');
+        fetch('/addToCart',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId: productId })
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log('Product added to cart successfully!');
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <script>
+    function addtocart(productId, quantity){
+        fetch("/productView",{
+            method:"post",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({productId,quantity})
+        }).then(response => response.json().then(data=>{
+            console.log(data);
+            if(data.success){
+                document.getElementById("itemadded").style.display = 'block';
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000);
+            }else{
+                errorExceeds.textcount=data.error
+                setTimeout(() => {
+                    errorExceeds.style.display='none'
+                }, 3000);
+            }
+        })).catch(error=>{
+            console.log(error.message);
+        })
+    }
+    btn.addEventListener("click",function(){
+        const qty1 = qty.innerHTML
+        const productid=this.dataset.productid
+        addtocart(productid,qty1)
+    })
+</script> -->

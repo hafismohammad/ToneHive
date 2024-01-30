@@ -39,7 +39,7 @@ router.post("/otpRegister", otpControllers.otpRegisterPost)
 // cart
 router.get("/cart",cartControllers.cartLoad)
 
-router.post("/cart",cartControllers.addToCart)
+router.get("/addToCart/:id",cartControllers.addToCart)
 
 
 

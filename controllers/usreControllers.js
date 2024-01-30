@@ -23,13 +23,21 @@ const homeLoad = async (req, res) => {
        
        // const products = await Product.find({product_status:false})
         const productData = await Products.aggregate([{
-            $lookup: {
-                from: "categories",
-                localField: "category",
-                foreignField: "_id",
-                as: "category",
+            
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category",
+                }
+            },
+            {
+                $match: {
+                    "category.isList": false,
+                    "product_status": true
+                }
             }
-        }])
+        ])
         
 
         const activeProducts = productData
@@ -161,23 +169,17 @@ const productViews = async (req, res) => {
 
 const userProfile = async (req, res) => {
     try {
-    let userData  = req.session.user
-       console.log(req.session.user);
-       console.log(userData);
+    let userId = req.session.user._id   
+        const userData = await User.findById({_id:userId});
         if (!userData) {
-            // Handle case when user data is not found
+          
             return res.status(404).send('User not found');
         }
-
-        // Render the user profile page with the user's data
         res.render("user/page-userProfile", { user: userData });
     } catch (error) {
-        console.error('Error:', error); // Debugging
         res.status(500).send("Internal server error");
     }
 };
-
-
 
 
 
