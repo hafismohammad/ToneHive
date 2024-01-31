@@ -39,7 +39,7 @@
                 </div>
                 <div class="card-body">
                  
-                    <form   action="/adminHome/editprodut" method="post"  >
+                    <form   action="/admin/editprodut" method="post"  >
                      <% if(productData) {%>
 
                         <input type="hidden" name="prodId" value="<%= productData._id %>">
@@ -61,7 +61,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="product_quantity" class="form-label">Quantity</label>
-                                    <input value="<%= productData.quantity %>" type="text" name="quantity" placeholder="nos" class="form-control"
+                                    <input value="<%= productData.quantity %>" type="text" name="quantity" placeholder="quantity" class="form-control"
                                         id="product_quantity" required>
                                 </div>
                             </div>

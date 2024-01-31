@@ -120,7 +120,7 @@ const forgotPasswordPost = async (req, res) => {
     const { email } = req.body;
     try {
         const userData = await User.findOne({ email });
-
+console.log(userData);
         if (userData) {
             const secret = JWT_SECRET + userData.password;
             const payload = {
@@ -133,7 +133,7 @@ const forgotPasswordPost = async (req, res) => {
             // Send reset password email
             await sendResetPasswordEmail(userData.email, resetLink);
 
-            res.render("user/page-forgottpassword",{message:'Password reset link has been sent to your email...'})
+            res.send('Password reset link has been sent to your email...');
         } else {
             res.send('User not found');
         }

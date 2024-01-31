@@ -42,6 +42,7 @@ const productsLoad = async (req, res) => {
 const addProductLoad = async (req, res) => {
     try {
         const category = await Category.find()
+        
         res.render("admin/page-addProduct", { category: category })
 
     } catch (error) {
@@ -83,11 +84,11 @@ const addProducts = async (req, res) => {
         const existingProduct = await Products.findOne({ name: name, });
 
         if (existingProduct) {
-            return res.redirect("/adminhome/products?error=Duplicate Product");
+            return res.redirect("/admin/products?error=Duplicate Product");
         }
         else {
             const newProduct = await Products.create(product);
-            res.redirect("/adminhome/products?success=Product Added");
+            res.redirect("/admin/products?success=Product Added");
         }
 
     } catch (error) {
@@ -126,7 +127,7 @@ const editedProduct = async (req, res) => {
     const category = req.body.category;
     await Products.findByIdAndUpdate({_id: req.body.prodId}, {$set:{name:name, category:category}})
     
-    res.redirect("/adminhome/products")
+    res.redirect("/admin/products")
   } catch (error) {
     console.log(error);
   }

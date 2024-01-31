@@ -22,7 +22,7 @@ const addProductCategory = async (req, res) => {
 
         if (existingCategory) {
 
-            return res.redirect("/adminhome/productCatrgory?error=DuplicateCategory");
+            return res.redirect("/admin/productCatrgory?error=DuplicateCategory");
 
         }
 
@@ -31,7 +31,7 @@ const addProductCategory = async (req, res) => {
             name: categoryName,
             list: list
         });
-        res.redirect("/adminhome/productCatrgory?success=Category Added")
+        res.redirect("/admin/productCatrgory?success=Category Added")
         //console.log(category);
     } catch (error) {
         console.log(error);
@@ -60,7 +60,7 @@ const editedCategory = async (req, res) => {
        // console.log('Request body:', req.body);
 
 
-        res.redirect("/adminhome/productCatrgory")
+        res.redirect("/admin/productCatrgory")
     } catch (error) {
         console.log(error);
     }
@@ -71,7 +71,7 @@ const deletecategory = async (req, res) => {
     try {
         const id = req.query.catId
         const deleteCat = await Category.deleteOne({ _id: id })
-        res.redirect("/adminhome/productCatrgory")
+        res.redirect("/admin/productCatrgory")
     } catch (error) {
         console.log(error);
     }

@@ -295,7 +295,7 @@
                                         <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%"><%= productData[i].quantity %></td>
                                         <td style="vertical-align: middle; padding-left: 2.5rem;" width="12%"><%= productData[i].discount %>%</td>
                                       
-                                        <td style="vertical-align: middle; padding-left: 1.5rem;" width="10%"><a href="/adminhome/editproduct/<%= productData[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
+                                        <td style="vertical-align: middle; padding-left: 1.5rem;" width="10%"><a href="/admin/editproduct/<%= productData[i]._id %>" class="btn btn-success btn-sm rounded font-sm mt-15">Edit</a></td>
                                          
                                        <td>
                                          
@@ -370,7 +370,7 @@
                 allowOutsideClick: true, // Allow closing when clicking outside the alert
             }).then((result) => { 
                 if (result.isConfirmed) {
-                    fetch(`/adminhome/list-Product/${prodId}`, { method: "PATCH" })
+                    fetch(`/admin/list-Product/${prodId}`, { method: "PATCH" })
                         .then(res => {
                             if (res.ok) {
                                 swal({

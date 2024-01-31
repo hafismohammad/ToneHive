@@ -37,7 +37,7 @@
                     <h4>Basic</h4>
                 </div>
                 <div class="card-body">
-                    <form id="editForm"  action="/adminHome/addproduct" method="post" enctype="multipart/form-data" >
+                    <form id="editForm"  action="/admin/addproduct" method="post" enctype="multipart/form-data" >
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Product Name</label>
                             <input  type="text" name="name"  placeholder="Type here" class="form-control"
@@ -54,7 +54,7 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label" for="product_price">Price</label>
-                            <input type="text" placeholder="price" name="price" class="form-control" id="price">
+                            <input type="number" placeholder="price" name="price" class="form-control" id="price">
                             <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span></p>
 
                         </div>
@@ -62,7 +62,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <label for="product_quantity" class="form-label">Quantity</label>
-                                    <input type="text" name="quantity" placeholder="nos" class="form-control"
+                                    <input type="number" name="quantity" placeholder="quantity" class="form-control"
                                         id="quantity">
                                         <p><span id="error4" style="display: none;" class="mt-15 err text-danger"></span></p>
 
@@ -113,7 +113,7 @@
                                 <!-- Add this before the loop -->
                               
                                 <% for (let i = 0; i < category.length; i++) { %>
-                                    <% if (category[i].isList == true) { %>
+                                    <% if (category[i].isList === false) { %>
                                         <option value="<%= category[i]._id %>">
                                             <%= category[i].name %>
                                         </option>
@@ -163,7 +163,7 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
 </html>
-
+    
 <script>
 const nameid = document.getElementById("name");
 const descriptionid = document.getElementById("description");
@@ -339,4 +339,5 @@ editFormid.addEventListener("submit", function (e) {
              e.preventDefault(); // Prevent form submission if validation fails
         }
     });
-
+    
+</script>
