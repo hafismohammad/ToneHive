@@ -68,9 +68,7 @@ const homeLoad = async (req, res) => {
 const loginLoad = function (req, res) {
     if (req.session.user) {
         res.redirect("/userHome");
-    } else if (req.session.admin) {
-        res.redirect("/adminhome")//?
-    } else {
+    }else{
         res.render("user/page-login")
     }
 };
@@ -113,7 +111,7 @@ const registerLoad = (req, res) => {
     if (req.session.user) {
         res.redirect("/page-userHome");
     } else if (req.session.admin) {
-        res.redirect("/page-adminHome")
+        res.redirect("/page-adminDashboard")
     } else {
         res.render("user/page-register")
     }

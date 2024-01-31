@@ -291,11 +291,11 @@
                                     <% if (person.isBlocked) { %>
                                         <!-- Display unblock button -->
                                         <button onclick="blockUnblockCustomer('<%= person._id %>','Unblockuser')"
-                                            type="button" class="btn btn-success px-3">Unblock</button>
+                                            type="button" class="btn btn-warning px-3">Unblock</button>
                                         <% } else { %>
                                             <!-- Display block button -->
                                             <button onclick="blockUnblockCustomer('<%= person._id %>','Blockuser')"
-                                                type="button" class="btn btn-warning px-3">Block</button>
+                                                type="button" class="btn btn-success px-3">Block</button>
                                             <% } %>
                                 </td>
                                 <%})}%>

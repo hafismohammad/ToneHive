@@ -11,23 +11,27 @@ const { set } = require("mongoose");
 //admin login 
 const adminLogin = (req, res) => {
     try {
-        res.render("admin/page-adminLogin")
+        if(req.session.admin){
+            res.redirect("admin/dashboard")
+        }else{
+            res.render("admin/page-adminLogin")
+        }
     } catch (error) {
         console.log(error);
     }
 }
 const adminPost= async (req, res) => {
-    // const enteredEmail = req.body.email;
-    // const enteredPass = req.body.password;
-   // console.log('body', enteredEmail, enteredPass);
     try {
         const {email, password } = req.body
+        
         const adminData = await Admins.findOne({ email: email });
+      
         console.log('admin dataaaa', adminData);
         if (adminData && adminData.password === password) {
+            req.session.admin = adminData;
             res.render("admin/page-adminDashboard");
         } else {
-            res.redirect('/dashboard');
+            res.redirect('/admin');
         }
     } catch (error) {
         console.log(error);

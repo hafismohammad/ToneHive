@@ -10,15 +10,15 @@ const productControllers = require("../controllers/productControllers")
 const { route } = require('./userRoutes');
 
 // admin login
- router.get("/",adminControllers.adminLogin)
+ router.get("/",adminAuth.isLogin,adminControllers.adminLogin)
  router.post("/adminLogin",adminControllers.adminPost)
 
 // admin dashboard
 //router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
-router.get("/dashboard" ,adminAuth.isLogout,adminControllers.dashboardLoad);
+router.get("/dashboard",adminAuth.isLogout,adminControllers.dashboardLoad);
 
 // customers side
-router.get("/customers",adminAuth.isLogout,customerController.customerLoad)
+router.get("/customers",customerController.customerLoad)
 
 //router.get('/edituser',adminAuth.isLogout,customerController.edituserload)
 

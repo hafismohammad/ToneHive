@@ -261,10 +261,10 @@
                                                 <td>
                                                     <% if (category[i].isList) { %>
                                                         <!-- Display unblock button -->
-                                                        <button onclick="listUnlistcat('<%= category[i]._id %>','List-Category')" type="button" class="btn btn-success px-3">List</button>
+                                                        <button onclick="listUnlistcat('<%= category[i]._id %>','List-Category')" type="button" class="btn btn-danger ">List</button>
                                                     <% } else { %>
                                                         <!-- Display block button -->
-                                                        <button onclick="listUnlistcat('<%= category[i]._id %>','Unlist-Category')" type="button" class="btn btn-success px-3">Unlist</button>
+                                                        <button onclick="listUnlistcat('<%= category[i]._id %>','Unlist-Category')" type="button" class="btn btn-success ">Unlist</button>
                                                     <% } %>
                                                 </td>
                                                 <td class="d-flex justify-content-center align-items-center">
@@ -410,7 +410,7 @@
         return true;
     }
 
-    
+        
     catName.addEventListener('blur', catValidation);
 
     myForm.addEventListener("submit", function (e) {

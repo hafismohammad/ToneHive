@@ -42,7 +42,83 @@
     }, 3000);
 </script>
 
+<script>
+    const emailid = document.getElementById('email')
+    const passwordid = document.getElementById('password')
+    const error1 = document.getElementById('error1')
+    const error2 = document.getElementById('error2')
+    const formid = document.getElementById('logForm')
 
+    function emailValidation(e) {
+    const emailVal = emailid.value;
+    const emailPattrn = /^([a-zA-Z0-9._-]+)@([a-zA-Z.-]+).([a-zA-z]{2,4})$/ 
+    if(!emailPattrn.test(emailVal))
+    {
+        error1.style.display = "block";
+        error1.innerHTML = "Please enter valid email address";
+
+        setTimeout(() => {
+            error1.style.display = "none";
+            error1.innerHTML = "";
+        }, 3000);
+        return false
+    }else
+    {
+        error1.style.display = "none";
+        error1.innerHTML = "";
+    }
+   return true
+}
+
+function passwordValidate(e) {
+    const passwordVal = passwordid.value;
+    const alpha =  /[a-zA-Z]/
+    const digit = /\d/
+    if(passwordVal.length < 8)
+    {
+        error2.style.display = "block";
+        error2.innerHTML = "Must enter at least 8 characters";
+
+        setTimeout(() => {
+            error2.style.display = "none";
+            error2.innerHTML = "";
+        }, 3000);
+        return false
+
+    }else if(!alpha.test(passwordVal) || !digit.test(passwordVal))
+    {
+        error2.style.display = "block"
+        error2.innerHTML = "Should contain number and alphabets !!"
+
+        setTimeout(() => {
+            error2.style.display = "none";
+            error2.innerHTML = "";
+        }, 3000);
+        return false
+
+    }else {
+        error2.style.display = "none";
+        error2.innerHTML = ""
+    }
+    return true
+}
+
+emailid.addEventListener("blur", emailValidation)
+passwordid.addEventListener("blur", passwordValidate)
+
+
+formid.addEventListener("submit", function(e) {
+  
+   const valemail= emailValidation()
+  const valpassword=  passwordValidate()
+    if(!valemail || !valpassword ) {
+
+     e.preventDefault()
+    }
+ })
+   
+
+</script>
 
 <!--footer-->
 </body>
