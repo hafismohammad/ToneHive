@@ -4,6 +4,7 @@ const userAuth = require('../middleware/userAuth')
 const userControllers = require("../controllers/usreControllers")
 const otpControllers = require("../controllers/otpControler")
 const cartControllers = require("../controllers/cartControllers")
+const forgottPassworControl = require("../controllers/forgottPasswordController")
 
 
 
@@ -19,6 +20,18 @@ router.post("/register", userControllers.registeredUser)
 router.get("/userHome",userAuth.isLogout,userControllers.homeLoad)
 
 router.get("/logout", userControllers.userLogout)
+
+// forgott password
+// router.get("/forgottPassword",userAuth.isLogin,forgottPassworControl.forgottPasswordOtp)
+
+// router.post("/forgottPassword",forgottPassworControl.forgottPasswordOtpPost)
+
+router.get("/RecoverForgottPassword",forgottPassworControl.forgotPasswordLoad)
+
+router.post("/RecoverForgottPassword",forgottPassworControl.forgotPasswordPost)
+
+router.get("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordLoad)
+router.post("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordPost)
 
 // otp login
 router.get("/verify-otp",otpControllers.verifyOTPLoad)

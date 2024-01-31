@@ -148,7 +148,7 @@ const otpRegisterLoad = async (req, res) => {
 
         // Store OTP in session
         req.session.otp = otp;
-        req.session.email = email;
+        req.session.email = email;  
        // req.session.otpExpirationTime = Date.now() + 20 * 1000
 
         res.render("user/page-otpRegister", { email });
@@ -171,6 +171,8 @@ const otpRegisterPost = (req, res) => {
         console.log(error);
     }
 };
+
+
 
 module.exports ={
     verifyOTPLoad,
