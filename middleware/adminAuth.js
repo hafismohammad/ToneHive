@@ -37,5 +37,5 @@ const adminAuthenticationChecking=async (req,res,next)=>{
 module.exports = {
     isLogin,
     isLogout,
-    adminAuthenticationChecking
+   
 }

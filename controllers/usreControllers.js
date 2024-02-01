@@ -93,7 +93,7 @@ const logedUser = async (req, res) => {
                 //     res.redirect("/adminhome")
                  if(logedUser.isBlocked==false){
                     req.session.user = id
-                    res.redirect("/verify-otp")
+                    res.redirect("/userHome")
                 }else{
                     console.log("This user not exist");
                     res.render("user/page-login",{error:"This user does not exist"})

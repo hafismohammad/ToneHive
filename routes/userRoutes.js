@@ -5,6 +5,7 @@ const userControllers = require("../controllers/usreControllers")
 const otpControllers = require("../controllers/otpControler")
 const cartControllers = require("../controllers/cartControllers")
 const forgottPassworControl = require("../controllers/forgottPasswordController")
+const userCheckng = require('../middleware/userChecking') 
 
 
 

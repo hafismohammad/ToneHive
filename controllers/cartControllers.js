@@ -32,31 +32,114 @@ const Products = require('../models/productModel')
 // }
 
 const addToCart = async (req, res) => {
-    const productId  = req.body.productId;
+    const productId = req.params.id; // Get the product ID from the request parameters
     try {
-        let productId = req.params.id;
-        let user = req.session.user;
+        // Check if user is authenticated and user information is available in session
+        if (!req.session || !req.session.user || !req.session.user._id) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        const userId = req.session.user._id; // Get the user ID from the session
+
         const product = await Products.findById(productId);
         if (!product) {
             return res.status(404).send('Product not found');
         }
-        console.log('Product added to cart:', product);
+
+        // Create a new Cart item with productId, quantity, and price
+        const cartItem = {
+            productId: productId,
+            quantity: 1, // Default quantity
+            price: product.price // Assign price from the product
+        };
+
+        // Find the user's cart or create a new one if it doesn't exist
+        let cart = await Cart.findOne({ userId: userId });
+        if (!cart) {    
+            cart = new Cart({
+                userId: userId,
+                items: [cartItem] // Add the Cart item to the items array
+            });
+        } else {
+            // If cart exists, push the new item to the items array
+            cart.items.push(cartItem);
+        }
+
+        // Save the cart to the database
+        await cart.save();
+
+        // console.log('Product added to cart:', product);
         return res.status(200).send('Product added to cart successfully');
     } catch (error) {
         console.log(error);
+        return res.status(500).send('Internal server error');
     }
 }
 
-const cartLoad = (req, res) => {
+
+
+const cartLoad = async (req, res) => {
+    // Check if the user is authenticated
+    if (!req.session || !req.session.user || !req.session.user._id) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    const userId = req.session.user._id;
+    console.log('user',userId);
     try {
-        // Assuming you have the cart data available in req.cart
-       // const cart = req.cart;
-        res.render("user/page-cart");
+        const cartItems = await Cart.aggregate([
+            {
+                $match: { userId: userId } 
+            },
+            {
+                $lookup:{
+                    from: 'products',
+                    let: { prodList: '$items.productId' },
+                    pipeline:[
+                        {
+                            $match:{
+                                $expr:{
+                                    $in:['$_id', "$$prodList"]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'matchedProducts'
+                }
+            }
+        ]);
+        
+        console.log('cart items:', cartItems); // Log the cartItems array after aggregation
+
+        // Iterate over each cart item
+        cartItems.forEach(cartItem => {
+            // Log the cart item
+            // console.log('Cart Item:', cartItem);
+
+            // Iterate over matchedProducts array of each cart item
+            cartItem.matchedProducts.forEach(product => {
+                // Access product details like name, description, price, etc.
+                const productName = product.name;
+                const productDescription = product.description;
+                const productPrice = product.price;
+
+                // Log product details
+              
+            });
+        });
+
+        // Render the page with cartItems
+        return res.render("user/page-cart", { cartItems: cartItems });
+        
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal server error");
+        return res.status(500).send("Internal server error");
     }
 }
+
+
+
+
 
 
 // const addToCartController = async (req, res) => {

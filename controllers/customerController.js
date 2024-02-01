@@ -23,9 +23,16 @@ const blockuser = async (req, res) => {
     const userId = req.params.userid;
     console.log(userId);
     try {
-        await User.findByIdAndUpdate(userId, { $set: { isBlocked: true } });
+     const user = await User.findById(userId);
+     user.isBlocked=!user.isBlocked;
+     await user.save()
+        if(user.isBlocked){
+           
+             delete req.session.user 
+        }
         res.json({ success: true });
         // console.log(`User blocked successfully.`);
+        
     } catch (error) {
         console.log(error);
 

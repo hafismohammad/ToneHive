@@ -135,7 +135,7 @@
                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                     </div>
                                     <div class="product-extra-link2">
-                                        <button id="addToCartBtn" type="button" class="button button-add-to-cart" >Add to cart here</button>
+                                        <button id="addToCartBtn" type="button" class="button button-add-to-cart" >  here</button>
 
                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                         <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
@@ -545,10 +545,10 @@
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
-                                            <div class="product-extra-link2">
-                                                <button id="addToCartBtn" type="submit" class="button button-add-to-cart" data-product-id="<%= products._id %>">Add to cart</button>
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                            <div class="col-md-6"> <!-- Adjust the column size based on your layout -->
+                                                <a href="/addToCart/<%= products._id %>">
+                                                    <button id="addToCartBtn" type="submit" class="btn btn-primary">Add to cart</button>
+                                                </a>
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
@@ -1143,7 +1143,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
 </html>
 
-
+<!-- 
 <script>
     document.getElementById('addToCartBtn').addEventListener('click', AddToCart);
 
@@ -1174,7 +1174,7 @@
 
 
 
-
+ -->
 
 
 
