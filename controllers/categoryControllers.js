@@ -54,15 +54,21 @@ const editCategoryLoad = async (req, res) => {
 const editedCategory = async (req, res) => {
     try {
         const name = req.body.name;
-        // console.log(name);
-        // console.log(req.session.id );
-        const updatedCat = await Category.findOneAndUpdate({ _id: req.body.catId }, { $set: { name: name } })
-       // console.log('Request body:', req.body);
+        const catId = req.body.catId;
 
+        // Check if the new category name already exists
+        const existingCat = await Category.find({ name: name });
+        if (existingCat) {
+            return res.redirect("/admin/productCatrgory?error=Duplicate Category");
+        }
 
-        res.redirect("/admin/productCatrgory")
+        // Update the category
+        const updatedCat = await Category.findByIdAndUpdate(catId, { name: name }, { new: true });
+
+        res.redirect("/admin/productCatrgory");
     } catch (error) {
         console.log(error);
+        res.status(500).send('Internal server error');
     }
 }
 

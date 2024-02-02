@@ -121,18 +121,39 @@ const editProductLoad = async (req, res) => {
         console.log(error);
     }
 }
-const editedProduct = async (req, res) => {
-  try {
-    const name = req.body.name;
-    const category = req.body.category;
-    await Products.findByIdAndUpdate({_id: req.body.prodId}, {$set:{name:name, category:category}})
-    
-    res.redirect("/admin/products")
-  } catch (error) {
-    console.log(error);
-  }
-}
 
+const editedProduct = async (req, res) => {  
+    try {
+      const name = req.body.name;
+      const prodId = req.body.prodId;
+      const duplicateProd = await Products.findOne({ name: name });
+           if (duplicateProd) {
+        return res.redirect("/admin/products"); 
+      }
+      
+      const category = req.body.category;
+      const description = req.body.description;
+      const price = req.body.price;
+      const quantity = req.body.quantity;
+      const discount = req.body.discount;
+      
+      await Products.findByIdAndUpdate(prodId, {
+        $set: {
+          name: name, 
+          category: category,
+          description: description,
+          price: price,
+          quantity: quantity,
+          discount: discount
+        }
+      });
+  
+      res.redirect("/admin/products");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
 
 
 

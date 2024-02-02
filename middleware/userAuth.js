@@ -14,7 +14,6 @@ const isLogin = async(req,res,next)=>{
 const isLogout = async(req,res,next)=>{
     try {
       if(req.session.user){
-        console.log("hi")
         next()
       }else{
         res.redirect('/')

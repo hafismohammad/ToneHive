@@ -88,13 +88,15 @@
                 </div> -->
                 <div class="card-body">
                     <div class="input-upload">
-                        <label class="form-label">Images</label>
+                       
+                        <% for (let i = 0; i < productData.image.length; i++) { %>
+                            <img src="/public/uploads/<%= productData.image[i] %>" alt="img" data-filename="<%= productData.image[i] %>">
+                        <% } %>
                         <div id="preview" style="display: flex; flex-wrap: wrap;"></div>
                         <input class="form-control" type="file" name="images" id="imageInput" multiple>
                     </div>
                 </div>
-            </div>
-        </div>
+                
         <!-- card end// -->
 
             <!-- <div id="imageList" class="card mb-4">

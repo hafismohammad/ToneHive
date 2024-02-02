@@ -167,7 +167,6 @@ const resetPasswordLoad = async (req, res) => {
     }
 };
 const bcrypt = require('bcrypt');
-
 const resetPasswordPost = async (req, res) => {
     const { _id, token } = req.params;
     const newPassword = req.body.password;
@@ -185,14 +184,20 @@ const resetPasswordPost = async (req, res) => {
             return;
         } 
 
-        
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-     
         userData.password = hashedPassword;
         await userData.save();
 
-        res.send("Password updated successfully");
+
+        const email = userData.email;
+
+
+        res.render("user/page-resetPassword", {
+            _id: _id,
+            token: token,
+            email: email,
+            message: "Password updated successfully"
+        });
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal server error');
