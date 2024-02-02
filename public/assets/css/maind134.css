@@ -9920,6 +9920,17 @@ span.fi-rs-apps {
   }
 }
 
+#regotpForm {
+  text-align: center;
+}
+
+.btn-link {
+  padding: 0;
+}
+
+#otpTimer {
+  margin-right: 10px;
+}
 
 
 .zoomContainer{ z-index: 9999;}

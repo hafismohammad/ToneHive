@@ -1,43 +1,119 @@
 <%- include('../layouts/header.ejs') %>
 
  <!--Body-->               
-            <form id="regotpForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/otpRegister">
+ <form id="regotpForm" class="border p-5" style="max-width: 400px; margin: auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/otpRegister">
+    <% if(locals.message){ %>
+    <div id="error" class="alert alert-danger">
+        <%= locals.message %>
+    </div>
+    <% } %>
 
-                <h2 class="d-flex justify-content-center py-5 mt-3">VERIFY OTP</h2>
+    <h2 class="text-center py-5 mt-3">VERIFY OTP</h2>
 
-                <div class="d-flex justify-content-center mb-3" style="display: flex; justify-content: space-between;">
-                  
-                    <input itemid="otpverify" type="number" style="width:300px; " class="form-control" name="otp" id="verify-otp">
+    <div class="form-group d-flex justify-content-center mb-3">
+        <input itemid="otpverify" type="number" style="width: 300px;" class="form-control" name="otp" id="regOtp">
+    </div>
 
-                </div>
-                <% if(locals.message){ %>
-                    <div id="error" class="alert alert-danger">
-                         <%= locals.message %>
-                    </div>
-                    <% } %>
-                <p><div id="error3" style="display: none;" class="alert alert-danger err"></div></p>
-                
-                <div class="mt-5 d-flex justify-content-center ">
-                    <button type="submit" class="btn  btn-primary btn-block btn-secondary">VERIFY OTP</button>
-                </div>
-                <!-- <p>Back to login <a href="/">Login</a></p> -->
-                
-            </form>
-        </div>
-        
-        <!-- <script src="/public/formValidation/user/verifyotpScript.js"></script> -->
+    <div class="mt-4 text-center">
+        <p><div id="error1" style="display: none;" class="alert alert-danger err"></div></p>
+        <button type="submit" class="btn btn-primary btn-block btn-secondary">VERIFY OTP</button>
+    </div>
+
+    <div class="mt-3 text-center">
+        <span id="otpTimer">Time Remaining: 20 seconds</span>
+        <button id="resendOTP" class="btn btn-secondary" style="display: none;" type="button">Resend</button>
+    </div>
+    
+</form>
 
 <script>
-const error = document.getElementById('error')
-const form = document.getElementById('regotpForm')
+    const error = document.getElementById('error');
+    const regOtp = document.getElementById('regOtp');
+    const error1 = document.getElementById('error1');
+    const form = document.getElementById('regotpForm');
 
-setTimeout(() => {
-    error.style.display = 'none'
-}, 2000);
+    setTimeout(() => {
+        error.style.display = 'none';
+    }, 2000);
+
+    function otpValidate() {
+        const otpValue = regOtp.value.trim();
+        if (otpValue === '') {
+            error1.style.display = 'block';
+            error1.innerHTML = 'Please enter OTP';
+
+            setTimeout(() => {
+                error1.style.display = 'none';
+                error1.innerHTML = '';
+            }, 3000);
+            return false;
+
+        } else {
+            error1.style.display = 'none';
+            error1.innerHTML = '';
+            return true;
+        }
+    }
+
+    regOtp.addEventListener('blur', otpValidate);
+
+    form.addEventListener('submit', function (e) {
+        const validOtp = otpValidate();
+        console.log('Valid OTP:', validOtp);
+        if (!validOtp) {
+            e.preventDefault();
+        }
+    });
 
 </script>
 
-<!--footer-->
-<%- include('../layouts/footer.ejs') %>
+<script>
+    let timeRemaining = 20;
+    const timerElement = document.getElementById('otpTimer');
+    const resendButton = document.getElementById('resendOTP');
+
+    function generateRandomOtp() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    function updateTimer() {
+        if (timeRemaining > 0) {
+            timerElement.textContent = `Time Remaining: ${timeRemaining} seconds`;
+            timeRemaining--;
+            setTimeout(updateTimer, 1000);
+        } else {
+            timerElement.textContent = 'OTP Expired';
+            resendButton.style.display = 'inline';
+        }
+    }
+    updateTimer();
+
+    function resendOTP() {
+        // Implement logic to generate a new OTP and send it to the user
+        const newOTP = generateRandomOtp();
+        sendOTPToUser(newOTP);
+
+        // Reset the timer
+        timeRemaining = 20;
+
+        // Hide the Resend OTP button
+        resendButton.style.display = 'none';
+
+        // Call updateTimer() again to restart the timer
+        updateTimer();
+    }
+
+    // Example function to simulate sending OTP to the user (replace this with your actual implementation)
+    function sendOTPToUser(otp) {
+        console.log(`Sending OTP to the user: ${otp}`);
+        // Implement logic to send the OTP to the user (e.g., via email, SMS, etc.)
+    }
+
+    resendButton.addEventListener('click', resendOTP);
+
+</script>
+ 
+           <!--footer-->
+           <%- include('../layouts/footer.ejs') %>
   
 

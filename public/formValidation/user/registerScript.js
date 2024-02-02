@@ -111,7 +111,7 @@ passwordid.addEventListener("blur", passwordValidate)
 
 regformid.addEventListener("submit", function(e) {
     nameValidate()
-    emailValidation()
+    emailValidation()   
     mobileValidate()
     passwordValidate()
     if(error1.innerHTML || error2.innerHTML || error3.innerHTML || error4.innerHTML) {

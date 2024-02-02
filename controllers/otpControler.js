@@ -98,7 +98,7 @@ const verifiedUser = async (req, res) => {
     }
 };
 
-const resendOtp = async (req, res) => {
+const   resendOtp = async (req, res) => {
     try {
         const userData = await User.findOne({ _id: req.session.user });
         const email = userData.email;
@@ -149,7 +149,7 @@ const otpRegisterLoad = async (req, res) => {
         // Store OTP in session
         req.session.otp = otp;
         req.session.email = email;  
-       // req.session.otpExpirationTime = Date.now() + 20 * 1000
+       req.session.otpExpirationTime = Date.now() + 20 * 1000
 
         res.render("user/page-otpRegister", { email });
     } catch (error) {
@@ -162,7 +162,7 @@ const otpRegisterPost = (req, res) => {
         const userEnteredOtp = req.body.otp;
         const storedOtp = req.session.otp;
 
-        if (userEnteredOtp !== storedOtp) {// ===
+        if (userEnteredOtp === storedOtp) {// ===
             res.render("user/page-register");
         } else {
             res.render("user/page-otpRegister",{message: "Invalid OTP"});

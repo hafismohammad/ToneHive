@@ -7,6 +7,8 @@ const session = require("express-session");
 const nodemailer = require('nodemailer');
 const Products=require('../models/productModel');
 const Cart = require("../models/cartModel");
+
+
 const securePassword = async (password) => {
     try {
         const passwordHash = await bcrypt.hash(password, 10);
@@ -78,7 +80,7 @@ const loginLoad = function (req, res) {
 const logedUser = async (req, res) => {
     const logEmail = req.body.email;
     const logPassword = req.body.password;
-    console.log(logEmail);
+   // console.log(logEmail);
     try {
 
         const logedUser = await User.findOne({
@@ -89,7 +91,7 @@ const logedUser = async (req, res) => {
         if (logedUser) {
             const comparePass = await bcrypt.compare(logPassword, logedUser.password);
             if (comparePass) {
-                console.log(req.body);
+              //  console.log(req.body);
                 // if (logedUser.isAdmin === 1) {
                 //     req.session.admin = id
                 //     res.redirect("/adminhome")
