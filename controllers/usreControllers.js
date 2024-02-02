@@ -5,7 +5,8 @@ const Product = require("../models/productModel")
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
-const Products=require('../models/productModel')
+const Products=require('../models/productModel');
+const Cart = require("../models/cartModel");
 const securePassword = async (password) => {
     try {
         const passwordHash = await bcrypt.hash(password, 10);
@@ -54,7 +55,8 @@ const homeLoad = async (req, res) => {
             }   
         }).filter(Boolean)
      // console.log(activeProducts);
-       
+    
+
         res.render("user/page-userHome", {category:category,products:productData,activeProducts:activeProducts})
         } else {
             redirect("/")
@@ -107,6 +109,7 @@ const logedUser = async (req, res) => {
         console.log(error);
     }
 }
+
 const registerLoad = (req, res) => {
     if (req.session.user) {
         res.redirect("/page-userHome");

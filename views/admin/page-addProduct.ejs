@@ -254,7 +254,7 @@ function priceVal(e) {
         return false;
     } else if (!/^\d+$/.test(priceVal)) {
         error3.style.display = "block";
-        error3.innerHTML = "Please enter a valid numeric price";
+        error3.innerHTML = "Please enter a valid price";
 
         setTimeout(() => {
             error3.style.display = "none";
