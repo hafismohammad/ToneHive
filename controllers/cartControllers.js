@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const Cart = require('../models/cartModel')
 const Products = require('../models/productModel')
-
+const mongoose = require('mongoose');
 // const addToCart = (req, res) => {
 
 //      const productId  = req.body.productId;
@@ -32,7 +32,7 @@ const Products = require('../models/productModel')
 // }
 
 const addToCart = async (req, res) => {
-    const productId = req.params.id; // Get the product ID from the request parameters
+    const prodId = req.params.id; // Get the product ID from the request parameters
     try {
         // Check if user is authenticated and user information is available in session
         if (!req.session || !req.session.user || !req.session.user._id) {
@@ -41,32 +41,40 @@ const addToCart = async (req, res) => {
 
         const userId = req.session.user._id; // Get the user ID from the session
 
-        const product = await Products.findById(productId);
+        const product = await Products.findById(prodId);
         if (!product) {
             return res.status(404).send('Product not found');
         }
 
         // Create a new Cart item with productId, quantity, and price
         const cartItem = {
-            productId: productId,
+            productId: prodId,
             quantity: 1, // Default quantity
             price: product.price // Assign price from the product
         };
 
         // Find the user's cart or create a new one if it doesn't exist
-        let cart = await Cart.findOne({ userId: userId });
-        if (!cart) {    
-            cart = new Cart({
+        let useCart = await Cart.findOne({ userId: userId });
+        if (useCart) {    
+            const prodId = new mongoose.Types.ObjectId(req.params.id); 
+            let proExist = useCart.items.findIndex(item => item.productId.equals(prodId));
+            console.log(proExist);
+            
+            // useCart.items.push(cartItem);
+        } else {
+        
+            // console.log(proExist);
+            // If cart exists, push the new item to the items array
+           
+            useCart = new Cart({
                 userId: userId,
                 items: [cartItem] // Add the Cart item to the items array
             });
-        } else {
-            // If cart exists, push the new item to the items array
-            cart.items.push(cartItem);
+            
         }
 
         // Save the cart to the database
-        await cart.save();
+        await useCart.save();
 
         // console.log('Product added to cart:', product);
         return res.status(200).send('Product added to cart successfully');

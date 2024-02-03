@@ -110,49 +110,55 @@ const listOrUnlistProducts = async (req, res) => {
     }
 
 }
-
 const editProductLoad = async (req, res) => {
     try {
-        const id=req.params.id
-        const category=await Category.find();
-        const productData = await Products.findOne({_id:id})
-        res.render("admin/page-editProdut", {productData:productData,category:category})
+        const message=req.flash("message")
+        
+        const id = req.params.id;
+        const category = await Category.find();
+        const productData = await Products.findOne({ _id: id });
+        res.render("admin/page-editProdut", {message:message, productData: productData, category: category });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+const editedProduct = async (req, res) => {  
+    try {
+        id = req.params.id;
+        const name = req.body.name;
+        const duplicateProd = await Products.findOne({ name: name });
+        if (!duplicateProd || duplicateProd._id.toString() === id) {
+            const category = req.body.category;
+            const description = req.body.description;
+            const price = req.body.price;
+            const quantity = req.body.quantity;
+            const discount = req.body.discount;
+            
+            await Products.findByIdAndUpdate(id, {
+                $set: {
+                    name: name, 
+                    category: category,
+                    description: description,
+                    price: price,
+                    quantity: quantity,
+                    discount: discount
+                }
+            });
+            
+            req.flash("message","Product Edited")
+            res.redirect(`/admin/products`);
+        } else {
+            console.log("Duplicate Product");
+            req.flash("message","Duplicate Product")
+            res.redirect("/admin/products");
+        }
     } catch (error) {
         console.log(error);
     }
 }
 
-const editedProduct = async (req, res) => {  
-    try {
-      const name = req.body.name;
-      const prodId = req.body.prodId;
-      const duplicateProd = await Products.findOne({ name: name });
-           if (duplicateProd) {
-        return res.redirect("/admin/products"); 
-      }
-      
-      const category = req.body.category;
-      const description = req.body.description;
-      const price = req.body.price;
-      const quantity = req.body.quantity;
-      const discount = req.body.discount;
-      
-      await Products.findByIdAndUpdate(prodId, {
-        $set: {
-          name: name, 
-          category: category,
-          description: description,
-          price: price,
-          quantity: quantity,
-          discount: discount
-        }
-      });
-  
-      res.redirect("/admin/products");
-    } catch (error) {
-      console.log(error);
-    }
-  }
   
 
 

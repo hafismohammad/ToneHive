@@ -206,12 +206,13 @@
                     <a href="/admin/addproduct" class="btn btn-primary btn-sm rounded">Create new</a>
                 </div>
             </div>
-            <% if(typeof data != 'undefined') {%>
-                <div class="col-6">
-                    <p class="text-success"><%= data %></p>
-                </div>
-
-            <% } %>
+                
+                <% if (typeof message !== 'undefined') { %>
+                    <div id="error" class="col-6">
+                        <p class="text-danger"><%= message %></p>
+                    </div>
+                <% } %>
+            
             <div class="card mb-4">
                 <header class="card-header">
                     <div class="row align-items-center">

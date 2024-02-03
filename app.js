@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose")
 const path = require("path")
 const nocache = require("nocache");
+const flash = require('express-flash')
 const nodemailer = require("nodemailer")
 const session = require("express-session")
 const MongoDBStore = require('connect-mongodb-session')(session);
@@ -57,9 +58,27 @@ app.use(
     })
   );
 
-app.use(nocache())
+
+
+// Set up session middleware
+app.use(session({
+  secret: 'your-secret-key', // Change this to a secret key
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Set up flash middleware
+app.use(flash());
+
+// Example route to set a flash message
+app.use( (req, res,next) => {
+  res.locals.message=req.session.message;
+  delete req.session.message;
+  next();
+});
 
 // User routes
+app.use(nocache())
 app.use("/", userRoute);   
 app.use('/admin', adminRute)  
 //app.use("/adminhome", adminRute)                             

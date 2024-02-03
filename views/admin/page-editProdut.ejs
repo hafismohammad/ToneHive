@@ -39,10 +39,10 @@
                 </div>
                 <div class="card-body">
                  
-                    <form   action="/admin/editprodut" method="post"  >
+                    <form   action="/admin/editprodut/<%=  productData._id %>" method="post"  >
                      <% if(productData) {%>
 
-                        <input type="hidden" name="prodId" value="<%= productData._id %>">
+                    
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Product Name</label>
                             <input value="<%= productData.name %>" type="text" name="name" placeholder="Type here" class="form-control"

@@ -44,9 +44,9 @@ router.get("/unlist-Category/:catid",categoryControllers.unlistedCategory)
 // product list 
 router.get("/products",productControllers.productsLoad)
 
-router.get("/addproduct",productControllers.addProductLoad)
+router.get("/addproduct/:id",productControllers.addProductLoad)
 
-router.post('/addproduct', productControllers.upload.array("image",4), productControllers.addProducts);
+router.post('/addproduct/:id', productControllers.upload.array("image",4), productControllers.addProducts);
 
 // router.get("/list-Product/:prodid",productControllers.listProducts);
 
@@ -56,7 +56,7 @@ router.patch('/list-product/:prodid',productControllers.listOrUnlistProducts);
 
 router.get("/editproduct/:id",productControllers.editProductLoad)
 
-router.post("/editprodut",productControllers.editedProduct)
+router.post("/editprodut/:id",productControllers.editedProduct)
 
 
 
