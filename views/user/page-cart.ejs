@@ -179,38 +179,43 @@
                                         <th scope="col">Subtotal</th>
                                         <th scope="col">Remove</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <% cartItems.forEach(cartItem => { %>   
-                                        <% cartItem.matchedProducts.forEach(product => { %>
+                                    <tbody>
+                                        <% cartItems.forEach(cartItem => { %>   
                                             <tr>
-                                                <td class="image product-thumbnail"><img src="/public/uploads/<%= product.image[0] %>" alt="<%= product.name %>"></td>
-                                                <td class="product-des product-name">
-                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= product.name %></a></h5>
-                                                    <p class="font-xs"><%= product.description %></p>
+                                                <td class="image product-thumbnail">
+                                                    <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
                                                 </td>
-                                                <td class="price" data-title="Price"><span>₹ <%= product.price %> </span></td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
+                                                    <p class="font-xs"><%= cartItem.productDetails.description %></p>
+                                                </td>
+                                                <td class="price" data-title="Price">
+                                                    <span>₹ <%= cartItem.productDetails.price %> </span>
+                                                </td>
                                                 <td class="text-center" data-title="Stock">
                                                     <div class="detail-qty border radius  m-auto">
                                                         <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                        <span class="qty-val"><%= product.quantity %></span>
+                                                        <span class="qty-val"><%= cartItem.items.quantity %></span>
                                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                                     </div>
                                                 </td>
                                                 <td class="text-right" data-title="Cart">
-                                                    <span>₹ <%= product.price %> </span>
+                                                    <span>₹ <%= cartItem.items.price %> </span>
                                                 </td>
-                                                <td class="action" data-title="Remove"><a href="#" class="text-muted"><i class="fi-rs-trash"></i></a></td>
+                                                <td class="action" data-title="Remove">
+                                                    <a href="#" class="text-muted"><i class="fi-rs-trash"></i></a>
+                                                </td>
                                             </tr>
                                         <% }) %>
-                                    <% }) %>
-                                    <tr>
-                                        <td colspan="6" class="text-end">
-                                            <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        <tr>
+                                            <td colspan="6" class="text-end">
+                                                <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    
+                            </table>    
+
                             
                         </div>
                         <div class="cart-action text-end">

@@ -57,10 +57,17 @@ const addToCart = async (req, res) => {
         let useCart = await Cart.findOne({ userId: userId });
         if (useCart) {    
             const prodId = new mongoose.Types.ObjectId(req.params.id); 
-            let proExist = useCart.items.findIndex(item => item.productId.equals(prodId));
-            console.log(proExist);
-            
-            // useCart.items.push(cartItem);
+            let prodExist = useCart.items.findIndex(item => item.productId.equals(prodId));
+           // console.log(proExist);
+            if(prodExist !== -1){
+                await Cart.updateOne(
+                    { userId: useCart.userId, 'items.productId': prodId },
+                    { $inc: { 'items.$.quantity': 1 } }
+                );
+            }else{
+                
+                useCart.items.push(cartItem);
+            }
         } else {
         
             // console.log(proExist);
@@ -77,13 +84,13 @@ const addToCart = async (req, res) => {
         await useCart.save();
 
         // console.log('Product added to cart:', product);
-        return res.status(200).send('Product added to cart successfully');
+      //  return res.status(200).send('Product added to cart successfully');
+    //   res.render('user/page-viewProduct')
     } catch (error) {
         console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
-
 
 
 const cartLoad = async (req, res) => {
@@ -93,57 +100,49 @@ const cartLoad = async (req, res) => {
     }
 
     const userId = req.session.user._id;
-    console.log('user',userId);
+    console.log('user', userId);
     try {
         const cartItems = await Cart.aggregate([
             {
-                $match: { userId: userId } 
+                $match: { userId: userId }
             },
             {
-                $lookup:{
-                    from: 'products',
-                    let: { prodList: '$items.productId' },
-                    pipeline:[
-                        {
-                            $match:{
-                                $expr:{
-                                    $in:['$_id', "$$prodList"]
-                                }
-                            }
-                        }
-                    ],
-                    as: 'matchedProducts'
+                $unwind: '$items'
+            },
+            {
+                $project: {
+                    items: 1 // Project the entire items array
+                }
+            },
+            {
+                $lookup: {
+                    from: 'products', // Name of the collection to join with
+                    localField: 'items.productId', // Field from the current collection
+                    foreignField: '_id', // Field from the foreign collection
+                    as: 'productDetails' // Alias for the joined documents
                 }
             }
+
         ]);
-        
-        console.log('cart items:', cartItems); // Log the cartItems array after aggregation
 
-        // Iterate over each cart item
-        cartItems.forEach(cartItem => {
-            // Log the cart item
-            // console.log('Cart Item:', cartItem);
+       // console.log(cartItems)
 
-            // Iterate over matchedProducts array of each cart item
-            cartItem.matchedProducts.forEach(product => {
-                // Access product details like name, description, price, etc.
-                const productName = product.name;
-                const productDescription = product.description;
-                const productPrice = product.price;
+        // Ensure that productDetails is properly populated for each cart item
+        const populatedCartItems = cartItems.map(cartItem => ({
+            ...cartItem,
+            productDetails: cartItem.productDetails[0] // Assuming there's only one product per cart item
+        }));
 
-                // Log product details
-              
-            });
-        });
+        console.log(populatedCartItems);
 
-        // Render the page with cartItems
-        return res.render("user/page-cart", { cartItems: cartItems });
-        
+        return res.render("user/page-cart", { cartItems: populatedCartItems });
+
     } catch (error) {
         console.error(error);
         return res.status(500).send("Internal server error");
     }
 }
+
 
 
 
