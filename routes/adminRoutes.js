@@ -44,9 +44,9 @@ router.get("/unlist-Category/:catid",categoryControllers.unlistedCategory)
 // product list 
 router.get("/products",productControllers.productsLoad)
 
-router.get("/addproduct/:id",productControllers.addProductLoad)
+router.get("/addproduct/",productControllers.addProductLoad)
 
-router.post('/addproduct/:id', productControllers.upload.array("image",4), productControllers.addProducts);
+router.post('/addproduct/', productControllers.upload.array("image",4), productControllers.addProducts);
 
 // router.get("/list-Product/:prodid",productControllers.listProducts);
 

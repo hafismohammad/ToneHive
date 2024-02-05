@@ -3,16 +3,14 @@
  <!--Body-->               
             <form id="logForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/">
                 <h2 class="d-flex justify-content-center py-5">Login</h2>
-                <% if(locals.message) { %>
-                    <div class="alert alert-success">
-                      <%= locals.message %>
+
+                <% if (locals.message) { %>
+                    <div id="error" class="col-6">
+                        <p class="text-danger"><%= locals.message %></p>
                     </div>
-                    <% } %>
-                    <% if(locals.error){ %>
-                        <div id="error" class="alert alert-danger">
-                            <%= locals.error %>
-                        </div>
-                    <% } %>
+                <% } %>
+                
+                  
                 <div class="mb-3">
 
                     <input type="email" class="form-control" name="email" id="email" placeholder="Email address"
@@ -30,19 +28,13 @@
                     <button type="submit" class="btn  btn-primary btn-block btn-secondary">LOGIN</button>
                 </div>
                 <div class="text-center">
-                    <p>You dont have an accoubt yet ?<a href="/otpRegister">Sign up</a></p>
+                    <p>You dont have an accoubt yet ?<a href="/register">Sign up</a></p>
                     </button>
                   </div>
             </form>
         </div>
 
-        <script>
-            const error = document.getElementById('error')
-
-            setTimeout(() => {
-                error.style.display = 'none'
-            }, 3000);
-        </script>
+       
 
         <script src="/public/formValidation/user/loginScript.js"></script>
 

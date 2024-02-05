@@ -72,8 +72,10 @@ const homeLoad = async (req, res) => {
 const loginLoad = function (req, res) {
     if (req.session.user) {
         res.redirect("/userHome");
-    }else{
-        res.render("user/page-login")
+    } else {
+        const message = req.flash('message');
+        res.render("user/page-login", { message:message[0] }); // Pass the message to the template
+        console.log(message);
     }
 };
 
@@ -112,6 +114,23 @@ const logedUser = async (req, res) => {
     }
 }
 
+
+// Generate a random OTP
+function generateRandomOtp() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Create an email transporter
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'hafismhdthaleekara764@gmail.com',
+        pass: 'ofzx kkgh klon lnht',
+    },
+});
+
+
+
 const registerLoad = (req, res) => {
     if (req.session.user) {
         res.redirect("/page-userHome");
@@ -131,16 +150,41 @@ const registeredUser = async (req, res) => {
             email: req.body.email,  
             mobile: req.body.mobile,
             password: spassword,
-            isAdmin: 0,
+           
         }
-        const result = await User.create(userIn);
-        if (result) {
-            res.render("user/page-login", { message: "Registered succesfully" })
-        }
+        req.session.userData = userIn
+
+        const otp = generateRandomOtp();
+        console.log(otp);
+        const email=userIn.email;
+
+        const mailOptions = {
+            from: 'hafismhdthaleekara764@gmail.com',
+            to: email,
+            subject: 'OTP Verification In Register Side',
+            text: `Your OTP is: ${otp}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending OTP email", error.message);
+            } else {
+                console.log("Register Side OTP mail sent", info.response);
+            }
+        });
+    
+
+
+    // Store OTP in session
+    req.session.otp = otp;
+    req.session.email = email;  
+   req.session.otpExpirationTime = Date.now() + 20 * 1000
+        
+        res.redirect('/otpRegister')
 
     } catch (error) {
         console.log(error);
-        res.render("user/page-register", { message: "Registration failed" })
+        res.redirect('/register')
     }
 }
 
@@ -195,5 +239,6 @@ module.exports = {
     registeredUser,
     userLogout,
     productViews,
-    userProfile
+    userProfile,
+    generateRandomOtp
 }

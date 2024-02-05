@@ -98,7 +98,7 @@ const verifiedUser = async (req, res) => {
     }
 };
 
-const   resendOtp = async (req, res) => {
+const  resendOtp = async (req, res) => {
     try {
         const userData = await User.findOne({ _id: req.session.user });
         const email = userData.email;
@@ -120,52 +120,33 @@ const   resendOtp = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
+
+
 const otpRegisterLoad = async (req, res) => {
     try {
-        const otp = generateRandomOtp();
-        console.log(otp);
-        const userData = await User.findOne();
-        const email = userData.email;
-
-
-        function sendOtpEmail(email, otp) {
-            const mailOptions = {
-                from: 'hafismhdthaleekara764@gmail.com',
-                to: email,
-                subject: 'OTP Verification In Register Side',
-                text: `Your OTP is: ${otp}`
-            };
-
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error("Error sending OTP email", error.message);
-                } else {
-                    console.log("Register Side OTP mail sent", info.response);
-                }
-            });
-        }
-        sendOtpEmail(email, otp);
-
-        // Store OTP in session
-        req.session.otp = otp;
-        req.session.email = email;  
-       req.session.otpExpirationTime = Date.now() + 20 * 1000
-
-        res.render("user/page-otpRegister", { email });
+         res.render("user/page-otpRegister");
     } catch (error) {
         console.log(error);
     }
 };
 
-const otpRegisterPost = (req, res) => {
+const otpRegisterPost = async(req, res) => {
     try {
         const userEnteredOtp = req.body.otp;
         const storedOtp = req.session.otp;
-
-        if (userEnteredOtp === storedOtp) {// ===
-            res.render("user/page-register");
-        } else {
-            res.render("user/page-otpRegister",{message: "Invalid OTP"});
+       
+                
+                if (userEnteredOtp === storedOtp) {
+                  
+                    const userData = req.session.userData; 
+                    const newUser = new User(userData);
+                    await newUser.save(); 
+                    // Redirect the user to the homepage with a success message
+                    req.flash("message", "Registered Successfully");
+                     res.redirect("/");
+                } else {
+                    req.flash("message", "Invalid OTP");
+            res.redirect("/",);
         }
     } catch (error) {
         console.log(error);

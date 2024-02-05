@@ -92,7 +92,6 @@ const addToCart = async (req, res) => {
     }
 }
 
-
 const cartLoad = async (req, res) => {
     // Check if the user is authenticated
     if (!req.session || !req.session.user || !req.session.user._id) {
@@ -122,26 +121,31 @@ const cartLoad = async (req, res) => {
                     as: 'productDetails' // Alias for the joined documents
                 }
             }
-
         ]);
 
-       // console.log(cartItems)
-
-        // Ensure that productDetails is properly populated for each cart item
-        const populatedCartItems = cartItems.map(cartItem => ({
-            ...cartItem,
-            productDetails: cartItem.productDetails[0] // Assuming there's only one product per cart item
-        }));
+        // Calculate subtotal price for each cart item and update total cart price
+        let totalCartPrice = 0;
+        const populatedCartItems = cartItems.map(cartItem => {
+            const product = cartItem.productDetails[0];
+            const subtotal = product.price * cartItem.items.quantity;
+            totalCartPrice += subtotal;
+            return {
+                ...cartItem,
+                productDetails: product,
+                subtotal: subtotal
+            };
+        });
 
         console.log(populatedCartItems);
 
-        return res.render("user/page-cart", { cartItems: populatedCartItems });
+        return res.render("user/page-cart", { cartItems: populatedCartItems, totalCartPrice });
 
     } catch (error) {
         console.error(error);
         return res.status(500).send("Internal server error");
     }
 }
+
 
 
 

@@ -181,38 +181,39 @@
                                     </tr>
                                     <tbody>
                                         <% cartItems.forEach(cartItem => { %>   
-                                            <tr>
-                                                <td class="image product-thumbnail">
-                                                    <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
-                                                </td>
-                                                <td class="product-des product-name">
-                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
-                                                    <p class="font-xs"><%= cartItem.productDetails.description %></p>
-                                                </td>
-                                                <td class="price" data-title="Price">
-                                                    <span>₹ <%= cartItem.productDetails.price %> </span>
-                                                </td>
-                                                <td class="text-center" data-title="Stock">
+                                            <tr data-product-id="<%= cartItem.productDetails._id %>">
+                                                <!-- Other columns -->
+                                    
+                                                <!-- Quantity column -->
+                                                <td class="text-center" data-title="Quantity">
                                                     <div class="detail-qty border radius  m-auto">
                                                         <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                        <span class="qty-val"><%= cartItem.items.quantity %></span>
+                                                        <!-- Updated span with id -->
+                                                        <span id="qty-<%= cartItem.productDetails._id %>" class="qty-val"><%= cartItem.items.quantity %></span>
                                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                                     </div>
                                                 </td>
-                                                <td class="text-right" data-title="Cart">
+                                                
+                                                <!-- Subtotal column -->
+                                                <td class="text-right subtotal" data-title="Subtotal">
                                                     <span>₹ <%= cartItem.items.price %> </span>
                                                 </td>
+                                    
+                                                <!-- Remove column -->
                                                 <td class="action" data-title="Remove">
                                                     <a href="#" class="text-muted"><i class="fi-rs-trash"></i></a>
                                                 </td>
                                             </tr>
                                         <% }) %>
+                                        <!-- Clear Cart button -->
                                         <tr>
                                             <td colspan="6" class="text-end">
                                                 <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
                                             </td>
                                         </tr>
                                     </tbody>
+                                    
+                                    
                                     
                             </table>    
 
