@@ -6,6 +6,7 @@ const otpControllers = require("../controllers/otpControler")
 const cartControllers = require("../controllers/cartControllers")
 const forgottPassworControl = require("../controllers/forgottPasswordController")
 const userCheckng = require('../middleware/userChecking') 
+const setUserCart = require('../middleware/cartProdQuantity')
 
 
 
@@ -52,6 +53,9 @@ router.post("/otpRegister", otpControllers.otpRegisterPost)
 
 // cart
 router.get("/cart",cartControllers.cartLoad)
+
+router.patch("/cart/:cartItemId/:productId/:delta",setUserCart.setUserCart, cartControllers.updateCartQuantity);
+
 
 router.get("/addToCart/:id",cartControllers.addToCart)
 

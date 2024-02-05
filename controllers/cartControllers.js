@@ -63,7 +63,7 @@ const addToCart = async (req, res) => {
                 await Cart.updateOne(
                     { userId: useCart.userId, 'items.productId': prodId },
                     { $inc: { 'items.$.quantity': 1 } }
-                );
+                ); 
             }else{
                 
                 useCart.items.push(cartItem);
@@ -93,13 +93,13 @@ const addToCart = async (req, res) => {
 }
 
 const cartLoad = async (req, res) => {
-    // Check if the user is authenticated
+  
     if (!req.session || !req.session.user || !req.session.user._id) {
         return res.status(401).send('Unauthorized');
     }
 
     const userId = req.session.user._id;
-    console.log('user', userId);
+   
     try {
         const cartItems = await Cart.aggregate([
             {
@@ -110,20 +110,20 @@ const cartLoad = async (req, res) => {
             },
             {
                 $project: {
-                    items: 1 // Project the entire items array
+                    items: 1 
                 }
             },
             {
                 $lookup: {
-                    from: 'products', // Name of the collection to join with
-                    localField: 'items.productId', // Field from the current collection
-                    foreignField: '_id', // Field from the foreign collection
-                    as: 'productDetails' // Alias for the joined documents
+                    from: 'products', 
+                    localField: 'items.productId', 
+                    foreignField: '_id', 
+                    as: 'productDetails' 
                 }
-            }
+            },
+           
         ]);
 
-        // Calculate subtotal price for each cart item and update total cart price
         let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
             const product = cartItem.productDetails[0];
@@ -136,7 +136,7 @@ const cartLoad = async (req, res) => {
             };
         });
 
-        console.log(populatedCartItems);
+       
 
         return res.render("user/page-cart", { cartItems: populatedCartItems, totalCartPrice });
 
@@ -145,6 +145,31 @@ const cartLoad = async (req, res) => {
         return res.status(500).send("Internal server error");
     }
 }
+
+
+const updateCartQuantity = async (req, res) => {
+    try {
+        const { cartItemId, productId, delta } = req.params;
+        
+        // Retrieve useCart from the request object
+        const useCart = req.useCart;
+
+        // Check if useCart is defined and contains the userId property
+        if (!useCart || !useCart.userId) {
+            return res.status(400).json({ error: 'User cart not found' });
+        }
+
+        await Cart.updateOne(
+            { userId: useCart.userId, 'items.productId': productId },
+            { $inc: { 'items.$.quantity': parseInt(delta) } }
+        );
+        // Send JSON response indicating success
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 
@@ -171,5 +196,6 @@ const cartLoad = async (req, res) => {
 module.exports = {
     cartLoad,
     addToCart,
+    updateCartQuantity
   
 }
