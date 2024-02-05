@@ -124,7 +124,10 @@ const  resendOtp = async (req, res) => {
 
 const otpRegisterLoad = async (req, res) => {
     try {
-         res.render("user/page-otpRegister");
+        const otp = generateRandomOtp(); // Generate OTP
+        // Other necessary code...
+
+        res.render("user/page-otpRegister", { otp }); // Pass otp variable to the view
     } catch (error) {
         console.log(error);
     }
@@ -145,7 +148,7 @@ const otpRegisterPost = async(req, res) => {
                     req.flash("message", "Registered Successfully");
                      res.redirect("/");
                 } else {
-                    req.flash("message", "Invalid OTP");
+                    req.flash("error", "Invalid OTP");
             res.redirect("/",);
         }
     } catch (error) {

@@ -1,12 +1,13 @@
 <%- include('../layouts/header.ejs') %>
 
  <!--Body-->               
- <form id="regotpForm" class="border p-5" style="max-width: 400px; margin: auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/otpRegister">
+ <form id="regotpForm" class="border p-5" style="max-width: 400px; margin: auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/otpRegister?otp=<%= otp %>">
     <% if(locals.message){ %>
     <div id="error" class="alert alert-danger">
         <%= locals.message %>
     </div>
     <% } %>
+    
 
     <h2 class="text-center py-5 mt-3">VERIFY OTP</h2>
 
@@ -23,7 +24,6 @@
         <span id="otpTimer">Time Remaining: 20 seconds</span>
         <button id="resendOTP" class="btn btn-secondary" style="display: none;" type="button">Resend</button>
     </div>
-    
 </form>
 
 <script>

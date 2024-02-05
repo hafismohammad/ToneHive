@@ -3,14 +3,17 @@
  <!--Body-->               
             <form id="logForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/">
                 <h2 class="d-flex justify-content-center py-5">Login</h2>
-
                 <% if (locals.message) { %>
-                    <div id="error" class="col-6">
-                        <p class="text-danger"><%= locals.message %></p>
+                    <div id="successMessage" class="col-6">
+                        <p class="alert alert-success"><%= locals.message %></p>
                     </div>
                 <% } %>
                 
-                  
+                <% if (locals.error) { %>
+                    <div id="errorMessage" class="col-6">
+                        <p class="alert alert-danger"><%= locals.error %></p>
+                    </div>
+                <% } %>
                 <div class="mb-3">
 
                     <input type="email" class="form-control" name="email" id="email" placeholder="Email address"
@@ -40,3 +43,22 @@
 
 <!--footer-->
 <%- include('../layouts/footer.ejs') %>
+
+<script>
+   
+    setTimeout(function() {
+        var successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            successMessage.style.display = 'none';
+        }
+    }, 3000);
+
+    
+    setTimeout(function() {
+        var errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.style.display = 'none';
+        }
+    }, 3000);
+</script>
+ 

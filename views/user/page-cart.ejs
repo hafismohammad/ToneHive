@@ -181,31 +181,35 @@
                                     </tr>
                                     <tbody>
                                         <% cartItems.forEach(cartItem => { %>   
-                                            <tr data-product-id="<%= cartItem.productDetails._id %>">
-                                                <!-- Other columns -->
-                                    
-                                                <!-- Quantity column -->
+                                            <tr>
+                                                <td class="image product-thumbnail">
+                                                    <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
+                                                </td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
+                                                    <p class="font-xs"><%= cartItem.productDetails.description %></p>
+                                                </td>
+                                                <td class="price" data-title="Price">
+                                                    <span>₹ <%= cartItem.productDetails.price %> </span>
+                                                </td>
                                                 <td class="text-center" data-title="Quantity">
-                                                    <div class="detail-qty border radius  m-auto">
-                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                        <!-- Updated span with id -->
-                                                        <span id="qty-<%= cartItem.productDetails._id %>" class="qty-val"><%= cartItem.items.quantity %></span>
-                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                    <div class="detail-qty border radius m-auto">
+                                                        <!-- Decrease quantity button -->
+                                                        <a href="#" class="qty-down" data-product-id="<%= cartItem.productDetails._id %>"><i class="fi-rs-angle-small-down"></i></a>
+                                                        <!-- Display quantity -->
+                                                        <span class="qty-val"><%= cartItem.items.quantity %></span>
+                                                        <!-- Increase quantity button -->
+                                                        <a href="#" class="qty-up" data-product-id="<%= cartItem.productDetails._id %>"><i class="fi-rs-angle-small-up"></i></a>
                                                     </div>
                                                 </td>
-                                                
-                                                <!-- Subtotal column -->
-                                                <td class="text-right subtotal" data-title="Subtotal">
-                                                    <span>₹ <%= cartItem.items.price %> </span>
+                                                <td class="text-right" data-title="Subtotal">
+                                                    <span>₹ <%= cartItem.subtotal %> </span>
                                                 </td>
-                                    
-                                                <!-- Remove column -->
                                                 <td class="action" data-title="Remove">
                                                     <a href="#" class="text-muted"><i class="fi-rs-trash"></i></a>
                                                 </td>
                                             </tr>
                                         <% }) %>
-                                        <!-- Clear Cart button -->
                                         <tr>
                                             <td colspan="6" class="text-end">
                                                 <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
@@ -701,6 +705,7 @@
     <script src="public/assets/js/maind134.js?v=3.4"></script>
     <script src="public/assets/js/shopd134.js?v=3.4"></script>
 </body>
+
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->

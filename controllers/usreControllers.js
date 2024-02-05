@@ -7,6 +7,7 @@ const session = require("express-session");
 const nodemailer = require('nodemailer');
 const Products=require('../models/productModel');
 const Cart = require("../models/cartModel");
+const flash = require("express-flash");
 
 
 const securePassword = async (password) => {
@@ -74,8 +75,7 @@ const loginLoad = function (req, res) {
         res.redirect("/userHome");
     } else {
         const message = req.flash('message');
-        res.render("user/page-login", { message:message[0] }); // Pass the message to the template
-        console.log(message);
+        res.render("user/page-login", { message:message[0] }); 
     }
 };
 
@@ -137,12 +137,26 @@ const registerLoad = (req, res) => {
     } else if (req.session.admin) {
         res.redirect("/page-adminDashboard")
     } else {
-        res.render("user/page-register")
+        const message = req.flash('message');
+        const error = req.flash('error');
+
+        res.render("user/page-register",{ message: message, error: error })
     }
 }
 
 const registeredUser = async (req, res) => {
     try {
+
+        const userEmail = req.body.email;
+        const existingUser = await User.findOne({ email: userEmail });
+        console.log(userEmail);
+        console.log(existingUser);
+        if (existingUser) {
+            req.flash('error', "Email already exists. Please use a different email.");
+            return res.redirect("/register");
+        }
+        
+        
         const spassword = await securePassword(req.body.password)
         // console.log(req.body);
         const userIn = {
@@ -176,8 +190,8 @@ const registeredUser = async (req, res) => {
 
 
     // Store OTP in session
-    req.session.otp = otp;
-    req.session.email = email;  
+     req.session.otp = otp;
+     req.session.email = email;  
    req.session.otpExpirationTime = Date.now() + 20 * 1000
         
         res.redirect('/otpRegister')

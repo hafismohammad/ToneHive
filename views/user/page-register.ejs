@@ -8,6 +8,11 @@
                       <%= locals.message %>
                     </div>
                     <% } %>
+                    <% if (locals.error) { %>
+                        <div id="errorMessage" class="col-6">
+                            <p class="alert alert-danger"><%= locals.error %></p>
+                        </div>
+                    <% } %>
                 <h2 class="d-flex justify-content-center py-5">Sign up</h2>
 
                 <div class="mb-3">
@@ -52,3 +57,12 @@
  <!--footer-->
 
  <%- include('../layouts/footer.ejs') %>
+
+ <script>
+        setTimeout(function() {
+        var errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.style.display = 'none';
+        }
+    }, 3000);
+ </script>
