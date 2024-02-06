@@ -2,7 +2,7 @@ const User = require("../models/userModel")
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
-
+require('dotenv').config();
 
 // Generate a random OTP
 function generateRandomOtp() {
@@ -13,8 +13,8 @@ function generateRandomOtp() {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'hafismhdthaleekara764@gmail.com',
-        pass: 'ofzx kkgh klon lnht',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
 });
 

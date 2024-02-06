@@ -2,44 +2,17 @@ const User = require('../models/userModel')
 const Cart = require('../models/cartModel')
 const Products = require('../models/productModel')
 const mongoose = require('mongoose');
-// const addToCart = (req, res) => {
 
-//      const productId  = req.body.productId;
-//      console.log( req.body.productId);
-//      console.log('Product added to cart. Product ID:', productId);
-//      res.status(200).send('Product added to cart successfully');
-
-    // try {
-    //     let cart = await Cart.findOne({ userId });
-
-    //     if (!cart) {
-    //         cart = new Cart({ userId, items: [] });
-    //     }
-
-    //     const itemIndex = cart.items.findIndex(item => item.productId.equals(productId));
-
-    //     if (itemIndex !== -1) {
-    //         cart.items[itemIndex].quantity++;
-    //     } else {
-    //         cart.items.push({ productId, quantity: 1, price });
-    //     }
-
-    //     await cart.save(); // Added parentheses to correctly call save function
-    // } catch (error) {
-    //     console.error(error);
-    //     throw new Error('Error adding item to cart');
-    // }
-// }
 
 const addToCart = async (req, res) => {
-    const prodId = req.params.id; // Get the product ID from the request parameters
+    const prodId = req.params.id; 
     try {
-        // Check if user is authenticated and user information is available in session
+     
         if (!req.session || !req.session.user || !req.session.user._id) {
             return res.status(401).send('Unauthorized');
         }
 
-        const userId = req.session.user._id; // Get the user ID from the session
+        const userId = req.session.user._id; 
 
         const product = await Products.findById(prodId);
         if (!product) {
@@ -49,16 +22,19 @@ const addToCart = async (req, res) => {
         // Create a new Cart item with productId, quantity, and price
         const cartItem = {
             productId: prodId,
-            quantity: 1, // Default quantity
-            price: product.price // Assign price from the product
+            quantity: 1, 
+            price: product.price 
         };
 
-        // Find the user's cart or create a new one if it doesn't exist
+        
         let useCart = await Cart.findOne({ userId: userId });
-        if (useCart) {    
+        if (useCart) {   
+
+            // Converting to object 
             const prodId = new mongoose.Types.ObjectId(req.params.id); 
             let prodExist = useCart.items.findIndex(item => item.productId.equals(prodId));
-           // console.log(proExist);
+
+            // console.log(proExist);
             if(prodExist !== -1){
                 await Cart.updateOne(
                     { userId: useCart.userId, 'items.productId': prodId },
@@ -69,23 +45,16 @@ const addToCart = async (req, res) => {
                 useCart.items.push(cartItem);
             }
         } else {
-        
-            // console.log(proExist);
-            // If cart exists, push the new item to the items array
            
             useCart = new Cart({
                 userId: userId,
-                items: [cartItem] // Add the Cart item to the items array
+                items: [cartItem] 
             });
             
         }
-
-        // Save the cart to the database
         await useCart.save();
 
-        // console.log('Product added to cart:', product);
-      //  return res.status(200).send('Product added to cart successfully');
-    //   res.render('user/page-viewProduct')
+       
     } catch (error) {
         console.log(error);
         return res.status(500).send('Internal server error');
@@ -151,10 +120,10 @@ const updateCartQuantity = async (req, res) => {
     try {
         const { cartItemId, productId, delta } = req.params;
         
-        // Retrieve useCart from the request object
+
         const useCart = req.useCart;
 
-        // Check if useCart is defined and contains the userId property
+       
         if (!useCart || !useCart.userId) {
             return res.status(400).json({ error: 'User cart not found' });
         }
@@ -163,7 +132,7 @@ const updateCartQuantity = async (req, res) => {
             { userId: useCart.userId, 'items.productId': productId },
             { $inc: { 'items.$.quantity': parseInt(delta) } }
         );
-        // Send JSON response indicating success
+        
         res.json({ success: true });
     } catch (error) {
         console.error(error);

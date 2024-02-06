@@ -196,7 +196,7 @@
             <td class="text-center" data-title="Quantity">
                 <div>
                     <button class="cart-item-count mr-5" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', -1)" <%= cartItem.items && cartItem.items.quantity === 1 ? 'disabled' : '' %>>-</button>
-                    <!-- Check if cartItem.items exists before accessing quantity -->
+                   
                     <span class="qty-val"><%= cartItem.items ? cartItem.items.quantity : 0 %></span>
                     <button class="cart-item-count ml-5" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', 1)">+</button>
                 </div>
@@ -714,9 +714,9 @@
 
 <script>
     function changeQuantity(cartItemId, productId, delta) {
-        // Send an AJAX request to update the product quantity
+       
         fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
-            method: 'PATCH', // Use PATCH method for updating existing resources
+            method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -725,7 +725,7 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            // If the response is successful, reload the page
+        
             window.location.reload();
         })
         .catch(error => {
