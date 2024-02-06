@@ -140,23 +140,28 @@ const updateCartQuantity = async (req, res) => {
     }
 };
 
+const removeFormCart = async (req, res) => {
+    try {
+        const userId = req.session.user._id;
+        const productId = req.params.id;
+        const productid = new mongoose.Types.ObjectId(req.params.id); 
 
+       
+        const findCart = await Cart.findOneAndUpdate(
+            { userId: userId }, 
+            { $pull: { items: { productId: productid } } } 
+        );
 
+        if (!findCart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
 
-
-
-
-
-// const addToCartController = async (req, res) => {
-    // const { userId, productId, price } = req.body;
-
-    // try {
-    //     await addToCart(userId, productId, price); // Call addToCart function
-    //     res.status(200).json({ message: 'Item added to cart successfully' });
-    // } catch (error) {
-    //     console.error(error);
-    //     res.status(500).json({ message: 'Internal server error' });
-    // }
+        res.status(200).json({ message: 'Product removed from cart successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 
@@ -165,6 +170,7 @@ const updateCartQuantity = async (req, res) => {
 module.exports = {
     cartLoad,
     addToCart,
-    updateCartQuantity
+    updateCartQuantity,
+    removeFormCart
   
 }

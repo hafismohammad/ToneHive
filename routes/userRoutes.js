@@ -56,9 +56,9 @@ router.get("/cart",cartControllers.cartLoad)
 
 router.patch("/cart/:cartItemId/:productId/:delta",setUserCart.setUserCart, cartControllers.updateCartQuantity);
 
-
 router.get("/addToCart/:id",cartControllers.addToCart)
 
+router.delete("/removeCartItem/:id",cartControllers.removeFormCart)
 
 
 
