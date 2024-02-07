@@ -7,7 +7,7 @@ const cartControllers = require("../controllers/cartControllers")
 const forgottPassworControl = require("../controllers/forgottPasswordController")
 const userCheckng = require('../middleware/userChecking') 
 const setUserCart = require('../middleware/cartProdQuantity')
-
+const checkoutControllers = require('../controllers/checkoutController')
 
 
 
@@ -60,7 +60,12 @@ router.get("/addToCart/:id",cartControllers.addToCart)
 
 router.delete("/removeCartItem/:id",cartControllers.removeFormCart)
 
+// checkout
+router.get("/checkout",checkoutControllers.checkoutLoad)
 
+router.post("/addressPost",checkoutControllers.addAddress)
+
+router.get("/editAddress/:_id",checkoutControllers.editAddressLoad)
 
 
 

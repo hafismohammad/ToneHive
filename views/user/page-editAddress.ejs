@@ -40,7 +40,7 @@
             <div class="col-xl-6 col-lg-4">
                 <div class="mobile-search search-style-3 mobile-header-border">
                     <form action="#">
-                        <input type="text" placeholder="Search for items…">
+                        <input type="text" for items…">
                         <button type="submit"><i class="fi-rs-search"></i></button>
                     </form>
                 </div>
@@ -148,160 +148,56 @@
             </div>
         </div>
     </header>
-   
-    <main class="main">
-      
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table class="table shopping-summery text-center clean">
-                                <thead>
-                                    <tr class="main-heading">
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Subtotal</th>
-                                        <th scope="col">Remove</th>
-                                    </tr>
-                       
-<tbody>
-    <% cartItems.forEach(cartItem => { %>   
-        <tr>
-            <td class="image product-thumbnail">
-                <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
-            </td>
-            <td class="product-des product-name">
-                <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
-                <p class="font-xs"><%= cartItem.productDetails.description %></p>
-            </td>
-            <td class="price" data-title="Price">
-                <span>₹ <%= cartItem.productDetails.price %> </span>
-            </td>
-            <td class="text-center" data-title="Quantity">
+
+
+
+
+
+    <div class="rows d-flex justify-content-center mt-30 mb-30">
+        <div class="col-md-6">
+            <form action="/addressPost/<%= addressId %>" method="post" >
+               <% if(userAddress && userAddress.length > 0){ %>
+                <div class="form-group">
+                    <input value="<%= userAddress.fname %>" type="text" required="" name="fname" >
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.lname %>" type="text" required="" name="lname" >
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.mobile %>" required="" type="text" name="mobile" >
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.email %>" required="" type="text" name="email" >
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.address %>" type="text" name="address" >
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.country %>" required="" type="text" name="country">
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.state %>" required="" type="text" name="state">
+                </div>
+                <div class="form-group">
+                    <input value="<%= userAddress.city %>" required="" type="text" name="city" >
+                </div>
+                
+                <div class="form-group">
+                    <input value="<%= userAddress.pincode %>" required="" type="text" name="pincode" >
+                </div>
+               
                 <div>
-                    <button class="cart-item-count mr-5" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', -1)" <%= cartItem.items && cartItem.items.quantity === 1 ? 'disabled' : '' %>>-</button>
-                   
-                    <span class="qty-val"><%= cartItem.items ? cartItem.items.quantity : 0 %></span>
-                    <button class="cart-item-count ml-5" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', 1)">+</button>
-                </div>
-            </td>
-            <td class="text-right" data-title="Subtotal">
-                <span>₹ <%= cartItem.subtotal %> </span>
-            </td>
-            <td class="action" data-title="Remove">
-                <a  class="text-muted" onclick="productRemove('<%= cartItem.productDetails._id %>')"><i class="fi-rs-trash"></i></a>
-            </td>
-        </tr>
-        <% }) %>
-    <tr>
-        <td colspan="6" class="text-end">
-            <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
-        </td>
-    </tr>
-  
- </tbody>
-                                    
-                                    
-             </table>    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                 </div><br>
+                 <% } %>
+           </form>
+        </div>
+          
+           </div>
+            
+</div>
 
-                            
-                        </div>
-                        <div class="cart-action text-end">
-                            <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
-                            <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
-                        </div>
-                        <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
-                        <div class="row mb-50">
-                            <div class="col-lg-6 col-md-12">
-                                <div class="heading_s1 mb-3">
-                                    <h4>Calculate Shipping</h4>
-                                </div>
-                                <p class="mt-15 mb-30">Flat rate: <span class="font-xl text-brand fw-900">5%</span></p>
-                                <form class="field_form shipping_calculator">
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-12">
-                                            <div class="custom_select">
-                                                
-                                               <!-- option here -->
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-row row">
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="State / Country" name="name" type="text">
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="PostCode / ZIP" name="name" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-12">
-                                            <button class="btn  btn-sm"><i class="fi-rs-shuffle mr-10"></i>Update</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="mb-30 mt-50">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Apply Coupon</h4>
-                                    </div>
-                                    <div class="total-amount">
-                                        <div class="left">
-                                            <div class="coupon">
-                                                <form action="#" target="_blank">
-                                                    <div class="form-row row justify-content-center">
-                                                        <div class="form-group col-lg-6">
-                                                            <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon">
-                                                        </div>
-                                                        <div class="form-group col-lg-6">
-                                                            <button class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-lg-6 col-md-12">
-                                <div class="border p-md-4 p-30 border-radius cart-totals">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Cart Totals</h4>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="cart_total_label">Cart Subtotal</td>
-                                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand"><%= totalCartPrice %></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Shipping</td>
-                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand"><%= totalCartPrice %></span></strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
-        </section>
-    </main>
     <footer class="main">
         <section class="newsletter p-30 text-white wow fadeIn animated">
             <div class="container">
@@ -309,7 +205,7 @@
                     <div class="col-lg-7 mb-md-3 mb-lg-0">
                         <div class="row align-items-center">
                             <div class="col flex-horizontal-center">
-                                <img class="icon-email" src="public/assets/imgs/theme/icons/icon-email.svg" alt="">
+                                <img class="icon-email" src="assets/imgs/theme/icons/icon-email.svg" alt="">
                                 <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
                             </div>
                             <div class="col my-4 my-md-0 des">
@@ -320,7 +216,7 @@
                     <div class="col-lg-5">
                         <!-- Subscribe Form -->
                         <form class="form-subcriber d-flex wow fadeIn animated">
-                            <input type="email" class="form-control bg-white font-small" placeholder="Enter your email">
+                            <input type="email" class="form-control bg-white font-small" our email">
                             <button class="btn bg-dark text-white" type="submit">Subscribe</button>
                         </form>
                         <!-- End Subscribe Form -->
@@ -334,7 +230,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="public/assets/imgs/theme/logo.svg" alt="logo"></a>
+                                <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">
@@ -348,11 +244,11 @@
                             </p>
                             <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
                             <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
-                                <a href="#"><img src="public/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                                <a href="#"><img src="public/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                                <a href="#"><img src="public/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                                <a href="#"><img src="public/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                                <a href="#"><img src="public/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                                <a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
                             </div>
                         </div>
                     </div>
@@ -384,13 +280,13 @@
                             <div class="col-md-8 col-lg-12">
                                 <p class="wow fadeIn animated">From App Store or Google Play</p>
                                 <div class="download-app wow fadeIn animated">
-                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="public/assets/imgs/theme/app-store.jpg" alt=""></a>
-                                    <a href="#" class="hover-up"><img src="public/assets/imgs/theme/google-play.jpg" alt=""></a>
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="assets/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="assets/imgs/theme/google-play.jpg" alt=""></a>
                                 </div>
                             </div>
                             <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
                                 <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
-                                <img class="wow fadeIn animated" src="public/assets/imgs/theme/payment-method.png" alt="">
+                                <img class="wow fadeIn animated" src="assets/imgs/theme/payment-method.png" alt="">
                             </div>
                         </div>
                     </div>
@@ -429,81 +325,30 @@
         </div>
     </div>
     <!-- Vendor JS-->
-    <script src="public/assets/js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="public/assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="public/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-    <script src="public/assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="public/assets/js/plugins/slick.js"></script>
-    <script src="public/assets/js/plugins/jquery.syotimer.min.js"></script>
-    <script src="public/assets/js/plugins/wow.js"></script>
-    <script src="public/assets/js/plugins/jquery-ui.js"></script>
-    <script src="public/assets/js/plugins/perfect-scrollbar.js"></script>
-    <script src="public/assets/js/plugins/magnific-popup.js"></script>
-    <script src="public/assets/js/plugins/select2.min.js"></script>
-    <script src="public/assets/js/plugins/waypoints.js"></script>
-    <script src="public/assets/js/plugins/counterup.js"></script>
-    <script src="public/assets/js/plugins/jquery.countdown.min.js"></script>
-    <script src="public/assets/js/plugins/images-loaded.js"></script>
-    <script src="public/assets/js/plugins/isotope.js"></script>
-    <script src="public/assets/js/plugins/scrollup.js"></script>
-    <script src="public/assets/js/plugins/jquery.vticker-min.js"></script>
+    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/plugins/slick.js"></script>
+    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="assets/js/plugins/wow.js"></script>
+    <script src="assets/js/plugins/jquery-ui.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="assets/js/plugins/magnific-popup.js"></script>
+    <script src="assets/js/plugins/select2.min.js"></script>
+    <script src="assets/js/plugins/waypoints.js"></script>
+    <script src="assets/js/plugins/counterup.js"></script>
+    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="assets/js/plugins/images-loaded.js"></script>
+    <script src="assets/js/plugins/isotope.js"></script>
+    <script src="assets/js/plugins/scrollup.js"></script>
+    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
     <!-- Template  JS -->
-    <script src="public/assets/js/maind134.js?v=3.4"></script>
-    <script src="public/assets/js/shopd134.js?v=3.4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="assets/js/maind134.js?v=3.4"></script>
+    <script src="assets/js/shopd134.js?v=3.4"></script>
 </body>
 
 
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
 </html>
 
-<script>
-    function changeQuantity(cartItemId, productId, delta) {
-       
-        fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
-            method: 'PATCH', 
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-        
-            setTimeout(() => {
-                window.location.reload();
-    
-            }, 500); 
-         })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-</script>
-
-<script>
-    function productRemove(productId) {
-        Swal.fire('Do you want to remove this item from cart?', {
-            buttons: ["No", "yes"],
-        }).then((res) => {
-            if (res.isConfirmed) {
-                $.ajax({
-                    url: '/removeCartItem/' + productId,
-                    method: 'DELETE',
-                }).done((res) => {
-                    Swal.fire('Successful', `${res.message}`, 'success').then(() => {
-                        
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-                    });
-                }).fail((error) => {
-                    console.log(error);
-                });
-            }
-        });
-    }
-    </script>
-    

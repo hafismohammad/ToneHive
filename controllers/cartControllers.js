@@ -104,7 +104,7 @@ const cartLoad = async (req, res) => {
                 subtotal: subtotal
             };
         });
-
+        
        
 
         return res.render("user/page-cart", { cartItems: populatedCartItems, totalCartPrice });
