@@ -229,19 +229,6 @@ const productViews = async (req, res) => {
     }
 }
 
-const userProfile = async (req, res) => {
-    try {
-    let userId = req.session.user._id   
-        const userData = await User.findById({_id:userId});
-        if (!userData) {
-          
-            return res.status(404).send('User not found');
-        }
-        res.render("user/page-userProfile", { user: userData });
-    } catch (error) {
-        res.status(500).send("Internal server error");
-    }
-};
 
 
 
@@ -253,6 +240,5 @@ module.exports = {
     registeredUser,
     userLogout,
     productViews,
-    userProfile,
     generateRandomOtp
 }

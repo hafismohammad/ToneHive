@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcrypt');
 
 
 
@@ -166,7 +166,9 @@ const resetPasswordLoad = async (req, res) => {
         res.status(500).send('Internal server error');
     }
 };
-const bcrypt = require('bcrypt');
+
+
+
 const resetPasswordPost = async (req, res) => {
     const { _id, token } = req.params;
     const newPassword = req.body.password;

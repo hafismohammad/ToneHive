@@ -157,36 +157,36 @@
 
     <div class="rows d-flex justify-content-center mt-30 mb-30">
         <div class="col-md-6">
-            <form action="/editAddress/<%= userAddress._id %>" method="post">
+            <form action="/editAddress/<%= userProfileAddress._id %>" method="post">
 
-                <% if (userAddress) { %>
+                <% if (userProfileAddress) { %>
                 <div class="form-group">
-                    <input value="<%= userAddress.fname %>" type="text"name="fname" >
+                    <input value="<%= userProfileAddress.fname %>" type="text"name="fname" >
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.lname %>" type="text" name="lname" >
+                    <input value="<%= userProfileAddress.lname %>" type="text" name="lname" >
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.mobile %>"  type="text" name="mobile" >
+                    <input value="<%= userProfileAddress.mobile %>"  type="text" name="mobile" >
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.email %>"  type="text" name="email" >
+                    <input value="<%= userProfileAddress.email %>"  type="text" name="email" >
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.address %>" type="text" name="address" >
+                    <input value="<%= userProfileAddress.address %>" type="text" name="address" >
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.country %>"  type="text" name="country">
+                    <input value="<%= userProfileAddress.country %>"  type="text" name="country">
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.state %>"  type="text" name="state">
+                    <input value="<%= userProfileAddress.state %>"  type="text" name="state">
                 </div>
                 <div class="form-group">
-                    <input value="<%= userAddress.city %>" type="text" name="city" >
+                    <input value="<%= userProfileAddress.city %>" type="text" name="city" >
                 </div>
                 
                 <div class="form-group">
-                    <input value="<%= userAddress.pincode %>" type="text" name="pincode" >
+                    <input value="<%= userProfileAddress.pincode %>" type="text" name="pincode" >
                 </div>
                
                 <div>

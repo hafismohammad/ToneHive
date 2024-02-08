@@ -8,6 +8,7 @@ const forgottPassworControl = require("../controllers/forgottPasswordController"
 const userCheckng = require('../middleware/userChecking') 
 const setUserCart = require('../middleware/cartProdQuantity')
 const checkoutControllers = require('../controllers/checkoutController')
+const userProfileController= require('../controllers/userProfileController')
 
 
 
@@ -44,7 +45,13 @@ router.get("/resend-otp",otpControllers.resendOtp)
 
 router.get("/productView/",userControllers.productViews)
 
-router.get("/userProfile",userControllers.userProfile)
+router.get("/userProfile",userProfileController.userProfile)
+
+router.post("/userProfileAddress",userProfileController.AddressPost)
+
+router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
+
+router.post("/changePassword",userProfileController.changePassword)
 
 // otp register
 router.get("/otpRegister", otpControllers.otpRegisterLoad)
@@ -65,8 +72,12 @@ router.get("/checkout",checkoutControllers.checkoutLoad)
 
 router.post("/addressPost",checkoutControllers.addAddress)
 
-router.get("/editAddress/:_id",checkoutControllers.editAddressLoad)
+router.get("/editAddress/:id",checkoutControllers.editAddressLoad)
+
+router.post("/editAddress/:id",checkoutControllers.edittedAddress)
+
+router.delete("/deleteAddress/:id", checkoutControllers.deleteAddress);
 
 
 
-module.exports = router
+module.exports = router 
