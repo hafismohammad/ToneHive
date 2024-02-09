@@ -1,7 +1,8 @@
 const AddreddModel = require('../models/addressModel');
 const Cart = require('../models/cartModel')
 const User = require('../models/userModel')
-const mongoose =require('mongoose')
+const ObjectId =require('mongoose').Types.ObjectId
+const Order = require('../models/orderModel')
 
 const checkoutLoad = async (req, res) => {
     try {
@@ -141,11 +142,65 @@ const deleteAddress = async (req, res) => {
     }
 };
 
+const placeOrderPost = async (req, res) => {
+    try {
+        const { address, paymentMethod } = req.body;
+    
+        const userAddressId = new ObjectId(address); 
+        const addressData = await AddreddModel.findById(userAddressId);
+        const userData = addressData.userId;
+
+        const cartItems = await Cart.aggregate([
+            { $match: { userId: userData } },
+            { $unwind: '$items' },
+            { $project: { items: 1 } },
+            { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
+        ]);
+
+        let totalCartPrice = 0;
+        const populatedCartItems = cartItems.map(cartItem => {
+            const product = cartItem.productDetails[0];
+            const subtotal = product.price * cartItem.items.quantity;
+            totalCartPrice += subtotal;
+            return { ...cartItem, productDetails: product, subtotal: subtotal };
+        });
+
+        const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
+        const date = new Date();
+
+        await Order.create({
+            address: addressData,
+            userId: userData,
+            paymentMethod: paymentMethod,
+            products: cartItems,
+            totalPrice: totalCartPrice,
+            orderStatus: status,
+            createdAt: date
+        });
+
+        await Cart.deleteOne({userId: userData})
+    res.redirect('/orderSuccess')
+        res.json({ message: 'Order placed successfully!' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Failed to place the order.' });
+    }
+}
+
+const orderPlace = (req, res) => {
+    try {
+        res.render('user/page-orderSuccess')
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
     checkoutLoad,
     addAddress,
     editAddressLoad,
     edittedAddress,
-    deleteAddress
+    deleteAddress,
+    placeOrderPost,
+    orderPlace
 }

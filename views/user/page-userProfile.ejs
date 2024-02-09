@@ -355,37 +355,30 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th>Order</th>
+                                                                <th>#</th>
                                                                 <th>Date</th>
-                                                                <th>Status</th>
+                                                                <th>Address</th>
                                                                 <th>Total</th>
-                                                                <th>Actions</th>
+                                                                <th>Status</th>
+                                                                <th>Payment Method</th>
+                                                                <th>View Details</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <td>#1357</td>
-                                                                <td>March 45, 2020</td>
-                                                                <td>Processing</td>
-                                                                <td>$125.00 for 2 item</td>
-                                                                <td><a href="#" class="btn-small d-block">View</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#2468</td>
-                                                                <td>June 29, 2020</td>
-                                                                <td>Completed</td>
-                                                                <td>$364.00 for 5 item</td>
-                                                                <td><a href="#" class="btn-small d-block">View</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#2366</td>
-                                                                <td>August 02, 2020</td>
-                                                                <td>Completed</td>
-                                                                <td>$280.00 for 3 item</td>
-                                                                <td><a href="#" class="btn-small d-block">View</a></td>
-                                                            </tr>
+                                                            <% userOrders.forEach((order, index) => { %>
+                                                                <tr>
+                                                                    <td><%= index + 1 %></td>
+                                                                    <td><%= order.createdAt %></td>
+                                                                    <td><%= order.lookedUpAddress[0].address %></td>
+                                                                    <td><%= order.totalPrice %></td>
+                                                                    <td><%= order.orderStatus %></td>
+                                                                    <td><%= order.paymentMethod %></td>
+                                                                    <td><a href="#" class="btn-small d-block">View</a></td>
+                                                                </tr>
+                                                            <% }); %>
                                                         </tbody>
                                                     </table>
+                                                    
                                                 </div>
                                             </div>
                                         </div>

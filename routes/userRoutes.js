@@ -78,6 +78,10 @@ router.post("/editAddress/:id",checkoutControllers.edittedAddress)
 
 router.delete("/deleteAddress/:id", checkoutControllers.deleteAddress);
 
+router.post("/placeOrder",checkoutControllers.placeOrderPost)
+
+router.get("/orderSuccess",checkoutControllers.orderPlace)
+
 
 
 module.exports = router 

@@ -1,22 +1,46 @@
 const User = require("../models/userModel")
 const AddreddModel = require('../models/addressModel');
+const bcrypt = require('bcrypt');
+const Order = require("../models/orderModel");
 
 const userProfile = async (req, res) => {
     try {
-
-        let userId = req.session.user._id
-        const userData = await User.findById({ _id: userId });
+        let userId = req.session.user._id;
 
 
-        const userAddress = await AddreddModel.aggregate([{
-            $match: { userId: userId }
-        }])
+        const userData = await User.findById(userId);
         if (!userData) {
-
             return res.status(404).send('User not found');
         }
-        res.render("user/page-userProfile", { user: userData, userAddress: userAddress });
+
+
+        const userAddress = await AddreddModel.aggregate([
+            { $match: { userId: userId } }
+        ]);
+
+    
+        const userOrders = await Order.aggregate([
+            {
+                $match: { userId: userId }
+            },
+            {
+                $lookup: {
+                    from: 'addresses',
+                    localField: 'address',
+                    foreignField: '_id',
+                    as: 'lookedUpAddress'
+                }
+            }
+        ]);
+
+
+        res.render("user/page-userProfile", {
+            user: userData,
+            userAddress: userAddress,
+            userOrders: userOrders 
+        });
     } catch (error) {
+        console.error(error);
         res.status(500).send("Internal server error");
     }
 };
@@ -57,7 +81,7 @@ const userProfileAddressDelete = async (req, res) => {
     }
 }
 
-const bcrypt = require('bcrypt');
+
 const saltRounds = 10;
 
 const changePassword = async (req, res) => {
