@@ -134,8 +134,6 @@ const transporter = nodemailer.createTransport({
 const registerLoad = (req, res) => {
     if (req.session.user) {
         res.redirect("/page-userHome");
-    } else if (req.session.admin) {
-        res.redirect("/page-adminDashboard")
     } else {
         const message = req.flash('message');
         const error = req.flash('error');
@@ -221,8 +219,7 @@ const userLogout = (req, res) => {
 const productViews = async (req, res) => {
     try {
         const id=req.query.id
-       
-        const productData = await Products.findOne({_id:id})
+        const productData = await Products.findOne({_id:id});
         res.render("user/page-viewProduct",{products:productData})
     } catch (error) {
         

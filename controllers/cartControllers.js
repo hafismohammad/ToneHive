@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const addToCart = async (req, res) => {
     const prodId = req.params.id; 
     try {
-     
+    
         if (!req.session || !req.session.user || !req.session.user._id) {
             return res.status(401).send('Unauthorized');
         }

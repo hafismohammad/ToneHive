@@ -322,7 +322,7 @@
                                             <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
                                         </li> -->
                                         <li class="nav-item">
-                                            <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                            <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#ddress" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
@@ -363,13 +363,13 @@
                                                                     <td><%= index + 1 %></td>
                                                                     <td><%= order.createdAt.toLocaleDateString()%></td>
                                                                     <td><%= order.lookedUpAddress[0].address %></td>
-                                                                    <td><%= order.totalPrice %></td>
+                                                                    <td>₹ <%= order.totalPrice %></td>
                                                                     <td><%= order.orderStatus %></td>
                                                                     <td><%= order.paymentMethod %></td>
                                                                     <% if(order.orderStatus !== "cancelled") {%>
                                                                     <td><a onclick="cancelOrder('<%= order._id %>')">Cancel</a></td>
                                                                      <% } else { %>
-                                                                             <td class="text-danger">cancelled</td>     
+                                                                             <td class="text-danger" >cancelled</td>     
                                                                     <% } %>
                                                                     
                                                                     <!-- <td><a href="/viewDetails" class="btn-small d-block">View</a></td> -->
@@ -699,6 +699,7 @@
 <script src="/public/assets/js/maind134.js?v=3.4"></script>
 <script src="/public/assets/js/shopd134.js?v=3.4"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </body>
 
 
@@ -732,6 +733,7 @@
 
 
 <script>
+    
     const passwordId = document.getElementById('password');
 const npasswordId = document.getElementById('npassword');
 const cpasswordId = document.getElementById('cpassword');

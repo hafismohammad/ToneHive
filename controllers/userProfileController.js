@@ -37,11 +37,11 @@ const userProfile = async (req, res) => {
                 }
             }
         ]);
-        console.log(userOrders.createdAt);
+   
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
-          console.log(formattedDate); 
+       
 
 
         res.render("user/page-userProfile", {
@@ -167,7 +167,7 @@ try {
 const orderCancel = async (req, res) => {
     try {
         const order_id = req.params.id
-    
+  
         const orderid = new ObjectId(order_id); 
 
         const result = await Order.findById({ _id: orderid });

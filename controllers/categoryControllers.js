@@ -57,14 +57,15 @@ const editedCategory = async (req, res) => {
         const catId = req.body.catId;
 
         // Check if the new category name already exists
-        const existingCat = await Category.find({ name: name });
+        const existingCat = await Category.findOne({ name: name });
         if (existingCat) {
             return res.redirect("/admin/productCatrgory?error=Duplicate Category");
         }
 
         // Update the category
         const updatedCat = await Category.findByIdAndUpdate(catId, { name: name }, { new: true });
-
+        console.log(existingCat);
+        console.log(updatedCat);
         res.redirect("/admin/productCatrgory");
     } catch (error) {
         console.log(error);

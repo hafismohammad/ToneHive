@@ -546,9 +546,8 @@
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
                                             <div class="col-md-6"> <!-- Adjust the column size based on your layout -->
-                                                <a href="/addToCart/<%= products._id %>">
-                                                    <button id="addToCartBtn" type="submit" class="btn btn-primary">Add to cart</button>
-                                                </a>
+                                             
+                                                <button onclick="addtoCartBtn('<%= products._id %>')" id="addToCartBtn" type="submit" class="btn btn-primary">Add to cart</button>
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
@@ -995,7 +994,7 @@
                         <div class="row align-items-center">
                             <div class="col flex-horizontal-center">
                                 <img class="icon-email" src="/public/assets/imgs/theme/icons/icon-email.svg" alt="">
-                                jhbjhbjhb!      <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
+                                 <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
                             </div>
                             <div class="col my-4 my-md-0 des">
                                 <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>$25 coupon for first shopping.</strong></h5>
@@ -1137,11 +1136,34 @@
     <!-- Template  JS -->
     <script src="/public/assets/js/maind134.js?v=3.4"></script>
     <script src="/public/assets/js/shopd134.js?v=3.4"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
 </html>
+
+<script>
+    function addtoCartBtn(prodId){
+        console.log(prodId);
+        swal("Adding to Cart", "Please wait...", "info"); 
+        
+        $.ajax({
+            url: '/addToCart/'+ prodId,
+            method: 'get'
+        }).done((res) => {
+            
+            swal("Success", "Product added to cart!", "success");
+         
+        }).fail((error) => {
+      
+            console.error("Error adding to cart:", error);
+            swal("Error", "Failed to add product to cart. Please try again later.", "error");
+        });
+    }
+</script>
+
 
 <!-- 
 <script>

@@ -183,7 +183,7 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Order List </h2>
-                    <p>Lorem ipsum dolor sit amet.</p>
+                
                 </div>
                 <div>
                     <input type="text" placeholder="Search order ID" class="form-control bg-white">
@@ -236,7 +236,7 @@
                                     <td><b><%= orderDetails[i].userId.name %></b></td>
                                     <td><%= orderDetails[i].userId.email %></td>
                                     <td><%= orderDetails[i].paymentMethod %></td>
-                                    <td><%= orderDetails[i].totalPrice %></td>
+                                    <td>₹ <%= orderDetails[i].totalPrice %></td>
                                     <td><%= orderDetails[i].createdAt.toLocaleDateString() %></td>
                                     <td width="7%">
                                         <% if (orderDetails[i].orderStatus == 'pending') { %>

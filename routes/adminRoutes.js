@@ -28,24 +28,24 @@ router.get('/blockuser/:userid',customerController.blockuser);
 router.get('/unblockuser/:userid',customerController.unblockuser);
 
 // category 
-router.get("/productCatrgory",categoryControllers.productCatrgory)
+router.get("/productCatrgory",adminAuth.isLogout,categoryControllers.productCatrgory)
 
 router.post("/createCategory",categoryControllers.addProductCategory)
 
-router.get("/editCategory",categoryControllers.editCategoryLoad)
+router.get("/editCategory",adminAuth.isLogout,categoryControllers.editCategoryLoad)
 
 router.post("/editCategory",categoryControllers.editedCategory)
 
-router.get("/deletecategory",categoryControllers.deletecategory)
+router.get("/deletecategory",adminAuth.isLogout,categoryControllers.deletecategory)
 
-router.get("/list-Category/:catid",categoryControllers.listedCategory)
+router.get("/list-Category/:catid",adminAuth.isLogout,categoryControllers.listedCategory)
 
-router.get("/unlist-Category/:catid",categoryControllers.unlistedCategory)
+router.get("/unlist-Category/:catid",adminAuth.isLogout,categoryControllers.unlistedCategory)
 
 // product list 
-router.get("/products",productControllers.productsLoad)
+router.get("/products",adminAuth.isLogout,productControllers.productsLoad)
 
-router.get("/addproduct/",productControllers.addProductLoad)
+router.get("/addproduct/",adminAuth.isLogout,productControllers.addProductLoad)
 
 router.post('/addproduct/', productControllers.upload.array("image",4), productControllers.addProducts);
 
@@ -55,11 +55,11 @@ router.post('/addproduct/', productControllers.upload.array("image",4), productC
 
 router.patch('/list-product/:prodid',productControllers.listOrUnlistProducts);
 
-router.get("/editproduct/:id",productControllers.editProductLoad)
+router.get("/editproduct/:id",adminAuth.isLogout,productControllers.editProductLoad)
 
 router.post("/editprodut/:id",productControllers.editedProduct)
 
-router.get("/orderDetails",orderControllers.orderList)
+router.get("/orderDetails",adminAuth.isLogout,orderControllers.orderList)
 
 router.post("/orderStatus",orderControllers.adminOrderStatus)
 

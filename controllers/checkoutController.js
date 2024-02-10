@@ -111,7 +111,7 @@ const edittedAddress = async (req, res) => {
      const id = req.params.id
      const { fname, lname, mobile, email, address, country, state, city, pincode } = req.body;
 
-      const userAddress = await A.findByIdAndUpdate(id, {
+      const userAddress = await AddreddModel.findByIdAndUpdate(id, {
         fname,
         lname,
         mobile,
@@ -171,7 +171,7 @@ const placeOrderPost = async (req, res) => {
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
-          console.log(formattedDate); 
+      
 
 
 
