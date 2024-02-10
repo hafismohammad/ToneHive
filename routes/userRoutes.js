@@ -82,6 +82,8 @@ router.post("/placeOrder",checkoutControllers.placeOrderPost)
 
 router.get("/orderSuccess",checkoutControllers.orderPlace)
 
+router.get("/viewDetails",userProfileController.viewOrderDetails)
 
+router.post("/cancelOrder/:id",userProfileController.orderCancel)
 
 module.exports = router 

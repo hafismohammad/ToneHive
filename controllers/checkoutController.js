@@ -3,6 +3,7 @@ const Cart = require('../models/cartModel')
 const User = require('../models/userModel')
 const ObjectId =require('mongoose').Types.ObjectId
 const Order = require('../models/orderModel')
+const moment = require('moment');
 
 const checkoutLoad = async (req, res) => {
     try {
@@ -166,7 +167,13 @@ const placeOrderPost = async (req, res) => {
         });
 
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
+
         const date = new Date();
+        const momentDate = moment(date);
+        const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
+          console.log(formattedDate); 
+
+
 
         await Order.create({
             address: addressData,
@@ -175,7 +182,7 @@ const placeOrderPost = async (req, res) => {
             products: cartItems,
             totalPrice: totalCartPrice,
             orderStatus: status,
-            createdAt: date
+            createdAt: formattedDate
         });
 
         await Cart.deleteOne({userId: userData})

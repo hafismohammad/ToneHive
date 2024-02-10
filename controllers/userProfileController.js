@@ -2,6 +2,11 @@ const User = require("../models/userModel")
 const AddreddModel = require('../models/addressModel');
 const bcrypt = require('bcrypt');
 const Order = require("../models/orderModel");
+const Cart = require('../models/cartModel');
+const Products = require("../models/productModel");
+const ObjectId =require('mongoose').Types.ObjectId
+const moment = require('moment');
+
 
 const userProfile = async (req, res) => {
     try {
@@ -32,6 +37,11 @@ const userProfile = async (req, res) => {
                 }
             }
         ]);
+        console.log(userOrders.createdAt);
+        const date = new Date();
+        const momentDate = moment(date);
+        const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
+          console.log(formattedDate); 
 
 
         res.render("user/page-userProfile", {
@@ -123,9 +133,61 @@ const changePassword = async (req, res) => {
     }
 };
 
+const viewOrderDetails = async (req, res) => {
+try {
+    const userId = req.session.user._id;
+    const userOrders = await Order.aggregate([
+        {
+            $match: { userId: userId }
+        },
+        {
+            $lookup: {
+                from: 'addresses',
+                localField: 'address',
+                foreignField: '_id',
+                as: 'lookedUpAddress'
+            }
+        }
+    ]);
+  
+    const date = new Date();
+    const momentDate = moment(date);
+    const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
+    userOrders.createdAt = formattedDate
+    
+
+
+      console.log(userOrders.createdAt);
+    res.render('user/Page-viewDetails', {userOrders:userOrders})
+} catch (error) {
+    console.log(error);
+}
+}
+
+const orderCancel = async (req, res) => {
+    try {
+        const order_id = req.params.id
+    
+        const orderid = new ObjectId(order_id); 
+
+        const result = await Order.findById({ _id: orderid });
+
+        result.orderStatus = "cancelled";
+        result.save();
+
+
+        res.json({ success: true });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     userProfile,
     AddressPost,
     userProfileAddressDelete,
-    changePassword
+    changePassword,
+    viewOrderDetails,
+    orderCancel
 }

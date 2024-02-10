@@ -7,6 +7,7 @@ const adminControllers = require("../controllers/adminController")
 const customerController = require("../controllers/customerController")
 const categoryControllers = require("../controllers/categoryControllers")
 const productControllers = require("../controllers/productControllers")
+const orderControllers = require("../controllers/orderController")
 const { route } = require('./userRoutes');
 
 // admin login
@@ -57,6 +58,10 @@ router.patch('/list-product/:prodid',productControllers.listOrUnlistProducts);
 router.get("/editproduct/:id",productControllers.editProductLoad)
 
 router.post("/editprodut/:id",productControllers.editedProduct)
+
+router.get("/orderDetails",orderControllers.orderList)
+
+router.post("/orderStatus",orderControllers.adminOrderStatus)
 
 
 

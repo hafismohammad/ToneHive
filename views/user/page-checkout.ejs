@@ -377,8 +377,8 @@
                                     </div>
 
                                     <div class="d-flex justify-content-start radio-wrapper">
-                                        <input type="radio" id="address<%= userAddress[i]._id %>" name="addressSelected"
-                                            value="<%= userAddress[i]._id %>">
+                                        <input  type="radio" id="address<%= userAddress[i]._id %>" name="addressSelected"
+                                            value="<%= userAddress[i]._id %>" checked>
 
                                         <a href="/editAddress/<%= userAddress[i]._id %>"><button type="submit"
                                                 class="btn btn-secondary btn-sm">Edit Address</button></a>
@@ -513,17 +513,19 @@
                                                     <%= cartItem.subtotal %>
                                                 </td>
                                             </tr>
-
+                                            <% }) %>
                                             <tr>
                                                 <th>SubTotal</th>
                                                 <td class="product-subtotal" colspan="2">
                                                     <%= totalCartPrice %>
                                                 </td>
                                             </tr>
+                                           
                                             <tr>
                                                 <th>Shipping</th>
                                                 <td colspan="2"><em>Free Shipping</em></td>
                                             </tr>
+                                           
                                             <tr>
                                                 <th>Total</th>
                                                 <td colspan="2" class="product-subtotal"><span
@@ -531,7 +533,7 @@
                                                         <%= totalCartPrice %>
                                                     </span></td>
                                             </tr>
-                                            <% }) %>
+                                           
                                     </tbody>
                                 </table>
                             </div>
@@ -576,7 +578,7 @@
                                 </div>
                             </div>
                        
-                        <button class="btn btn-fill-out btn-block mt-30" id="placeOrderButton">Place Order</button>
+                        <button  class="btn btn-fill-out btn-block mt-30" id="placeOrderButton">Place Order</button>
                         </div>
                     </form>
                     </div>

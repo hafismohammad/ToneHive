@@ -32,15 +32,15 @@ const orderSchema = new mongoose.Schema({
             'shipped',
             'outForDelivery',
             'delivered',
-            // 'cancelled',
-            // 'return pending',
-            // 'returned',
+            'cancelled',
+            'return pending',
+            'returned',
         ],
         default: 'pending',
     },
     createdAt: {
         type: Date,
-        default: Date.now
+    
     }
 });
 
