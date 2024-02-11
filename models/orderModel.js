@@ -7,9 +7,13 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     address: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address',
-        required: true
+        name: { type: String },
+        house: { type: String },
+        city: { type: String },
+        state: { type: String },
+        country: { type: String },
+        pincode: { type: Number } ,
+        mobile: { type: Number }
     },
     paymentMethod: {
         type: String,

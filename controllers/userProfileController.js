@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const Order = require("../models/orderModel");
 const Cart = require('../models/cartModel');
 const Products = require("../models/productModel");
-const ObjectId =require('mongoose').Types.ObjectId
+const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment');
 
 
@@ -19,35 +19,53 @@ const userProfile = async (req, res) => {
         }
 
 
-        const userAddress = await AddreddModel.aggregate([
-            { $match: { userId: userId } }
+        const userAddress = await User.aggregate([
+            { $match: { _id: userId } },
+            { $unwind: "$address" },
+            {
+                $project: {
+                    "address.name": 1,
+                    "address.house": 1,
+                    "address.city": 1,
+                    "address.state": 1,
+                    "address.country": 1,
+                    "address.pincode": 1,
+                    "address.mobile": 1  
+                }
+            }
         ]);
 
-    
+     //   const userOrders = await Order.findOne({userId:userId},{'address':1})
+// console.log(userOrders1);
         const userOrders = await Order.aggregate([
             {
                 $match: { userId: userId }
             },
             {
                 $lookup: {
-                    from: 'addresses',
+                    from: 'users',
                     localField: 'address',
                     foreignField: '_id',
                     as: 'lookedUpAddress'
                 }
             }
+            
         ]);
-   
+     
+        
+    
+
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
-       
 
+        // const message = req.flash('message');
 
         res.render("user/page-userProfile", {
-            user: userData,
+            userId: userData,
             userAddress: userAddress,
-            userOrders: userOrders 
+            userOrders: userOrders,
+
         });
     } catch (error) {
         console.error(error);
@@ -55,41 +73,60 @@ const userProfile = async (req, res) => {
     }
 };
 
-
 const AddressPost = async (req, res) => {
     try {
-
-        const id = req.params.id
-        const { fname, lname, mobile, email, address, country, state, city, pincode } = req.body;
-
-        const userAddress = await AddreddModel.findByIdAndUpdate(id, {
-            fname,
-            lname,
-            mobile,
-            email,
-            address,
-            country,
-            state,
+        const {
+            name,
+            house,
             city,
-            pincode
-        })
+            state,
+            country,
+            pincode,
+            mobile
+        } = req.body;
 
-        res.redirect('/userProfile')
+        const userId = req.session.user._id;
+
+        const newAddress = {
+            name: name,
+            house: house,
+            city: city,
+            state: state,
+            country: country,
+            pincode: pincode,
+            mobile: mobile,
+           
+        };
+
+        const user = await User.findById({ _id: userId })
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        user.address.push(newAddress)
+
+        await user.save()
+
+        req.flash('message', 'New Address Added')
+        res.redirect('/userProfile');
     } catch (error) {
         console.log(error);
+        res.status(500).send("Internal server error");
     }
-}
+};
 
-const userProfileAddressDelete = async (req, res) => {
-    try {
-        const id = req.params.id;
-        console.log(id);
-        await AddreddModel.deleteMany({ _id: id })
 
-    } catch (error) {
-        console.log(error);
-    }
-}
+
+// const userProfileAddressDelete = async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         console.log(id);
+//         await AddreddModel.deleteMany({ _id: id })
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 
 const saltRounds = 10;
@@ -134,41 +171,41 @@ const changePassword = async (req, res) => {
 };
 
 const viewOrderDetails = async (req, res) => {
-try {
-    const userId = req.session.user._id;
-    const userOrders = await Order.aggregate([
-        {
-            $match: { userId: userId }
-        },
-        {
-            $lookup: {
-                from: 'addresses',
-                localField: 'address',
-                foreignField: '_id',
-                as: 'lookedUpAddress'
+    try {
+        const userId = req.session.user._id;
+        const userOrders = await Order.aggregate([
+            {
+                $match: { userId: userId }
+            },
+            {
+                $lookup: {
+                    from: 'addresses',
+                    localField: 'address',
+                    foreignField: '_id',
+                    as: 'lookedUpAddress'
+                }
             }
-        }
-    ]);
-  
-    const date = new Date();
-    const momentDate = moment(date);
-    const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
-    userOrders.createdAt = formattedDate
-    
+        ]);
+
+        const date = new Date();
+        const momentDate = moment(date);
+        const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
+        userOrders.createdAt = formattedDate
 
 
-      console.log(userOrders.createdAt);
-    res.render('user/Page-viewDetails', {userOrders:userOrders})
-} catch (error) {
-    console.log(error);
-}
+
+        console.log(userOrders.createdAt);
+        res.render('user/Page-viewDetails', { userOrders: userOrders })
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const orderCancel = async (req, res) => {
     try {
         const order_id = req.params.id
-  
-        const orderid = new ObjectId(order_id); 
+
+        const orderid = new ObjectId(order_id);
 
         const result = await Order.findById({ _id: orderid });
 
@@ -186,7 +223,7 @@ const orderCancel = async (req, res) => {
 module.exports = {
     userProfile,
     AddressPost,
-    userProfileAddressDelete,
+    // userProfileAddressDelete,
     changePassword,
     viewOrderDetails,
     orderCancel

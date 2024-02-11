@@ -49,7 +49,7 @@ router.get("/userProfile",userProfileController.userProfile)
 
 router.post("/userProfileAddress",userProfileController.AddressPost)
 
-router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
+//router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
 
 router.post("/changePassword",userProfileController.changePassword)
 
@@ -76,7 +76,7 @@ router.get("/editAddress/:id",checkoutControllers.editAddressLoad)
 
 router.post("/editAddress/:id",checkoutControllers.edittedAddress)
 
-router.delete("/deleteAddress/:id", checkoutControllers.deleteAddress);
+//router.delete("/deleteAddress/:id", checkoutControllers.deleteAddress);
 
 router.post("/placeOrder",checkoutControllers.placeOrderPost)
 

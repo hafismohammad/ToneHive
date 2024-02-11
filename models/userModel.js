@@ -18,15 +18,21 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    address: [{
+        name: { type: String },
+        house: { type: String },
+        city: { type: String },
+        state: { type: String },
+        country: { type: String },
+        pincode: { type: Number } ,
+        mobile: { type: Number }
+    }],
   
     isBlocked:{
         type:Boolean,
         default: false ,  
     },
-    // verified: {
-    //     type: Boolean,
-    //     default: false 
-    // }  
+   
 })
 
 const User = mongoose.model("User", userSchema);

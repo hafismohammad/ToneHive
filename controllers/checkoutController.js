@@ -4,6 +4,7 @@ const User = require('../models/userModel')
 const ObjectId =require('mongoose').Types.ObjectId
 const Order = require('../models/orderModel')
 const moment = require('moment');
+const mongoose = require('mongoose')
 
 const checkoutLoad = async (req, res) => {
     try {
@@ -13,8 +14,24 @@ const checkoutLoad = async (req, res) => {
         }
         const userId = req.session.user._id
 
-        const userAddress = await AddreddModel.find({userId:userId})
-
+        const userAddress = await User.aggregate([
+            { $match: { _id: userId } },
+            { $unwind: "$address" },
+            {
+                $project: {
+                    "address.name": 1,
+                    "address.house": 1,
+                    "address.city": 1,
+                    "address.state": 1,
+                    "address.country": 1,
+                    "address.pincode": 1,
+                    "address.mobile": 1 ,
+                    "address._id" : 1
+                }
+            }
+        ]);
+        
+ 
         const cartItems = await Cart.aggregate([
             {
                 $match: { userId: userId }
@@ -97,62 +114,84 @@ const addAddress = async (req, res) => {
 const editAddressLoad = async (req, res) => {
     try {
         const id = req.params.id
-        const userAddress = await AddreddModel.findOne({_id:id})
-  
+        const userId=req.session.user._id;
+        const userAddress = await User.findOne({_id:userId,"address._id":id},{"address.$":1,_id:0});
+       
+        
         res.render("user/page-editAddress", { userAddress });
     } catch (error) {
         console.log(error);
     }
 };
-
 const edittedAddress = async (req, res) => {
     try {
-     
-     const id = req.params.id
-     const { fname, lname, mobile, email, address, country, state, city, pincode } = req.body;
+        const userId = req.session.user._id;
+        const addressId = req.params.id;
+        const { name, house, city, state, country, pincode, mobile } = req.body;
 
-      const userAddress = await AddreddModel.findByIdAndUpdate(id, {
-        fname,
-        lname,
-        mobile,
-        email,
-        address,
-        country,
-        state,
-        city,
-        pincode
-      })
-      
-      res.redirect('/checkout')
+        const updatedUser = await User.findOneAndUpdate(
+            { 
+                _id: userId, 
+                "address._id": addressId 
+            }, 
+            { 
+                $set: {
+                    "address.$.name": name,
+                    "address.$.house": house,
+                    "address.$.city": city,
+                    "address.$.state": state,
+                    "address.$.country": country,
+                    "address.$.pincode": pincode,
+                    "address.$.mobile": mobile
+                }
+            },
+            { 
+                new: true 
+            }
+        );
+
+        if (updatedUser) {
+       
+            res.redirect('/checkout');
+        } else {
+            console.log("User address update failed.");
+            res.status(404).send("User address update failed.");
+        }
     } catch (error) {
-        console.log(error);
-    }
-}
-
-const deleteAddress = async (req, res) => {
-    try {
-        const id = req.params.id;
-        console.log(id);
-       await AddreddModel.deleteMany({_id:id})
-
-    
-        res.status(200).json({ message: "Address deleted successfully" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Internal server error" });
+        console.error("Error updating user address:", error);
+        res.status(500).send("Error updating user address. Please try again later.");
     }
 };
 
+
+// const deleteAddress = async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         console.log(id);
+//        await AddreddModel.deleteMany({_id:id})
+
+    
+//         res.status(200).json({ message: "Address deleted successfully" });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// };
+
 const placeOrderPost = async (req, res) => {
     try {
+      const userId = req.session.user._id
         const { address, paymentMethod } = req.body;
-    
-        const userAddressId = new ObjectId(address); 
-        const addressData = await AddreddModel.findById(userAddressId);
-        const userData = addressData.userId;
+        const userAddressId = new mongoose.Types.ObjectId(address);
+       console.log(userAddressId);
 
+        const addressData = await User.findOne({_id:userId,'address._id':address}, {'address.$':1, _id:0})
+      
+        // const userData = addressData.userId;
+     
+        
         const cartItems = await Cart.aggregate([
-            { $match: { userId: userData } },
+            { $match: { userId: userId } },
             { $unwind: '$items' },
             { $project: { items: 1 } },
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
@@ -176,8 +215,8 @@ const placeOrderPost = async (req, res) => {
 
 
         await Order.create({
-            address: addressData,
-            userId: userData,
+            address: addressData.address[0],
+            userId:userId,
             paymentMethod: paymentMethod,
             products: cartItems,
             totalPrice: totalCartPrice,
@@ -185,7 +224,8 @@ const placeOrderPost = async (req, res) => {
             createdAt: formattedDate
         });
 
-        await Cart.deleteOne({userId: userData})
+        await Cart.deleteOne({userId: userId})
+
     res.redirect('/orderSuccess')
         res.json({ message: 'Order placed successfully!' });
     } catch (error) {
@@ -207,7 +247,7 @@ module.exports = {
     addAddress,
     editAddressLoad,
     edittedAddress,
-    deleteAddress,
+    // deleteAddress,
     placeOrderPost,
-    orderPlace
-}
+    orderPlace,
+}; 

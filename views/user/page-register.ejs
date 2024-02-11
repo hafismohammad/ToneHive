@@ -3,16 +3,8 @@
 <%- include('../layouts/header.ejs') %>
 <!--Body-->
             <form id="regForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/register">
-                <% if(locals.message) { %>
-                    <div class="alert alert-danger">
-                      <%= locals.message %>
-                    </div>
-                    <% } %>
-                    <% if (locals.error) { %>
-                        <div id="errorMessage" class="col-6">
-                            <p class="alert alert-danger"><%= locals.error %></p>
-                        </div>
-                    <% } %>
+             
+               
                 <h2 class="d-flex justify-content-center py-5">Sign up</h2>
 
                 <div class="mb-3">
@@ -58,11 +50,3 @@
 
  <%- include('../layouts/footer.ejs') %>
 
- <script>
-        setTimeout(function() {
-        var errorMessage = document.getElementById('errorMessage');
-        if (errorMessage) {
-            errorMessage.style.display = 'none';
-        }
-    }, 3000);
- </script>
