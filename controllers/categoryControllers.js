@@ -7,7 +7,7 @@ const productCatrgory = async (req, res) => {
         const data = req.query.success;
         const error = req.query.error || ''
        
-        const category = await Category.find();
+        const category = await Category.find()
         res.render("admin/page-category", {  data: data,error:error, category: category })
     } catch (error) {
         console.log(error);
@@ -18,7 +18,7 @@ const addProductCategory = async (req, res) => {
     try {
         const { categoryName, list } = req.body;
 
-        const existingCategory = await Category.findOne({ name: categoryName });
+        const existingCategory = await Category.findOne({ name: categoryName })
 
         if (existingCategory) {
 
@@ -31,6 +31,7 @@ const addProductCategory = async (req, res) => {
             name: categoryName,
             list: list
         });
+        
         res.redirect("/admin/productCatrgory?success=Category Added")
         //console.log(category);
     } catch (error) {
@@ -74,15 +75,7 @@ const editedCategory = async (req, res) => {
 }
 
 
-const deletecategory = async (req, res) => {
-    try {
-        const id = req.query.catId
-        const deleteCat = await Category.deleteOne({ _id: id })
-        res.redirect("/admin/productCatrgory")
-    } catch (error) {
-        console.log(error);
-    }
-}
+
 
 const unlistedCategory = async (req, res) => {
     const catId = req.params.catid;
@@ -112,7 +105,7 @@ module.exports ={
     addProductCategory,
     editCategoryLoad,
     editedCategory,
-    deletecategory,
+ 
     unlistedCategory,
     listedCategory
 

@@ -193,7 +193,7 @@
             <div class="content-header">
               <div>
                 <h2 class="content-title card-title">Category Management </h2>
-                <p>Add, edit, or delete a category</p>
+                
               </div>
               <div>
                 <input type="text" placeholder="Search Categories" class="form-control bg-white">
@@ -247,15 +247,15 @@
                                         <th>Status</th>
                                         <th>Action</th>
                                         
-                                        <th class="text-center">Edit/Delete</th>
+                                        <th class="text-center">Edit</th>
                                         
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% if (typeof category !== 'undefined') { %>
-                                        <% for (let i = 0; i < category.length; i++) { %>
+                                        <% for (let i = category.length - 1; i >= 0; i--) { %>
                                             <tr>
-                                                <td><br><%= i+1 %></br></td>
+                                                <td><br><%=category.length - i%></br></td>
                                                 <td><br><%= category[i].name %></br></td>
                                                 <td><br><%= category[i].list ? 'Listed' : 'Unlisted' %></br></td>
                                                 <td>
@@ -269,7 +269,7 @@
                                                 </td>
                                                 <td class="d-flex justify-content-center align-items-center">
                                                     <a href="/admin/editcategory?CategoryId=<%= category[i]._id %>"><button class="btn btn-primary">Edit</button></a>
-                                                    <a href="/admin/deletecategory?catId=<%= category[i]._id %>"><button class="btn btn-danger">Delete</button></a>
+                                                   
                                                 </td>
                                             </tr>
                                         <% } %>
@@ -317,7 +317,7 @@
           
             Swal.fire({
                 title: "Are you sure?",
-               // text: "Once deleted, you will not be able to recover this imaginary file!",
+              
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: `Yes,${Action}`,

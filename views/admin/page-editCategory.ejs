@@ -17,16 +17,17 @@
               <div class="mb-md-5 mt-md-4 px-5 py-5">
    
 
-   <div class="container border p-5 mt-5 " style="background-color: #088178;">
-    <form action="/admin/editCategory" method="post">
+   <div class="container border p-5 mt-5 " style="background-color: #f2f2f2;">
+    <form id="myForm" action="/admin/editCategory" method="post">
        <% if(editCat) {%>
         <!-- Existing user data to populate the form -->
           
         <input type="hidden" name="catId" value="<%= editCat._id %>">
         <div class="form-outline form-white mb-3">
             <label class="form-label" for="typeNameX">Category Name</label>
-            <input type="text" id="typeNameX" class="form-control form-control-lg" name="name" value="<%= editCat.name %>" required />
+            <input type="text" id="name" class="form-control form-control-lg" name="name" value="<%= editCat.name %>" required />
         </div>
+        <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span></p>
         <!-- Additional form fields for editing -->
 
       <% } %>
@@ -49,3 +50,44 @@
 
 </body>
 </html>
+
+<script>
+  const nameField = document.getElementById('name');
+  const error1 = document.getElementById('error1');
+  const myForm = document.getElementById('myForm');
+
+  function nameValidation() {
+      let nameVal = nameField.value.trim();
+      if (nameVal === '') {
+          error1.style.display = 'block';
+          error1.innerHTML = 'Please enter a valid category name';
+          setTimeout(() => {
+              error1.style.display = 'none';
+              error1.innerHTML = '';
+          }, 3000);
+          return false;
+      } else if (/^-?\d+$/.test(nameVal)) {
+          error1.style.display = 'block';
+          error1.innerHTML = 'Please enter a name without numbers';
+          setTimeout(() => {
+              error1.style.display = 'none';
+              error1.innerHTML = '';
+          }, 3000);
+          return false;
+      } else {
+          error1.style.display = 'none';
+          error1.innerHTML = '';
+      }
+      return true;
+  }
+
+  nameField.addEventListener('blur', nameValidation);
+
+  myForm.addEventListener('submit', function (e) {
+      const isNameValid = nameValidation();
+
+      if (!isNameValid) {
+          e.preventDefault();
+      }
+  });
+</script>

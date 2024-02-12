@@ -445,39 +445,29 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <% userOrders.forEach((order, index)=> { %>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <%= index + 1 %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%=
-                                                                                    order.createdAt.toLocaleDateString()%>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= order.address.house %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= order.totalPrice %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= order.orderStatus %>
-                                                                            </td>
-                                                                            <td>
-                                                                                <%= order.paymentMethod %>
-                                                                            </td>
-                                                                            <% if(order.orderStatus !=="cancelled" ) {
-                                                                                %>
-                                                                                <td><a
-                                                                                        onclick="cancelOrder('<%= order._id %>')">Cancel</a>
-                                                                                </td>
+                                                                    <% if (userOrders && userOrders.length > 0) { %>
+                                                                        <% for (let i = userOrders.length - 1; i >= 0; i--) { %>
+                                                                            <tr>
+                                                                                <td><%= userOrders.length - i %></td>
+                                                                                <td><%= userOrders[i].createdAt.toLocaleDateString() %></td>
+                                                                                <td><%= userOrders[i].address.house %></td>
+                                                                                <td><%= userOrders[i].totalPrice %></td>
+                                                                                <td><%= userOrders[i].orderStatus %></td>
+                                                                                <td><%= userOrders[i].paymentMethod %></td>
+                                                                                <% if (userOrders[i].orderStatus !== "cancelled") { %>
+                                                                                    <td><a onclick="cancelOrder('<%= userOrders[i]._id %>')">Cancel</a></td>
                                                                                 <% } else { %>
-                                                                                    <td class="text-danger">cancelled
-                                                                                    </td>
-                                                                                    <% } %>
+                                                                                    <td class="text-danger">cancelled</td>
+                                                                                <% } %>
+                                                                            </tr>
+                                                                        <% } %>
+                                                                    <% } else { %>
+                                                                        <tr>
+                                                                            <td colspan="7">No orders found</td>
                                                                         </tr>
-                                                                        <% }); %>
+                                                                    <% } %>
                                                                 </tbody>
+                                                                
 
                                                             </table>
 

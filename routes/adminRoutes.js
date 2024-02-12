@@ -36,7 +36,7 @@ router.get("/editCategory",adminAuth.isLogout,categoryControllers.editCategoryLo
 
 router.post("/editCategory",categoryControllers.editedCategory)
 
-router.get("/deletecategory",adminAuth.isLogout,categoryControllers.deletecategory)
+
 
 router.get("/list-Category/:catid",adminAuth.isLogout,categoryControllers.listedCategory)
 
