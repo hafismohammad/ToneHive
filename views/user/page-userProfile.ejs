@@ -455,8 +455,7 @@
                                                                                     order.createdAt.toLocaleDateString()%>
                                                                             </td>
                                                                             <td>
-                                                                                <%= order.address.house
-                                                                                    %>
+                                                                                <%= order.address.house %>
                                                                             </td>
                                                                             <td>
                                                                                 <%= order.totalPrice %>
@@ -514,34 +513,37 @@
                                                                             <%= userAddress[i].address.name %>
                                                                         </span>
                                                                     </div>
-                                                                   
+
                                                                     <div>
                                                                         <span><strong>Mobile:</strong>
                                                                             <%= userAddress[i].address.mobile %>
                                                                         </span>
                                                                     </div>
-                                                                   
+
                                                                     <div>
                                                                         <span><strong>House:</strong>
                                                                             <%= userAddress[i].address.house %>
                                                                         </span>
                                                                     </div>
-                                                                   
+
                                                                     <div>
                                                                         <span><strong>City:</strong>
                                                                             <%= userAddress[i].address.city %>
                                                                         </span>
                                                                     </div>
-                                                                    
+
                                                                     <div>
                                                                         <span><strong>Pincode:</strong>
                                                                             <%= userAddress[i].address.pincode %>
                                                                         </span>
                                                                     </div>
-                                                                   
-                                                                    <div class="d-flex justify-content-start mt-2">
-                                                                        <a  href="/userProfileAddress/<%= userAddress[i].address._id %>"   class="btn btn-secondary btn-sm ml-15">Edit Address</a>
 
+                                                                    <div class="d-flex justify-content-start mt-2">
+                                                                        <a href="/userProfileAddress/<%= userAddress[i].address._id %>"
+                                                                            class="btn btn-secondary btn-sm ml-15">Edit
+                                                                            Address</a>
+                                                                        <a onclick="deleteAddress('<%= userAddress[i].address._id %>')"
+                                                                            class="btn btn-text-danger btn-sm ml-15">Delete</a>
                                                                     </div>
                                                                 </li>
                                                                 <% } %>
@@ -623,7 +625,7 @@
 
                                                 </div>
                                             </div>
-<script src="/public/formValidation/user/addressScript.js"></script>                 
+                                            <script src="/public/formValidation/user/addressScript.js"></script>
 
                                             <!-- <div class="col-lg-6">
                         
@@ -653,90 +655,54 @@
                                             </div> -->
                                             <!-- </div>
                                     </div> -->
-                                            <div class="tab-pane fade" id="account-detail" role="tabpanel"
-                                                aria-labelledby="account-detail-tab">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5>Account Details</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <p>Already have an account? <a
-                                                                href="page-login-register.html">Log in
-                                                                instead!</a></p>
-                                                        <form method="post" name="enq">
-                                                            <div class="row">
-                                                                <% if(userId ){ %>
-                                                                    <div class="form-group col-md-12">
-                                                                        <label>Name <span
-                                                                                class="required">*</span></label>
-                                                                        <input value="<%= userId .name %>" required=""
-                                                                            class="form-control square" name="name"
-                                                                            type="text">
-                                                                    </div>
+                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+    <div class="card">
+        <div class="card-header">
+            <h5>Account Details</h5>
+        </div>
+        <div class="card-body">
+            <p>Already have an account? <a href="page-login-register.html">Log in instead!</a></p>
+            <form method="post" name="enq">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Name <span class="required">*</span></label>
+                        <input value="<%= userId ? userId.name : '' %>" required class="form-control square" name="name" type="text">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input value="<%= userId ? userId.email : '' %>" required class="form-control square" name="email" type="email">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Mobile <span class="required">*</span></label>
+                        <input value="<%= userId ? userId.mobile : '' %>" required class="form-control square" name="mobile" type="tel">
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>Current Password <span class="required">*</span></label>
+                        <input id="password" required class="form-control square" name="password" type="password">
+                    </div>
+                    <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span></p>
+                    <div class="form-group col-md-12">
+                        <label>New Password <span class="required">*</span></label>
+                        <input id="npassword" required class="form-control square" name="npassword" type="password">
+                    </div>
+                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span></p>
+                    <div class="form-group col-md-12">
+                        <label>Confirm Password <span class="required">*</span></label>
+                        <input id="cpassword" required class="form-control square" name="cpassword" type="password">
+                    </div>
+                    <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span></p>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                                                                    <div class="form-group col-md-12">
-                                                                        <label>Email Address <span
-                                                                                class="required">*</span></label>
-                                                                        <input value="<%= userId .email %>" required=""
-                                                                            class="form-control square" name="email"
-                                                                            type="email">
-                                                                    </div>
-                                                                    <div class="form-group col-md-12">
-                                                                        <label>Mobile <span
-                                                                                class="required">*</span></label>
-                                                                        <input value="<%= userId .mobile %>" required=""
-                                                                            class="form-control square" name="mobile"
-                                                                            type="mobile">
-                                                                    </div>
-                                                                    <% } %>
-                                                            </div>
-
-                                                        </form>
-
-                                                    </div><br><br><br>
-                                                    <div class="card-body">
-                                                        <form id="formId" action="/changePassword" method="post">
-                                                            <div class="row">
-                                                                <div class="form-group col-md-12">
-                                                                    <label>Current Password <span
-                                                                            class="required">*</span></label>
-                                                                    <input id="password" required=""
-                                                                        class="form-control square" name="password"
-                                                                        type="password">
-                                                                </div>
-                                                                <p><span id="error1" style="display: none;"
-                                                                        class="mt-15 err text-danger"></span></p>
-                                                                <div class="form-group col-md-12">
-
-                                                                    <label>New Password <span
-                                                                            class="required">*</span></label>
-                                                                    <input id="npassword" required=""
-                                                                        class="form-control square" name="npassword"
-                                                                        type="password">
-                                                                </div>
-                                                                <p><span id="error2" style="display: none;"
-                                                                        class="mt-15 err text-danger"></span></p>
-                                                                <div class="form-group col-md-12">
-
-                                                                    <label>Confirm Password <span
-                                                                            class="required">*</span></label>
-                                                                    <input id="cpassword" required=""
-                                                                        class="form-control square" name="cpassword"
-                                                                        type="password">
-                                                                </div>
-                                                                <p><span id="error3" style="display: none;"
-                                                                        class="mt-15 err text-danger"></span></p>
-                                                                <div class="col-md-12">
-                                                                    <button type="submit"
-                                                                        class="btn btn-fill-out submit" name="submit"
-                                                                        value="Submit">Save</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -961,21 +927,66 @@
 
 
 <script>
+    function deleteAddress(addressId) {
+        console.log(addressId);
+        Swal.fire({
+            title: "Are you sure?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes`,
+            cancelButtonText: 'Cancel',
+            allowOutsideClick: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/deleteAddress/${addressId}`, { method: "DELETE" })
+                    .then(res => {
+                        if (res.ok) {
+                            Swal.fire({
+                                title: `Done`,
+                                text: "You clicked the button!",
+                                icon: "success",
+                                button: false
+                            });
+                            // Delay page reload after displaying the success message
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000); // Adjust the timeout as needed
 
-    function deleteAddress(userId) {
+                        } else {
+                            Swal.fire({
+                                title: "Something went wrong!",
+                                text: "You clicked the button!",
+                                icon: "error",
+                            });
+                        }
+                    });
+
+            } else {
+                Swal.fire({
+                    title: "Canceled!",
+                    text: "You clicked the button!",
+                    icon: "info",
+                });
+            }
+        });
+    }
+</script>
+
+
+<script>
+
+    function deleteAddress(addressId) {
         Swal.fire('Do you want to delete address', {
             buttons: ["No", "yes"],
         }).then((res) => {
             if (res.isConfirmed) {
                 $.ajax({
-                    url: '/deleteAddress/' + userId,
+                    url: '/deleteAddress/' + addressId,
                     method: 'DELETE',
                 }).done((res) => {
                     Swal.fire('Successful', `${res.message}`, 'success').then(() => {
 
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
+
                     });
                 }).fail((error) => {
                     console.log(error);
@@ -984,4 +995,3 @@
         });
     }
 </script>
-

@@ -3,7 +3,8 @@ const User = require("../models/userModel")
 
 const customerLoad = async (req, res) => {
     try {
-        const userData = await User.find({ isAdmin: 0 });
+        const userData = await User.find();
+        console.log(userData);
         res.render("admin/page-customers", { user: userData })
     } catch (error) {
         console.log(error);

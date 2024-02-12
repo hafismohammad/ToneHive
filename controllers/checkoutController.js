@@ -180,16 +180,13 @@ const edittedAddress = async (req, res) => {
 
 const placeOrderPost = async (req, res) => {
     try {
-      const userId = req.session.user._id
+        const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
-       console.log(userAddressId);
+        console.log(userAddressId);
 
-        const addressData = await User.findOne({_id:userId,'address._id':address}, {'address.$':1, _id:0})
+        const addressData = await User.findOne({_id: userId, 'address._id': address}, {'address.$': 1, _id: 0});
       
-        // const userData = addressData.userId;
-     
-        
         const cartItems = await Cart.aggregate([
             { $match: { userId: userId } },
             { $unwind: '$items' },
@@ -210,13 +207,10 @@ const placeOrderPost = async (req, res) => {
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
-      
-
-
 
         await Order.create({
             address: addressData.address[0],
-            userId:userId,
+            userId: userId,
             paymentMethod: paymentMethod,
             products: cartItems,
             totalPrice: totalCartPrice,
@@ -224,10 +218,9 @@ const placeOrderPost = async (req, res) => {
             createdAt: formattedDate
         });
 
-        await Cart.deleteOne({userId: userId})
+        await Cart.deleteOne({ userId: userId });
 
-    res.redirect('/orderSuccess')
-        res.json({ message: 'Order placed successfully!' });
+        res.redirect('/orderSuccess'); // Redirect the user to the '/orderSuccess' page
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to place the order.' });

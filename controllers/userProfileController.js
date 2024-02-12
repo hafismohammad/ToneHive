@@ -61,11 +61,12 @@ const userProfile = async (req, res) => {
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
 
         // const message = req.flash('message');
-
+        const message = req.flash('message');
         res.render("user/page-userProfile", {
             userId: userData,
             userAddress: userAddress,
             userOrders: userOrders,
+            message:message
 
         });
     } catch (error) {
@@ -215,17 +216,32 @@ const profileAddressEditpost = async (req, res) => {
     }
 
 
-// const userProfileAddressDelete = async (req, res) => {
-//     try {
-//         const id = req.params.id;
-//         console.log(id);
-//         await AddreddModel.deleteMany({ _id: id })
+    const userProfileAddressDelete = async (req, res) => {
+        try {
+            const userId = req.session.user._id
 
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+            const id = req.params.id;
+ 
 
+    
+            const result = await User.updateOne(
+                { _id: userId },
+                { $pull: { address: { _id: id } } }
+            );
+    
+            if (result.nModified > 0) {
+                console.log("Address deleted successfully.");
+                res.status(200).json({ message: "Address deleted successfully." });
+            } else {
+                console.log("Address not found or already deleted.");
+                res.status(404).json({ message: "Address not found or already deleted." });
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    };
+    
 
 const saltRounds = 10;
 
@@ -322,11 +338,12 @@ module.exports = {
     userProfile,
     AddressPost,
     editProfileAddress,
-    // userProfileAddressDelete,
+    userProfileAddressDelete,
     changePassword,
     viewOrderDetails,
     orderCancel,
     profileEditAddressLoad,
     editProfileAddress,
-    profileAddressEditpost
+    profileAddressEditpost,
+    userProfileAddressDelete
 }

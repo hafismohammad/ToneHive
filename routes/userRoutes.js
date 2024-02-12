@@ -56,7 +56,7 @@ router.post("/porfileAddress/:id",userProfileController.editProfileAddress)
 
 router.post("/profileAddresspost/:id",userProfileController.profileAddressEditpost)
 
-//router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
+router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
 
 router.post("/changePassword",userProfileController.changePassword)
 
