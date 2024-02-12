@@ -14,10 +14,11 @@ const error5 = document.getElementById('error5');
 const error6 = document.getElementById('error6');
 const error7 = document.getElementById('error7');
 
-const formId = document.getElementById('myform');
+const formId = document.getElementById('formId');
 
 
-function nameValidate() {
+
+ function nameValidate() {
     const nameVal = nameId.value.trim();
     if (nameVal === '') {
         error1.style.display = 'block';
@@ -144,6 +145,7 @@ function mobileValidate() {
     return true;
 }
 
+
 nameId.addEventListener('blur', nameValidate);
 houseId.addEventListener('blur', houseValidate);
 cityId.addEventListener('blur', cityValidate);
@@ -151,8 +153,10 @@ stateId.addEventListener('blur', stateValidate);
 countryId.addEventListener('blur', countryValidate);
 pincodeId.addEventListener('blur', pincodeValidate);
 mobileId.addEventListener('blur', mobileValidate);
+// Select the submit button element
 
 formId.addEventListener('submit', function (e) {
+
     const isNameValid = nameValidate();
     const isHouseValid = houseValidate();
     const isCityValid = cityValidate();
@@ -163,6 +167,7 @@ formId.addEventListener('submit', function (e) {
 
     if (!isNameValid || !isHouseValid || !isCityValid || !isStateValid || !isCountryValid || !isPincodeValid || !isMobileValid) {
         e.preventDefault();
-        console.log("hello");
     }
 });
+
+

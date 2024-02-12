@@ -514,30 +514,34 @@
                                                                             <%= userAddress[i].address.name %>
                                                                         </span>
                                                                     </div>
+                                                                   
                                                                     <div>
                                                                         <span><strong>Mobile:</strong>
                                                                             <%= userAddress[i].address.mobile %>
                                                                         </span>
                                                                     </div>
+                                                                   
                                                                     <div>
                                                                         <span><strong>House:</strong>
                                                                             <%= userAddress[i].address.house %>
                                                                         </span>
                                                                     </div>
+                                                                   
                                                                     <div>
                                                                         <span><strong>City:</strong>
                                                                             <%= userAddress[i].address.city %>
                                                                         </span>
                                                                     </div>
+                                                                    
                                                                     <div>
                                                                         <span><strong>Pincode:</strong>
                                                                             <%= userAddress[i].address.pincode %>
                                                                         </span>
                                                                     </div>
+                                                                   
                                                                     <div class="d-flex justify-content-start mt-2">
-                                                                        <a href="/editAddress/<%=  userAddress[i].address._id %>"
-                                                                            class="btn btn-secondary btn-sm mr-2">Edit
-                                                                            Address</a>
+                                                                        <a  href="/userProfileAddress/<%= userAddress[i].address._id %>"   class="btn btn-secondary btn-sm ml-15">Edit Address</a>
+
                                                                     </div>
                                                                 </li>
                                                                 <% } %>
@@ -550,7 +554,7 @@
                                             <div class="tab-pane fade" id="newaddress" role="tabpanel"
                                                 aria-labelledby="address-new">
                                                 <div class="row">
-                                                    <form id="formId" action="/userProfileAddress" method="post">
+                                                    <form id="myform" action="/userProfileAddress" method="post">
                                                         <div class="ship_detail">
                                                             <div class="form-group">
                                                                 <div class="chek-form">
@@ -579,7 +583,6 @@
                                                             </div>
                                                             <p><span id="error3" style="display: none;"
                                                                     class="mt-15 err text-danger"></span></p>
-
                                                             <div class="form-group">
                                                                 <input id="state" required="" type="text" name="state"
                                                                     placeholder="State *">
@@ -591,9 +594,8 @@
                                                                 <input id="country" required="" type="text"
                                                                     name="country" placeholder="Country *">
                                                             </div>
-                                                            <p><span id="error5" style="display: none;"
+                                                            <p><span id="error5" style="display: block;"
                                                                     class="mt-15 err text-danger"></span></p>
-
                                                             <div class="form-group">
                                                                 <input id="pincode" required="" type="text"
                                                                     name="pincode" placeholder="Pincode *">
@@ -621,9 +623,7 @@
 
                                                 </div>
                                             </div>
-
-                                            <script src="/public/formValidation/user/addressScript.js"></script>
-
+<script src="/public/formValidation/user/addressScript.js"></script>                 
 
                                             <!-- <div class="col-lg-6">
                         
@@ -909,144 +909,7 @@
 
 </html>
 
-//
-<script>
 
-    //     function deleteAddress(userId) {
-    //         Swal.fire('Do you want to delete address', {
-    //             buttons: ["No", "yes"],
-    //         }).then((res) => {
-    //             if (res.isConfirmed) {
-    //                 $.ajax({
-    //                     url: '/deleteAddress/' + userId,
-    //                     method: 'DELETE',
-    //                 }).done((res) => {
-    //                     Swal.fire('Successful', `${res.message}`, 'success').then(() => {
-
-    //                         setTimeout(() => {
-    //                             window.location.reload();
-    //                         }, 1000);
-    //                     });
-    //                 }).fail((error) => {
-    //                     console.log(error);
-    //                 });
-    //             }
-    //         });
-    //     }
-    // </script>
-
-
-//
-<script>
-    //     const passwordId = document.getElementById('password');
-    //     const npasswordId = document.getElementById('npassword');
-    //     const cpasswordId = document.getElementById('cpassword');
-
-    //     const error1 = document.getElementById('error1');
-    //     const error2 = document.getElementById('error2');
-    //     const error3 = document.getElementById('error3');
-
-    //     const formId = document.getElementById('formId');
-
-    //     function passwordValidation() {
-    //         const PassVal = passwordId.value;
-    //         const alpha = /[a-zA-Z]/;
-    //         const digit = /\d/;
-    //         if (PassVal.length < 8) {
-    //             error1.style.display = "block";
-    //             error1.innerHTML = "Must enter at least 8 characters";
-
-    //             setTimeout(() => {
-    //                 error1.style.display = "none";
-    //                 error1.innerHTML = "";
-    //             }, 3000);
-
-    //         } else if (!alpha.test(PassVal) || !digit.test(PassVal)) {
-    //             error1.style.display = "block"
-    //             error1.innerHTML = "Should contain number and alphabets !!"
-
-    //             setTimeout(() => {
-    //                 error1.style.display = "none";
-    //                 error1.innerHTML = "";
-    //             }, 3000);
-
-    //         } else {
-    //             error1.style.display = "none";
-    //             error1.innerHTML = ""
-    //         }
-    //     }
-
-    //     function npasswordValidation() {
-    //         const nPassVal = npasswordId.value;
-    //         const alpha = /[a-zA-Z]/;
-    //         const digit = /\d/;
-    //         if (nPassVal.length < 8) {
-    //             error2.style.display = "block";
-    //             error2.innerHTML = "Must enter at least 8 characters";
-
-    //             setTimeout(() => {
-    //                 error2.style.display = "none";
-    //                 error2.innerHTML = "";
-    //             }, 3000);
-
-    //         } else if (!alpha.test(nPassVal) || !digit.test(nPassVal)) {
-    //             error2.style.display = "block"
-    //             error2.innerHTML = "Should contain number and alphabets !!"
-
-    //             setTimeout(() => {
-    //                 error2.style.display = "none";
-    //                 error2.innerHTML = "";
-    //             }, 3000);
-
-    //         } else {
-    //             error2.style.display = "none";
-    //             error2.innerHTML = ""
-    //         }
-    //     }
-
-    //     function cpasswordValidation() {
-    //         const cPassVal = cpasswordId.value;
-    //         const alpha = /[a-zA-Z]/;
-    //         const digit = /\d/;
-    //         if (cPassVal.length < 8) {
-    //             error3.style.display = "block";
-    //             error3.innerHTML = "Must enter at least 8 characters";
-
-    //             setTimeout(() => {
-    //                 error3.style.display = "none";
-    //                 error3.innerHTML = "";
-    //             }, 3000);
-
-    //         } else if (!alpha.test(cPassVal) || !digit.test(cPassVal)) {
-    //             error3.style.display = "block"
-    //             error3.innerHTML = "Should contain number and alphabets !!"
-
-    //             setTimeout(() => {
-    //                 error3.style.display = "none";
-    //                 error3.innerHTML = "";
-    //             }, 3000);
-
-    //         } else {
-    //             error3.style.display = "none";
-    //             error3.innerHTML = ""
-    //         }
-    //     }
-
-    //     passwordId.addEventListener("blur", passwordValidation);
-    //     npasswordId.addEventListener("blur", npasswordValidation);
-    //     cpasswordId.addEventListener("blur", cpasswordValidation);
-
-    //     formId.addEventListener('submit', function (e) {
-    //         const validpass = passwordValidation();
-    //         const validnPass = npasswordValidation();
-    //         const validcPass = cpasswordValidation();
-
-
-    //         if (!validpass || !validnPass || !validcPass) {
-    //             e.preventDefault();
-    //         }
-    //     });
-    // </script>
 
 
 <script>
@@ -1122,98 +985,3 @@
     }
 </script>
 
-<!-- 
-<script>
-
-	$(document).ready(function () {
-		$('#add-address-form').submit((e) => {
-			e.preventDefault();
-			$.ajax({
-				url: '/add-address',
-				type: 'post',
-				data: $('#add-address-form').serialize()
-			})
-				.done((res) => {
-					swal({
-						title: "Success",
-						text: "New Address added.",
-						icon: "success",
-						button: "OK",
-					}).then(() => {
-						console.log(res.message);
-						location.reload()
-						// setTimeout(()=>{
-						// 	Toastify({
-						// 		text: "Address added ",
-						// 		duration: 3000,
-						// 		newWindow: true,
-						// 		close: true,
-						// 		gravity: "top", // `top` or `bottom`
-						// 		position: "center", // `left`, `center` or `right`
-						// 		stopOnFocus: true, // Prevents dismissing of toast on hover
-						// 		style: {
-						// 			background: "yellow",
-						// 		},
-						// 		}).showToast();
-						// },1000)
-						// location.href = "#tab-addAddress"
-					})
-				})
-				.fail((err) => {
-					console.log(err);
-				})
-		})
-	})
-
-
-	function getAddress(addressId) {
-		console.log(addressId);
-		$.ajax({
-			url: '/edit-address/' + addressId,
-			type: 'get',
-
-		}).done((res) => {
-			console.log(res.address);
-			document.getElementById('addressId').value = res.address._id;
-			document.getElementById('fname').value = res.address.first_name;
-			document.getElementById('lname').value = res.address.last_name;
-			document.getElementById('mobile').value = res.address.mobile;
-			document.getElementById('email').value = res.address.email_id;
-			document.getElementById('address').value = res.address.address;
-			document.getElementById('country').value = res.address.country;
-			document.getElementById('state').value = res.address.state;
-			document.getElementById('city').value = res.address.city;
-			document.getElementById('pincode').value = res.address.pincode;
-		})
-			.fail((error) => {
-				console.log(error);
-			})
-	}
-
-
-	$(document).ready(function () {
-		$('#edit-address-form').submit((e) => {
-			e.preventDefault();
-			$.ajax({
-				url: '/edit-address',
-				type: 'post',
-				data: $('#edit-address-form').serialize()
-			})
-				.done((res) => {
-					swal({
-						title: "Success",
-						text: "Address Updated.",
-						icon: "success",
-						button: "OK",
-					}).then(() => {
-						console.log(res.message);
-						location.reload()
-					})
-				})
-				.fail((err) => {
-					console.log(err);
-				})
-		})
-	})
-
-</script> -->

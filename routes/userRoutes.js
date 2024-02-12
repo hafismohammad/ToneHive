@@ -34,6 +34,7 @@ router.get("/RecoverForgottPassword",forgottPassworControl.forgotPasswordLoad)
 router.post("/RecoverForgottPassword",forgottPassworControl.forgotPasswordPost)
 
 router.get("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordLoad)
+
 router.post("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordPost)
 
 // otp login
@@ -48,6 +49,12 @@ router.get("/productView/",userControllers.productViews)
 router.get("/userProfile",userProfileController.userProfile)
 
 router.post("/userProfileAddress",userProfileController.AddressPost)
+
+router.get("/userProfileAddress/:id",userProfileController.profileEditAddressLoad)
+
+router.post("/porfileAddress/:id",userProfileController.editProfileAddress)
+
+router.post("/profileAddresspost/:id",userProfileController.profileAddressEditpost)
 
 //router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
 

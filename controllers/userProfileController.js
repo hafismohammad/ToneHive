@@ -30,7 +30,8 @@ const userProfile = async (req, res) => {
                     "address.state": 1,
                     "address.country": 1,
                     "address.pincode": 1,
-                    "address.mobile": 1  
+                    "address.mobile": 1 ,
+                    "address._id" : 1 
                 }
             }
         ]);
@@ -115,6 +116,103 @@ const AddressPost = async (req, res) => {
     }
 };
 
+   const profileEditAddressLoad = async (req, res) => {
+    try {
+        const userId = req.session.user._id;
+        const addressId = req.params.id;
+       
+        const userAddress = await User.findOne(
+            { _id: userId, "address._id": addressId },
+            { "address.$": 1, _id: 0 }
+        );
+
+        res.render("user/page-profileEditAddress", { userAddress });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+const editProfileAddress = async (req, res) => {
+    try {
+        const userId = req.session.user._id;
+        const addressId = req.params.id;
+        const { name, house, city, state, country, pincode, mobile } = req.body;
+
+        const updatedUser = await User.findOneAndUpdate(
+            { 
+                _id: userId, 
+                "address._id": addressId 
+            }, 
+            { 
+                $set: {
+                    "address.$.name": name,
+                    "address.$.house": house,
+                    "address.$.city": city,
+                    "address.$.state": state,
+                    "address.$.country": country,
+                    "address.$.pincode": pincode,
+                    "address.$.mobile": mobile
+                }
+            },
+            { 
+                new: true 
+            }
+        );
+
+        if (updatedUser) {
+       
+            res.redirect('/checkout');
+        } else {
+            console.log("User address update failed.");
+            res.status(404).send("User address update failed.");
+        }
+    } catch (error) {
+        console.error("Error updating user address:", error);
+        res.status(500).send("Error updating user address. Please try again later.");
+    }
+};
+
+
+const profileAddressEditpost = async (req, res) => {
+        try {
+            const userId = req.session.user._id;
+            const addressId = req.params.id;
+            const { name, house, city, state, country, pincode, mobile } = req.body;
+    
+            const updatedUser = await User.findOneAndUpdate(
+                { 
+                    _id: userId, 
+                    "address._id": addressId 
+                }, 
+                { 
+                    $set: {
+                        "address.$.name": name,
+                        "address.$.house": house,
+                        "address.$.city": city,
+                        "address.$.state": state,
+                        "address.$.country": country,
+                        "address.$.pincode": pincode,
+                        "address.$.mobile": mobile
+                    }
+                },
+                { 
+                    new: true 
+                }
+            );
+    
+            if (updatedUser) {
+           
+                res.redirect('/userProfile');
+            } else {
+                console.log("User address update failed.");
+                res.status(404).send("User address update failed.");
+            }
+        } catch (error) {
+            console.error("Error updating user address:", error);
+            res.status(500).send("Error updating user address. Please try again later.");
+        }
+    }
 
 
 // const userProfileAddressDelete = async (req, res) => {
@@ -223,8 +321,12 @@ const orderCancel = async (req, res) => {
 module.exports = {
     userProfile,
     AddressPost,
+    editProfileAddress,
     // userProfileAddressDelete,
     changePassword,
     viewOrderDetails,
-    orderCancel
+    orderCancel,
+    profileEditAddressLoad,
+    editProfileAddress,
+    profileAddressEditpost
 }

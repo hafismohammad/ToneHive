@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
         state: { type: String },
         country: { type: String },
         pincode: { type: Number } ,
-        mobile: { type: Number }
+        mobile: { type: String  }
     },
     paymentMethod: {
         type: String,

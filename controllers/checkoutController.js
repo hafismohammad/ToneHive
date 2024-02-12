@@ -31,7 +31,7 @@ const checkoutLoad = async (req, res) => {
             }
         ]);
         
- 
+
         const cartItems = await Cart.aggregate([
             {
                 $match: { userId: userId }
