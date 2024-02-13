@@ -58,7 +58,7 @@ router.post("/profileAddresspost/:id",userProfileController.profileAddressEditpo
 
 router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelete)
 
-router.post("/changePassword",userProfileController.changePassword)
+router.post("/accountDetails",userProfileController.changePassword)
 
 // otp register
 router.get("/otpRegister", otpControllers.otpRegisterLoad)

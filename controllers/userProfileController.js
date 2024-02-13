@@ -12,7 +12,7 @@ const userProfile = async (req, res) => {
     try {
         let userId = req.session.user._id;
         const userInfo = await User.findOne(userId)
-
+       
         const userData = await User.findById(userId);
         if (!userData) {
             return res.status(404).send('User not found');
@@ -248,45 +248,54 @@ const profileAddressEditpost = async (req, res) => {
     
 
 const saltRounds = 10;
-
 const changePassword = async (req, res) => {
-    const currentPassword = req.body.password;
-    const newPassword = req.body.npassword;
-    const confirmedPassword = req.body.cpassword;
-
     try {
+        const {
+            name, email, mobile, password, npassword, cpassword
+        } = req.body;
+
         const userId = req.session.user._id;
 
-        const userData = await User.findOne(userId);
+        // Check if new password matches the confirm password
+        if (npassword !== cpassword) {
+            return res.status(400).send("New password and confirm password do not match");
+        }
 
-        // if (!userData) {
-        //     return res.status(404).send("User not found");
-        // }
-        // const passwordMatch = await bcrypt.compare(currentPassword, userData.password);
+        // Find the user document by userId
+        const userData = await User.findOne({ _id: userId });
 
-        // if (!passwordMatch) {
-        //     console.log("Current password is incorrect");
-        //     return res.status(400)
-        // }
+        if (!userData) {
+            return res.status(404).send("User not found");
+        }
 
-        // if (newPassword !== confirmedPassword) {
+        // Verify the current password
+        const passwordMatch = await bcrypt.compare(password, userData.password);
+        if (!passwordMatch) {
+            return res.status(400).send("Current password is incorrect");
+        }
 
-        //     return res.status(400)
-        // }
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(npassword, saltRounds);
 
-        // const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+        // Update user details including the password
+        await User.updateOne({ _id: userId }, {
+            $set: {
+                name: name,
+                email: email,
+                mobile: mobile,
+                password: hashedNewPassword
+            }
+        });
 
-        // await User.updateOne({ _id: userId }, { password: hashedNewPassword });
-
-        // console.log("Password changed successfully");
-
-        // res.status(200)
+        console.log("User account details and password changed successfully");
+        res.status(200).send("User account details and password changed successfully");
 
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal server error");
     }
 };
+
 
 const viewOrderDetails = async (req, res) => {
     try {

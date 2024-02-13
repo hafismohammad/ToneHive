@@ -659,30 +659,36 @@
                                                         <h5>Account Details</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <p>Already have an account? <a
-                                                                href="page-login-register.html">Log in instead!</a></p>
-                                                        <form method="post" name="enq">
+                                                      
+                                                        <form action="/accountDetails" method="post" name="enq">
                                                             <div class="row">
                                                                 <div class="form-group col-md-12">
                                                                     <label>Name <span class="required">*</span></label>
-                                                                    <input value="<%= userId ? userId.name : '' %>"
+                                                                    <input  id="name" value="<%= userId ? userId.name : '' %>"
                                                                         required class="form-control square" name="name"
                                                                         type="text">
                                                                 </div>
+                                                                <p><span id="error1" style="display: none;"
+                                                                    class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>Email Address <span
                                                                             class="required">*</span></label>
-                                                                    <input value="<%= userId ? userId.email : '' %>"
-                                                                        required class="form-control square"
+                                                                    <input  id="email" value="<%= userId ? userId.email : '' %>"
+                                                                
+                                                                    required class="form-control square"
                                                                         name="email" type="email">
                                                                 </div>
+                                                                <p><span id="error2" style="display: none;"
+                                                                    class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>Mobile <span
                                                                             class="required">*</span></label>
-                                                                    <input value="<%= userId ? userId.mobile : '' %>"
+                                                                    <input id="mobile" value="<%= userId ? userId.mobile : '' %>"
                                                                         required class="form-control square"
                                                                         name="mobile" type="tel">
                                                                 </div>
+                                                                <p><span id="error3" style="display: none;"
+                                                                    class="mt-15 err text-danger"></span></p>
                                                             </div>
 
                                                             <div class="row">
@@ -693,7 +699,7 @@
                                                                         class="form-control square" name="password"
                                                                         type="password">
                                                                 </div>
-                                                                <p><span id="error1" style="display: none;"
+                                                                <p><span id="error4" style="display: none;"
                                                                         class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>New Password <span
@@ -702,7 +708,7 @@
                                                                         class="form-control square" name="npassword"
                                                                         type="password">
                                                                 </div>
-                                                                <p><span id="error2" style="display: none;"
+                                                                <p><span id="error5" style="display: none;"
                                                                         class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>Confirm Password <span
@@ -711,7 +717,7 @@
                                                                         class="form-control square" name="cpassword"
                                                                         type="password">
                                                                 </div>
-                                                                <p><span id="error3" style="display: none;"
+                                                                <p><span id="error6" style="display: none;"
                                                                         class="mt-15 err text-danger"></span></p>
                                                                 <div class="col-md-12">
                                                                     <button type="submit"
