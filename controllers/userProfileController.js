@@ -11,7 +11,7 @@ const moment = require('moment');
 const userProfile = async (req, res) => {
     try {
         let userId = req.session.user._id;
-
+        const userInfo = await User.findOne(userId)
 
         const userData = await User.findById(userId);
         if (!userData) {
@@ -38,22 +38,25 @@ const userProfile = async (req, res) => {
 
      //   const userOrders = await Order.findOne({userId:userId},{'address':1})
 // console.log(userOrders1);
-        const userOrders = await Order.aggregate([
-            {
-                $match: { userId: userId }
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'address',
-                    foreignField: '_id',
-                    as: 'lookedUpAddress'
-                }
-            }
-            
-        ]);
+const userOrders = await Order.aggregate([
+    {
+        $match: { userId: userId }
+    },
+    {
+        $lookup: {
+            from: 'users',
+            localField: 'address',
+            foreignField: '_id',
+            as: 'lookedUpAddress'
+        }
+    },
+    {
+        $unwind: '$products' 
+    }
+]);
+
      
-        
+     
     
 
         const date = new Date();
@@ -66,7 +69,8 @@ const userProfile = async (req, res) => {
             userId: userData,
             userAddress: userAddress,
             userOrders: userOrders,
-            message:message
+            message:message,
+            userInfo:userInfo
 
         });
     } catch (error) {
@@ -255,28 +259,28 @@ const changePassword = async (req, res) => {
 
         const userData = await User.findOne(userId);
 
-        if (!userData) {
-            return res.status(404).send("User not found");
-        }
-        const passwordMatch = await bcrypt.compare(currentPassword, userData.password);
+        // if (!userData) {
+        //     return res.status(404).send("User not found");
+        // }
+        // const passwordMatch = await bcrypt.compare(currentPassword, userData.password);
 
-        if (!passwordMatch) {
-            console.log("Current password is incorrect");
-            return res.status(400)
-        }
+        // if (!passwordMatch) {
+        //     console.log("Current password is incorrect");
+        //     return res.status(400)
+        // }
 
-        if (newPassword !== confirmedPassword) {
+        // if (newPassword !== confirmedPassword) {
 
-            return res.status(400)
-        }
+        //     return res.status(400)
+        // }
 
-        const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+        // const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
-        await User.updateOne({ _id: userId }, { password: hashedNewPassword });
+        // await User.updateOne({ _id: userId }, { password: hashedNewPassword });
 
-        console.log("Password changed successfully");
+        // console.log("Password changed successfully");
 
-        res.status(200)
+        // res.status(200)
 
     } catch (error) {
         console.log(error);
@@ -334,6 +338,27 @@ const orderCancel = async (req, res) => {
     }
 }
 
+const viewProducrDetails = async (req, res) => {
+    try {
+        const userId = req.session.user._id
+       
+        const productId = req.params.id
+        console.log(userId,productId);
+      //  const orderid = new ObjectId(productId);
+      const orderedItems = await Order.findOne(
+        { userId: userId, 'products._id': productId }, 
+        { 'products.$': 1, _id: 0 }
+    );
+    orderedItems
+
+        console.log(orderedItems);
+
+        res.render("user/Page-viewDetails",{userOrders:orderedItems})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     userProfile,
     AddressPost,
@@ -345,5 +370,6 @@ module.exports = {
     profileEditAddressLoad,
     editProfileAddress,
     profileAddressEditpost,
-    userProfileAddressDelete
+    userProfileAddressDelete,
+    viewProducrDetails
 }

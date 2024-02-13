@@ -70,6 +70,8 @@ const cartLoad = async (req, res) => {
     const userId = req.session.user._id;
    
     try {
+        const userInfo = await User.findOne(userId)
+      
         const cartItems = await Cart.aggregate([
             {
                 $match: { userId: userId }
@@ -107,7 +109,7 @@ const cartLoad = async (req, res) => {
         
        
 
-        return res.render("user/page-cart", { cartItems: populatedCartItems, totalCartPrice });
+        return res.render("user/page-cart", {userInfo:userInfo, cartItems: populatedCartItems, totalCartPrice });
 
     } catch (error) {
         console.error(error);

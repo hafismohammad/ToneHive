@@ -292,26 +292,21 @@
     </header>
  <div class="col-lg-12">
    <div class="table-responsive">
+    
     <table class="table">
         <thead>
             <tr>
-                <th width="40%" style="font-weight: bold;">Product</th>
-                <th width="20%" style="font-weight: bold;">Unit Price</th>
-                <th width="20%" style="font-weight: bold;">Quantity</th>
-                <th width="20%" style="font-weight: bold; " class="text-end">Total</th>
+                <th style="font-weight: bold; width: 40%;">Product</th>
+                <th style="font-weight: bold; width: 20%;">Unit Price</th>
+                <th style="font-weight: bold; width: 20%;">Quantity</th>
+                <th style="font-weight: bold; width: 20%;" class="text-end">Total</th>
             </tr>
         </thead>
         <tbody>
-            <% for(let i = 1; i < userOrders.length; i++ ) { %>
-            <tr>
-                
-                <td><%= userOrders[i].price %></td>
-               
-                <!-- Calculate subtotal here if needed -->
-            </tr>
-            <% } %>
+          
         </tbody>
     </table>
+    
 </div>
 </div>    
 

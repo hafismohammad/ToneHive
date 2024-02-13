@@ -192,60 +192,44 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
 </html>
-<Script>
-//    
-$(document).ready(function() {
-    // Delete image button click event
-    $('.delete-image-btn').click(function() {
-        var index = $(this).data('index');
-        // Remove the image container
-        $('.image-container').eq(index).remove();
-    });
 
-    // Add image button click event
-    $('#add-image-btn').click(function() {
-        $('#imageInput').click(); // Trigger file input click
-    });
-
-    // Preview selected images
-    $('#imageInput').change(function() {
-        var files = $(this)[0].files;
-        // Clear existing images
-        $('#preview').empty();
-        if (files && files.length) {
-            for (var i = 0; i < files.length; i++) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#preview').append('<div class="image-container"><img src="' + e.target.result + '" alt="img"><button class="delete-image-btn">Delete</button></div>');
-                }
-                reader.readAsDataURL(files[i]);
-            }
-        }
-    });
-});
-
-
-</Script>
 <script>
-    // Assume each product has a unique ID
-$('.delete-product-btn').click(function() {
-    var productId = $(this).data('product-id');
-    
-    // Send an AJAX request to delete the product
-    $.ajax({
-        url: '/delete-product',
-        method: 'POST',
-        data: { productId: productId },
-        success: function(response) {
-            // Handle success response
-            // For example, remove the product from the UI
-            $(this).closest('.product-container').remove();
-        },
-        error: function(xhr, status, error) {
-            // Handle error response
-            console.error(error);
-        }
-    });
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('preview');
+
+    // Loop through each selected file
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        // Create a new image element
+        const imgElement = document.createElement('img');
+        imgElement.classList.add('image-container');
+
+        // Set up the remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.innerText = 'Remove';
+        removeBtn.classList.add('remove-image-btn');
+        removeBtn.addEventListener('click', function() {
+            // Remove the image container when the remove button is clicked
+            previewContainer.removeChild(imgElement);
+        });
+
+        // Read the file and set the image source
+        reader.onload = function() {
+            imgElement.src = reader.result;
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+
+        // Append the image and remove button to the preview container
+        previewContainer.appendChild(imgElement);
+        imgElement.appendChild(removeBtn);
+    }
 });
 
 </script>
+
+

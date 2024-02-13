@@ -22,6 +22,11 @@ const securePassword = async (password) => {
 
 const homeLoad = async (req, res) => {
     try {
+        const userId = req.session.user
+        const user = await User.findById(userId)
+        const userName = user.name;
+  
+        
         if (req.session.user) {
         const category = await Category.find({isList:false})
        
@@ -58,9 +63,9 @@ const homeLoad = async (req, res) => {
             }   
         }).filter(Boolean)
      // console.log(activeProducts);
-    
 
-        res.render("user/page-userHome", {category:category,products:productData,activeProducts:activeProducts})
+
+        res.render("user/page-userHome", {userName:userName,category:category,products:productData,activeProducts:activeProducts})
         } else {
             redirect("/")
         }
@@ -218,9 +223,12 @@ const userLogout = (req, res) => {
 
 const productViews = async (req, res) => {
     try {
+        const user = req.session.user
+       const userInfo = await User.findById({_id:user})
+    
         const id=req.query.id
         const productData = await Products.findOne({_id:id});
-        res.render("user/page-viewProduct",{products:productData})
+        res.render("user/page-viewProduct",{products:productData,userInfo:userInfo})
     } catch (error) {
         
     }

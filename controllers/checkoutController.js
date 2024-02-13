@@ -13,7 +13,7 @@ const checkoutLoad = async (req, res) => {
             throw new Error('User ID not found in session');
         }
         const userId = req.session.user._id
-
+        const userInfo = await User.findOne(userId)
         const userAddress = await User.aggregate([
             { $match: { _id: userId } },
             { $unwind: "$address" },
@@ -72,7 +72,8 @@ const checkoutLoad = async (req, res) => {
             userId:userId,
             userAddress:userAddress,
             cartItems:populatedCartItems,
-            totalCartPrice
+            totalCartPrice,
+            userInfo:userInfo
         })
     } catch (error) {
         console.log(error);
@@ -183,8 +184,7 @@ const placeOrderPost = async (req, res) => {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
-        console.log(userAddressId);
-
+       
         const addressData = await User.findOne({_id: userId, 'address._id': address}, {'address.$': 1, _id: 0});
       
         const cartItems = await Cart.aggregate([
@@ -194,6 +194,7 @@ const placeOrderPost = async (req, res) => {
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
         ]);
 
+
         let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
             const product = cartItem.productDetails[0];
@@ -201,6 +202,21 @@ const placeOrderPost = async (req, res) => {
             totalCartPrice += subtotal;
             return { ...cartItem, productDetails: product, subtotal: subtotal };
         });
+ const cartProducts = await Cart.aggregate([
+            { $match: { userId: userId } },
+            { $unwind: '$items' },
+            { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } },
+            { 
+              $project: {
+                productId: "$items.productId", 
+                quantity: "$items.quantity", 
+                price: "$items.price", 
+                _id: 0
+              } 
+            }
+          ]);
+          console.log(cartProducts);
+        
 
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
 
@@ -212,7 +228,7 @@ const placeOrderPost = async (req, res) => {
             address: addressData.address[0],
             userId: userId,
             paymentMethod: paymentMethod,
-            products: cartItems,
+            products: cartProducts,
             totalPrice: totalCartPrice,
             orderStatus: status,
             createdAt: formattedDate

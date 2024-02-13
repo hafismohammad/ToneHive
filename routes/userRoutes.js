@@ -93,4 +93,6 @@ router.get("/viewDetails",userProfileController.viewOrderDetails)
 
 router.patch("/cancelOrder/:id",userProfileController.orderCancel)
 
+router.get("/vewProductDetails/:id",userProfileController.viewProducrDetails)
+
 module.exports = router 
