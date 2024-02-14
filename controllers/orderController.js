@@ -5,7 +5,9 @@ const orderList = async (req, res) => {
    
         const orderDetails = await Order.find().populate('userId');
       
-        // console.log(orderDetails);
+    
+     
+        
 
         res.render("admin/page-orderList", { orderDetails: orderDetails });
     } catch (error) {
@@ -22,6 +24,7 @@ const adminOrderStatus = async (req, res) => {
 
         const order = await Order.findByIdAndUpdate(orderId, { orderStatus: status }, { new: true });
 
+       
         if (!order) {
             return res.status(404).json({ success: false, error: 'Order not found' });
         }
@@ -33,8 +36,22 @@ const adminOrderStatus = async (req, res) => {
     }
 };
 
+const orderProductView = async (req, res) => {
+    try {
+      const orderId = req.params.id
+  
+      const orderedItems = await Order.findById(orderId).populate(
+          'products.productId')
+          
+          res.render('admin/page-viewProductsDetails',{orderedItems:orderedItems})
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
     orderList,
-    adminOrderStatus
+    adminOrderStatus,
+    orderProductView
 }

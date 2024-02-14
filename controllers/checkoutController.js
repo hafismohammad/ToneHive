@@ -1,7 +1,7 @@
 const AddreddModel = require('../models/addressModel');
 const Cart = require('../models/cartModel')
 const User = require('../models/userModel')
-const ObjectId =require('mongoose').Types.ObjectId
+const ObjectId = require('mongoose').Types.ObjectId
 const Order = require('../models/orderModel')
 const moment = require('moment');
 const mongoose = require('mongoose')
@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 const checkoutLoad = async (req, res) => {
     try {
         if (!req.session.user || !req.session.user._id) {
-           
+
             throw new Error('User ID not found in session');
         }
         const userId = req.session.user._id
@@ -25,12 +25,12 @@ const checkoutLoad = async (req, res) => {
                     "address.state": 1,
                     "address.country": 1,
                     "address.pincode": 1,
-                    "address.mobile": 1 ,
-                    "address._id" : 1
+                    "address.mobile": 1,
+                    "address._id": 1
                 }
             }
         ]);
-        
+
 
         const cartItems = await Cart.aggregate([
             {
@@ -41,18 +41,18 @@ const checkoutLoad = async (req, res) => {
             },
             {
                 $project: {
-                    items: 1 
+                    items: 1
                 }
             },
             {
                 $lookup: {
-                    from: 'products', 
-                    localField: 'items.productId', 
-                    foreignField: '_id', 
-                    as: 'productDetails' 
+                    from: 'products',
+                    localField: 'items.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
                 }
             },
-           
+
         ]);
 
         let totalCartPrice = 0;
@@ -66,15 +66,15 @@ const checkoutLoad = async (req, res) => {
                 subtotal: subtotal
             };
         });
-   
+
         res.render("user/page-checkout",
-        {
-            userId:userId,
-            userAddress:userAddress,
-            cartItems:populatedCartItems,
-            totalCartPrice,
-            userInfo:userInfo
-        })
+            {
+                userId: userId,
+                userAddress: userAddress,
+                cartItems: populatedCartItems,
+                totalCartPrice,
+                userInfo: userInfo
+            })
     } catch (error) {
         console.log(error);
     }
@@ -82,28 +82,38 @@ const checkoutLoad = async (req, res) => {
 
 const addAddress = async (req, res) => {
     try {
-       
+
         const {
-            fname,
-            lname,
-            mobile,
-            email,
-            address,
-            country,
-            state,
+            name,
+            house,
             city,
+            state,
+            country,
             pincode,
-            userId
+            mobile,
+
         } = req.body
+        const userId = req.session.user._id;
+       
+        const newAddress = {
+            name: name,
+            house: house,
+            city: city,
+            state: state,
+            country: country,
+            pincode: pincode,
+            mobile: mobile,
 
-        const getAddress = {
-            fname:fname, lname:lname, mobile:mobile,
-            email:email, address:address,country:country, 
-            state:state, city:city, pincode:pincode, userId:userId       
+        };
+
+        const user = await User.findById({ _id: userId })
+
+        if (!user) {
+            return res.status(404).send('User not found');
         }
+        user.address.push(newAddress)
 
-        const findAddress = await AddreddModel.findOne({email:email})
-        const saveAddress = await AddreddModel.create(getAddress)
+        await user.save()
 
         res.redirect('/checkout')
     } catch (error) {
@@ -115,10 +125,10 @@ const addAddress = async (req, res) => {
 const editAddressLoad = async (req, res) => {
     try {
         const id = req.params.id
-        const userId=req.session.user._id;
-        const userAddress = await User.findOne({_id:userId,"address._id":id},{"address.$":1,_id:0});
-       
-        
+        const userId = req.session.user._id;
+        const userAddress = await User.findOne({ _id: userId, "address._id": id }, { "address.$": 1, _id: 0 });
+
+
         res.render("user/page-editAddress", { userAddress });
     } catch (error) {
         console.log(error);
@@ -131,11 +141,11 @@ const edittedAddress = async (req, res) => {
         const { name, house, city, state, country, pincode, mobile } = req.body;
 
         const updatedUser = await User.findOneAndUpdate(
-            { 
-                _id: userId, 
-                "address._id": addressId 
-            }, 
-            { 
+            {
+                _id: userId,
+                "address._id": addressId
+            },
+            {
                 $set: {
                     "address.$.name": name,
                     "address.$.house": house,
@@ -146,13 +156,13 @@ const edittedAddress = async (req, res) => {
                     "address.$.mobile": mobile
                 }
             },
-            { 
-                new: true 
+            {
+                new: true
             }
         );
 
         if (updatedUser) {
-       
+
             res.redirect('/checkout');
         } else {
             console.log("User address update failed.");
@@ -171,7 +181,7 @@ const edittedAddress = async (req, res) => {
 //         console.log(id);
 //        await AddreddModel.deleteMany({_id:id})
 
-    
+
 //         res.status(200).json({ message: "Address deleted successfully" });
 //     } catch (error) {
 //         console.log(error);
@@ -184,9 +194,9 @@ const placeOrderPost = async (req, res) => {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
-    
-        const addressData = await User.findOne({_id: userId, 'address._id': address}, {'address.$': 1, _id: 0});
-      
+
+        const addressData = await User.findOne({ _id: userId, 'address._id': address }, { 'address.$': 1, _id: 0 });
+
         const cartItems = await Cart.aggregate([
             { $match: { userId: userId } },
             { $unwind: '$items' },
@@ -202,21 +212,21 @@ const placeOrderPost = async (req, res) => {
             totalCartPrice += subtotal;
             return { ...cartItem, productDetails: product, subtotal: subtotal };
         });
- const cartProducts = await Cart.aggregate([
+        const cartProducts = await Cart.aggregate([
             { $match: { userId: userId } },
             { $unwind: '$items' },
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } },
-            { 
-              $project: {
-                productId: "$items.productId", 
-                quantity: "$items.quantity", 
-                price: "$items.price", 
-                _id: 0
-              } 
+            {
+                $project: {
+                    productId: "$items.productId",
+                    quantity: "$items.quantity",
+                    price: "$items.price",
+                    _id: 0
+                }
             }
-          ]);
-          console.log(cartProducts);
-        
+        ]);
+        console.log(cartProducts);
+
 
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
 

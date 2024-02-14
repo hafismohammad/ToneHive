@@ -63,6 +63,8 @@ router.get("/orderDetails",adminAuth.isLogout,orderControllers.orderList)
 
 router.post("/orderStatus",orderControllers.adminOrderStatus)
 
+router.get("/viewProductsDetails/:id",orderControllers.orderProductView)
+
 
 
 

@@ -386,13 +386,13 @@
                             <% if(orderedItems.orderStatus === 'delivered') {%>
                                 <div class="text-center"><span  class="badge rounded-pill alert-success"><%= orderedItems.orderStatus %></span></div>
                                 <% } %>
-                             <td class="text-center"><%=totalquantity %></td>
+                             <td class="text-center">₹ <%=totalquantity %></td>
                         
                          </tr>
                      <% }); %>
                      <tr>
                          <td colspan="4" class="text-end ">Total Price:</td>
-                         <td class="text-center"><%= orderedItems.totalPrice %></td>
+                         <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
                      </tr>
                   
                  <% } %>

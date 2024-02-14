@@ -218,26 +218,28 @@
                             <thead>
                                 <tr>
                                     <th>#ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">payment Method</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">CHANGE STATUS</th>
+                                    <th class="text-center" scope="col">Name</th>
+                                    <th class="text-center" scope="col">Email</th>
+                                    <th class="text-center" scope="col">PAYMENT METHOD</th>
+                                    <th class="text-center" scope="col">Total</th>
+                                    <th class="text-center" scope="col">Date</th>
+                                    <th class="text-center" scope="col">Status</th>
+                                    <th class="text-center" scope="col">CHANGE STATUS</th>
+                                    <th class="text-center" scope="col">VIEW DETAILS</th>
                                     <!-- <th scope="col" class="text-end"> Action </th> -->
                                 </tr>
                             </thead>
                             <tbody>
-                                <% for(let i = 0; i < orderDetails.length; i++) { %>
+                                <% if (orderDetails && orderDetails.length > 0) { %>
+                                    <% for (let i = orderDetails.length - 1; i >= 0; i--) { %>
                                 <tr>
                                     <td>0901</td>
                                     <!-- Accessing user details from userId field -->
-                                    <td><b><%= orderDetails[i].userId.name %></b></td>
-                                    <td><%= orderDetails[i].userId.email %></td>
-                                    <td><%= orderDetails[i].paymentMethod %></td>
-                                    <td>₹ <%= orderDetails[i].totalPrice %></td>
-                                    <td><%= orderDetails[i].createdAt.toLocaleDateString() %></td>
+                                    <td class="text-center"><b><%= orderDetails[i].userId.name %></b></td>
+                                    <td class="text-center"><%= orderDetails[i].userId.email %></td>
+                                    <td class="text-center"><%= orderDetails[i].paymentMethod %></td>
+                                    <td class="text-center">₹ <%= orderDetails[i].totalPrice %></td>
+                                    <td class="text-center"><%= orderDetails[i].createdAt.toLocaleDateString() %></td>
                                     <td width="7%">
                                         <% if (orderDetails[i].orderStatus == 'pending') { %>
                                             <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-warning"><%= orderDetails[i].orderStatus %></span>
@@ -274,7 +276,9 @@
                                         <% } %>
                                     </td>
                                    
-                                   
+                                   <td class="text-center">
+                                    <a href="/admin/viewProductsDetails/<%= orderDetails[i]._id %>"><button class="btn btn-primary">View Details</button></a>
+                                   </td>
                                     
                                    <!--  <td class="text-end"> -->
                                       
@@ -290,6 +294,7 @@
                                         <!-- dropdown //end -->
                                     <!-- </td> -->
                                 </tr>
+                                <% } %>
                                 <% } %>
                             </tbody>
                             

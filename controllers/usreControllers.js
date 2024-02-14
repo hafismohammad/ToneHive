@@ -228,7 +228,10 @@ const productViews = async (req, res) => {
     
         const id=req.query.id
         const productData = await Products.findOne({_id:id});
+    if(productData.product_status){
         res.render("user/page-viewProduct",{products:productData,userInfo:userInfo})
+    }
+       res.redirect("/userHome")
     } catch (error) {
         
     }
