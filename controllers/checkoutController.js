@@ -184,7 +184,7 @@ const placeOrderPost = async (req, res) => {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
-       
+    
         const addressData = await User.findOne({_id: userId, 'address._id': address}, {'address.$': 1, _id: 0});
       
         const cartItems = await Cart.aggregate([

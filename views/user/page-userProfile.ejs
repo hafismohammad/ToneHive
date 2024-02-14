@@ -242,7 +242,7 @@
                                 </div> -->
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
-                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                        <img alt="Evara" src="/public/assets/imgs/theme/icons/icon-cart.svg">
                                         <span class="pro-count blue">2</span>
                                     </a>
                                 </div>
@@ -462,7 +462,7 @@
                                                                                     <td class="text-danger">cancelled</td>
                                                                                 <% } %>
                                                                                 <td>
-                                                                                    <a href="/vewProductDetails/<%= userOrders[i].products._id %>"> <button  class="btn btn-primary btn-sm">View Details</button></a>
+                                                                                    <a href="/vewProductDetails/<%= userOrders[i]._id %>"> <button  class="btn btn-primary btn-sm">View Details</button></a>
                                                                                    
                                                                                 </td>
                                                                             </tr>
@@ -660,34 +660,34 @@
                                                     </div>
                                                     <div class="card-body">
                                                       
-                                                        <form action="/accountDetails" method="post" name="enq">
+                                                        <form id="userInfo" action="/accountDetails" method="post" name="enq">
                                                             <div class="row">
                                                                 <div class="form-group col-md-12">
                                                                     <label>Name <span class="required">*</span></label>
-                                                                    <input  id="name" value="<%= userId ? userId.name : '' %>"
+                                                                    <input  id="uname" value="<%= userId ? userId.name : '' %>"
                                                                         required class="form-control square" name="name"
                                                                         type="text">
                                                                 </div>
-                                                                <p><span id="error1" style="display: none;"
+                                                                <p><span id="uerror1" style="display: none;"
                                                                     class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>Email Address <span
                                                                             class="required">*</span></label>
-                                                                    <input  id="email" value="<%= userId ? userId.email : '' %>"
+                                                                    <input  id="uemail" value="<%= userId ? userId.email : '' %>"
                                                                 
                                                                     required class="form-control square"
                                                                         name="email" type="email">
                                                                 </div>
-                                                                <p><span id="error2" style="display: none;"
+                                                                <p><span id="uerror2" style="display: none;"
                                                                     class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>Mobile <span
                                                                             class="required">*</span></label>
-                                                                    <input id="mobile" value="<%= userId ? userId.mobile : '' %>"
+                                                                    <input id="umobile" value="<%= userId ? userId.mobile : '' %>"
                                                                         required class="form-control square"
                                                                         name="mobile" type="tel">
                                                                 </div>
-                                                                <p><span id="error3" style="display: none;"
+                                                                <p><span id="uerror3" style="display: none;"
                                                                     class="mt-15 err text-danger"></span></p>
                                                             </div>
 
@@ -699,7 +699,7 @@
                                                                         class="form-control square" name="password"
                                                                         type="password">
                                                                 </div>
-                                                                <p><span id="error4" style="display: none;"
+                                                                <p><span id="uerror4" style="display: none;"
                                                                         class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>New Password <span
@@ -708,7 +708,7 @@
                                                                         class="form-control square" name="npassword"
                                                                         type="password">
                                                                 </div>
-                                                                <p><span id="error5" style="display: none;"
+                                                                <p><span id="uerror5" style="display: none;"
                                                                         class="mt-15 err text-danger"></span></p>
                                                                 <div class="form-group col-md-12">
                                                                     <label>Confirm Password <span
@@ -717,7 +717,7 @@
                                                                         class="form-control square" name="cpassword"
                                                                         type="password">
                                                                 </div>
-                                                                <p><span id="error6" style="display: none;"
+                                                                <p><span id="uerror6" style="display: none;"
                                                                         class="mt-15 err text-danger"></span></p>
                                                                 <div class="col-md-12">
                                                                     <button type="submit"
@@ -1020,4 +1020,186 @@
             }
         });
     }
+</script>
+
+
+
+<script>
+    const uNameId = document.getElementById('uname');
+    const uEmailId = document.getElementById('uemail');
+    const umobileId = document.getElementById('umobile');
+    const passwordId = document.getElementById('password');
+    const npasswordId = document.getElementById('npassword');
+    const cpasswordId = document.getElementById('cpassword');
+
+    const uError1 = document.getElementById('uerror1');
+    const uError2 = document.getElementById('uerror2');
+    const uError3 = document.getElementById('uerror3');
+    const uError4 = document.getElementById('uerror4');
+    const uError5 = document.getElementById('uerror5');
+    const uError6 = document.getElementById('uerror6');
+
+    const uForm = document.getElementById('userInfo');
+
+    function unameValidation() {
+        let nameVal = uNameId.value.trim();
+        if (nameVal === '') {
+            uError1.style.display = 'block';
+            uError1.innerHTML = 'Please enter a valid name';
+            setTimeout(() => {
+                uError1.style.display = 'none';
+                uError1.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (/\d/.test(nameVal)) {
+            uError1.style.display = 'block';
+            uError1.innerHTML = 'Please enter a name without numbers';
+            setTimeout(() => {
+                uError1.style.display = 'none';
+                uError1.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            uError1.style.display = 'none';
+            uError1.innerHTML = '';
+        }
+        return true;   
+    }
+
+    function uemailValidation() {
+        const emailVal = uEmailId.value;
+        const emailPattern = /^([a-zA-Z0-9._-]+)@([a-zA-Z.-]+).([a-zA-Z]{2,4})$/;
+        if (!emailPattern.test(emailVal)) {
+            uError2.style.display = 'block';
+            uError2.innerHTML = 'Please enter a valid email address';
+            setTimeout(() => {
+                uError2.style.display = 'none';
+                uError2.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            uError2.style.display = 'none';
+            uError2.innerHTML = '';
+        }
+        return true;
+    }
+
+    function umobileValidate() {
+        const mobileVal = umobileId.value.trim();
+        if (mobileVal === '') {
+            uError3.style.display = 'block';
+            uError3.innerHTML = 'Enter a valid mobile number';
+            setTimeout(() => {
+                uError3.style.display = 'none';
+                uError3.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (mobileVal.length !== 10) {
+            uError3.style.display = 'block';
+            uError3.innerHTML = 'Please enter exactly 10 digits';
+            setTimeout(() => {
+                uError3.style.display = 'none';
+                uError3.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            uError3.style.display = 'none';
+            uError3.innerHTML = '';
+        }
+        return true;
+    }
+
+    function passwordValidate() {
+        const passwordVal = passwordId.value;
+        const alpha = /[a-zA-Z]/;
+        const digit = /\d/;
+        if (passwordVal.length < 8) {
+            uError4.style.display = 'block';
+            uError4.innerHTML = 'Must enter at least 8 characters';
+            setTimeout(() => {
+                uError4.style.display = 'none';
+                uError4.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (!alpha.test(passwordVal) || !digit.test(passwordVal)) {
+            uError4.style.display = 'block';
+            uError4.innerHTML = 'Password must contain both letters and numbers';
+            setTimeout(() => {
+                uError4.style.display = 'none';
+                uError4.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            uError4.style.display = 'none';
+            uError4.innerHTML = '';
+        }
+        return true;
+    }
+
+    function npasswordValidate() {
+        const passwordVal = npasswordId.value;
+        const alpha = /[a-zA-Z]/;
+        const digit = /\d/;
+        if (passwordVal.length < 8) {
+            uError5.style.display = 'block';
+            uError5.innerHTML = 'Must enter at least 8 characters';
+            setTimeout(() => {
+                uError5.style.display = 'none';
+                uError5.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (!alpha.test(passwordVal) || !digit.test(passwordVal)) {
+            uError5.style.display = 'block';
+            uError5.innerHTML = 'Password must contain both letters and numbers';
+            setTimeout(() => {
+                uError5.style.display = 'none';
+                uError5.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            uError5.style.display = 'none';
+            uError5.innerHTML = '';
+        }
+        return true;
+    }
+
+    function cpasswordValidate() {
+        const passwordVal = cpasswordId.value;
+        const alpha = /[a-zA-Z]/;
+        const digit = /\d/;
+        if (passwordVal.length < 8) {
+            uError6.style.display = 'block';
+            uError6.innerHTML = 'Must enter at least 8 characters';
+            setTimeout(() => {
+                uError6.style.display = 'none';
+                uError6.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (!alpha.test(passwordVal) || !digit.test(passwordVal)) {
+            uError6.style.display = 'block';
+            uError6.innerHTML = 'Password must contain both letters and numbers';
+            setTimeout(() => {
+                uError6.style.display = 'none';
+                uError6.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            uError6.style.display = 'none';
+            uError6.innerHTML = '';
+        }
+        return true;
+    }
+
+    uNameId.addEventListener('blur', unameValidation);
+    uEmailId.addEventListener('blur', uemailValidation);
+    umobileId.addEventListener('blur', umobileValidate);
+    passwordId.addEventListener('blur', passwordValidate);
+    npasswordId.addEventListener('blur', npasswordValidate);
+    cpasswordId.addEventListener('blur', cpasswordValidate);
+
+    uForm.addEventListener('submit', function (e) {
+        if (!unameValidation() || !uemailValidation() || !umobileValidate() || !passwordValidate() || !npasswordValidate() || !cpasswordValidate()) {
+            e.preventDefault();
+        }
+    });
 </script>

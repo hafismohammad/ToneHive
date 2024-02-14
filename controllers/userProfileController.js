@@ -349,20 +349,17 @@ const orderCancel = async (req, res) => {
 
 const viewProducrDetails = async (req, res) => {
     try {
-        const userId = req.session.user._id
-       
-        const productId = req.params.id
-        console.log(userId,productId);
-      //  const orderid = new ObjectId(productId);
-      const orderedItems = await Order.findOne(
-        { userId: userId, 'products._id': productId }, 
-        { 'products.$': 1, _id: 0 }
-    );
-    orderedItems
+        const user = req.session.user._id
+        const userId = await User.findById({_id:user})
+        const orderId = req.params.id
+        const orderedItems = await Order.findById(orderId).populate(
+        'products.productId'
+      )
 
-        console.log(orderedItems);
-
-        res.render("user/Page-viewDetails",{userOrders:orderedItems})
+    
+   
+   console.log(orderedItems);
+        res.render("user/Page-viewDetails",{orderedItems:orderedItems,userId:userId})
     } catch (error) {
         console.log(error);
     }

@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
         required:true
     },
     quantity:{
-        type:Intl,  
+        type:Number,  
         required:true
     },
     image:{

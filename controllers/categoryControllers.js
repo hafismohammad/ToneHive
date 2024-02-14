@@ -105,7 +105,6 @@ module.exports ={
     addProductCategory,
     editCategoryLoad,
     editedCategory,
- 
     unlistedCategory,
     listedCategory
 
