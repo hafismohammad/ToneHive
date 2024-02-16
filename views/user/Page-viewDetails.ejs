@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>Tone Hive</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/Tonehive (1).png">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/public/assets/css/maind134.css?v=3.4">
 </head>
@@ -76,9 +76,11 @@
                                     <li class="social-twitter"> <a href="#"><img
                                                 src="/public/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
                                     <li class="social-instagram"><a href="#"><img
-                                                src="/public/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
+                                                src="/public/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                    </li>
                                     <li class="social-linkedin"><a href="#"><img
-                                                src="/public/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+                                                src="/public/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -201,10 +203,13 @@
                                     <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i
                                             class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">
-                                        <li><a href="#"><img src="/public/assets/imgs/theme/flag-fr.png" alt="">Français</a>
+                                        <li><a href="#"><img src="/public/assets/imgs/theme/flag-fr.png"
+                                                    alt="">Français</a>
                                         </li>
-                                        <li><a href="#"><img src="/public/assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                        <li><a href="#"><img src="/public/assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
+                                        <li><a href="#"><img src="/public/assets/imgs/theme/flag-dt.png"
+                                                    alt="">Deutsch</a></li>
+                                        <li><a href="#"><img src="/public/assets/imgs/theme/flag-ru.png"
+                                                    alt="">Pусский</a></li>
                                     </ul>
                                 </li>
 
@@ -243,7 +248,9 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/public/assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue"><%= cartTotalCount %></span>
+                                        <span class="pro-count blue">
+                                            <%= cartTotalCount %>
+                                        </span>
                                     </a>
                                 </div>
 
@@ -264,7 +271,7 @@
                                         <li class="dropdown nav-item">
                                             <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                                 id="dropdownAccount" aria-expanded="false">
-                                               <button class="btn  btn-primary ">hey.. <%= userId.name %></button>
+                                                <button class="btn  btn-primary ">hey.. <%= userId.name %></button>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="dropdownAccount">
@@ -279,7 +286,7 @@
                                                         class="material-icons md-exit_to_app"></i>Logout</a>
                                             </div>
                                         </li>
-                                    </ul> 
+                                    </ul>
                                 </div>
 
 
@@ -338,77 +345,155 @@
             </div>
         </div>
     </header>
-    
+
+    <div class="row mb-50 mt-20 order-info-wrap" style="background-color: rgb(228, 224, 224); height: 120px;
+    align-items: center;">
+        <div class="col-md-4" style=" text-align: center;">
+            <article class="icontext align-items-start">
+                <span class="icon icon-sm rounded-circle bg-primary-light">
+                    <i class="text-primary material-icons md-person"></i>
+                </span>
+                <div class="text">
+                    <h6 class="mb-1">Customer</h6>
+                    <p class="mb-1">
+                        <%= orderedItems.address.name %>
+                    </p>
+                    <a href="/userProfile">View profile</a>
+                </div>
+            </article>
+        </div> <!-- col// -->
+        <div class="col-md-4" style=" text-align: center;">
+            <article class="icontext align-items-start">
+                <span class="icon icon-sm rounded-circle bg-primary-light" style="margin-top: 13px;">
+                    <i class="text-primary material-icons md-local_shipping"></i>
+                </span>
+                <div class="text">
+                    <h6 class="mb-1">Order info</h6>
+                    <p class="mb-1">
+                        Shipping: Fargo express <br> Pay method: <%= orderedItems.paymentMethod %> <br>
+                            Status: new
+                    </p>
+                    <!-- <a href="#">Download info</a> -->
+                </div>
+            </article>
+        </div>
+        <div class="col-md-4" style=" text-align: center;">
+            <article class="icontext align-items-start">
+                <span class="icon icon-sm rounded-circle bg-primary-light">
+                    <i class="text-primary material-icons md-place"></i>
+                </span>
+                <div class="text">
+                    <h6 class="mb-1">Deliver to</h6>
+                    <p class="mb-1">
+                        City: <%= orderedItems.address.city %>
+                    </p>
+                    <p class="mb-1">
+                        Address : <%= orderedItems.address.house %>
+                    </p>
+                    <!-- <a href="#">View profile</a> -->
+                </div>
+            </article>
+        </div> <!-- col// -->
+    </div>
+
     <div class="mt-30 container mb-30">
         <div class="col-lg-12">
             <div class="table-responsive">
-             
-           <table class="table">
-             <thead>
-                 <tr>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Product</th>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Name</th>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Quantity</th>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Status</th>
-                     <th style="font-weight: bold; width: 20% " class="text-end text-center">Total</th>
-                  
-                 </tr>
-             </thead>
-             <tbody>
-                 <% if (locals.orderedItems) { %>
-                     <% let totalPrice = 0; %>
-                     <% orderedItems.products.forEach(element => { %>
-                         <% totalPrice += element.totalPrice; %>
-                         <% totalquantity =  element.productId.price * element.quantity  %>
-                         <tr>
-                             <td class="image product-thumbnail">
-                                 <div class="text-center">
-                                     <img  src="/public/uploads/<%= element.productId.image[0] %>" alt="#">
-                                 </div>
-                             </td>
-                             <td class="product-des product-name">
-                                 <h5 class=" mt-2 text-center "><a href="shop-product-right.html"><%= element.productId.name %></a></h5><br>
-                                 <p class="font-xs text-center"><%= element.productId.description.split('.')[0] %></p>
-                             </td>
-                             <td class="text-center"><%= element.quantity %></td>
-                             <% if(orderedItems.orderStatus === 'confirmed'){ %>
-                                <td class="text-center"><span class="badge rounded-pill  alert-dark  "><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                                <% if(orderedItems.orderStatus === 'cancelled'){ %>
-                                    <td class="text-center"><span class="badge rounded-pill alert-danger "><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                                <% if(orderedItems.orderStatus === 'shipped') {%>
-                                    <td class="text-center"><span class="badge rounded-pill alert-info "><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                                <% if(orderedItems.orderStatus === 'outForDelivery') {%>
-                                    <td class="text-center"><span class="badge rounded-pill alert-warning"><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                            <% if(orderedItems.orderStatus === 'delivered') {%>
-                                <div class="text-center"><span  class="badge rounded-pill alert-success"><%= orderedItems.orderStatus %></span></div>
-                                <% } %>
-                             <td class="text-center">₹ <%=totalquantity %></td>
-                        
-                         </tr>
-                     <% }); %>
-                     <tr>
-                         <td colspan="4" class="text-end ">Total Price:</td>
-                         <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
-                     </tr>
-                  
-          
-             </tbody>
-         </table>
-         
-         </div>
-         </div> 
-         <% if(orderedItems.orderStatus !== "cancelled") { %>   
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="font-weight: bold; width: 20%;" class="text-center">Product</th>
+                            <th style="font-weight: bold; width: 20%;" class="text-center">Name</th>
+                            <th style="font-weight: bold; width: 20%;" class="text-center">Quantity</th>
+                            <th style="font-weight: bold; width: 20%;" class="text-center">Status</th>
+                            <th style="font-weight: bold; width: 20% " class="text-end text-center">Total</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (locals.orderedItems) { %>
+                            <% let totalPrice=0; %>
+                                <% orderedItems.products.forEach(element=> { %>
+                                    <% totalPrice +=element.totalPrice; %>
+                                        <% totalquantity=element.productId.price * element.quantity %>
+                                            <tr>
+                                                <td class="image product-thumbnail">
+                                                    <div class="text-center">
+                                                        <img src="/public/uploads/<%= element.productId.image[0] %>"
+                                                            alt="#">
+                                                    </div>
+                                                </td>
+                                                <td class="product-des product-name">
+                                                    <h5 class=" mt-2 text-center "><a href="shop-product-right.html">
+                                                            <%= element.productId.name %>
+                                                        </a></h5><br>
+                                                    <p class="font-xs text-center">
+                                                        <%= element.productId.description.split('.')[0] %>
+                                                    </p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <%= element.quantity %>
+                                                </td>
+                                                <% if(orderedItems.orderStatus==='confirmed' ){ %>
+                                                    <td class="text-center"><span
+                                                            class="badge rounded-pill  alert-dark  ">
+                                                            <%= orderedItems.orderStatus %>
+                                                        </span></td>
+                                                    <% } %>
+                                                        <% if(orderedItems.orderStatus==='cancelled' ){ %>
+                                                            <td class="text-center"><span
+                                                                    class="badge rounded-pill alert-danger ">
+                                                                    <%= orderedItems.orderStatus %>
+                                                                </span></td>
+                                                            <% } %>
+                                                                <% if(orderedItems.orderStatus==='shipped' ) {%>
+                                                                    <td class="text-center"><span
+                                                                            class="badge rounded-pill alert-info ">
+                                                                            <%= orderedItems.orderStatus %>
+                                                                        </span></td>
+                                                                    <% } %>
+                                                                        <% if(orderedItems.orderStatus==='outForDelivery'
+                                                                            ) {%>
+                                                                            <td class="text-center"><span
+                                                                                    class="badge rounded-pill alert-warning">
+                                                                                    <%= orderedItems.orderStatus %>
+                                                                                </span></td>
+                                                                            <% } %>
+                                                                                <% if(orderedItems.orderStatus==='delivered'
+                                                                                    ) {%>
+                                                                                    <div class="text-center"><span
+                                                                                            class="badge rounded-pill alert-success">
+                                                                                            <%= orderedItems.orderStatus
+                                                                                                %>
+                                                                                        </span></div>
+                                                                                    <% } %>
+                                                                                        <td class="text-center">₹
+                                                                                            <%=totalquantity %>
+                                                                                        </td>
+
+                                            </tr>
+                                            <% }); %>
+                                                <tr>
+                                                    <td colspan="4" class="text-end ">Total Price:</td>
+                                                    <td class="text-center">₹ <%= orderedItems.totalPrice %>
+                                                    </td>
+                                                </tr>
+
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <% if(orderedItems.orderStatus !=="cancelled" ) { %>
             <div class="text-end mt-4">
                 <a class="btn btn-danger" onclick="cancelOrder('<%= orderedItems._id %>')">Cancel Order</a></td>
             </div>
-        <% } %>
-        <% } %>
+            <% } %>
+                <% } %>
     </div>
- 
+
 
 
     <footer class="main">
@@ -419,10 +504,11 @@
                         <div class="row align-items-center">
                             <div class="col flex-horizontal-center">
                                 <img class="icon-email" src="/public/assets/imgs/theme/icons/icon-email.svg" alt="">
-                                 <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
+                                <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
                             </div>
                             <div class="col my-4 my-md-0 des">
-                                <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>$25 coupon for first shopping.</strong></h5>
+                                <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>$25 coupon for first
+                                        shopping.</strong></h5>
                             </div>
                         </div>
                     </div>
@@ -493,13 +579,16 @@
                             <div class="col-md-8 col-lg-12">
                                 <p class="wow fadeIn animated">From App Store or Google Play</p>
                                 <div class="download-app wow fadeIn animated">
-                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/public/assets/imgs/theme/app-store.jpg" alt=""></a>
-                                    <a href="#" class="hover-up"><img src="/public/assets/imgs/theme/google-play.jpg" alt=""></a>
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="/public/assets/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/public/assets/imgs/theme/google-play.jpg"
+                                            alt=""></a>
                                 </div>
                             </div>
                             <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
                                 <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
-                                <img class="wow fadeIn animated" src="/public/assets/imgs/theme/payment-method.png" alt="">
+                                <img class="wow fadeIn animated" src="/public/assets/imgs/theme/payment-method.png"
+                                    alt="">
                             </div>
                         </div>
                     </div>
@@ -512,11 +601,13 @@
                     <div class="footer-bottom"></div>
                 </div>
                 <div class="col-lg-6">
-                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2022, <strong class="text-brand">Evara</strong> - HTML Ecommerce Template </p>
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2022, <strong
+                            class="text-brand">Evara</strong> - HTML Ecommerce Template </p>
                 </div>
                 <div class="col-lg-6">
                     <p class="text-lg-end text-start font-sm text-muted mb-0">
-                        Designed by <a href="http://alithemes.com/" target="_blank">Alithemes.com</a>. All rights reserved
+                        Designed by <a href="http://alithemes.com/" target="_blank">Alithemes.com</a>. All rights
+                        reserved
                     </p>
                 </div>
             </div>
@@ -562,14 +653,15 @@
     <script src="/public/assets/js/maind134.js?v=3.4"></script>
     <script src="/public/assets/js/shopd134.js?v=3.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    </body>
-    
-    
-    <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
-    </html>
-    
+</body>
 
-    
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
+
+</html>
+
+
+
 <script>
     function cancelOrder(orderId) {
         console.log(orderId);

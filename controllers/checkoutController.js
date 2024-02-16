@@ -4,7 +4,8 @@ const User = require('../models/userModel')
 const ObjectId = require('mongoose').Types.ObjectId
 const Order = require('../models/orderModel')
 const moment = require('moment');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Products = require('../models/productModel');
 
 const checkoutLoad = async (req, res) => {
     try {
@@ -118,6 +119,7 @@ const addAddress = async (req, res) => {
         }
         user.address.push(newAddress)
 
+
         await user.save()
 
         res.redirect('/checkout')
@@ -230,8 +232,11 @@ const placeOrderPost = async (req, res) => {
                 }
             }
         ]);
-        console.log(cartProducts);
 
+        // Decrease product quantity
+        for (const product of cartProducts) {
+            await Products.updateOne({ _id: product.productId }, { $inc: { quantity: -product.quantity } });
+        }
 
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
 
@@ -251,7 +256,7 @@ const placeOrderPost = async (req, res) => {
 
         await Cart.deleteOne({ userId: userId });
 
-        res.redirect('/orderSuccess'); // Redirect the user to the '/orderSuccess' page
+        res.redirect('/orderSuccess');
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to place the order.' });

@@ -3,6 +3,7 @@ const Cart = require('../models/cartModel')
 const Products = require('../models/productModel')
 const mongoose = require('mongoose');
 
+const { ObjectId } = mongoose.Types;
 
 const addToCart = async (req, res) => {
     const prodId = req.params.id; 
@@ -51,7 +52,7 @@ const addToCart = async (req, res) => {
                 items: [cartItem],
                 totalPrice:cartItem.price * cartItem.quantity
             });
-            
+          
         }
         await useCart.save();
 
@@ -95,7 +96,7 @@ const cartLoad = async (req, res) => {
             },
            
         ]);
-console.log(cartItems);
+
         let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
             const product = cartItem.productDetails[0];
@@ -112,7 +113,7 @@ console.log(cartItems);
         let cartTotalCount = 0; 
         const cartItemss = await Cart.find({userId:userId});
         const cartCount = cartItems.length;
-    
+ 
         // Now you can use cartCount to display the count in your cart icon or perform other operations
         
        
@@ -125,30 +126,52 @@ console.log(cartItems);
     }
 }
 
-
 const updateCartQuantity = async (req, res) => {
     try {
         const { cartItemId, productId, delta } = req.params;
-        
 
         const useCart = req.useCart;
 
-       
         if (!useCart || !useCart.userId) {
             return res.status(400).json({ error: 'User cart not found' });
         }
 
+        const product = await Products.findById(productId);
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        // Convert the productId parameter to ObjectId
+        const targetProductId = new ObjectId(productId);
+
+        // Find the item in the cart items array
+        const currentItem = useCart.items.find(item => item.productId.equals(targetProductId));
+
+        // Check if the currentItem exists and get its quantity
+        const currentQuantity = currentItem ? currentItem.quantity : 0;
+
+        // Calculate the new quantity after applying the delta
+        const newQuantity = parseInt(delta);
+        const requestedQuantity = currentQuantity + newQuantity;
+
+        // Check if the requested quantity exceeds the available stock
+        if (requestedQuantity > product.quantity) {
+            return res.status(400).json({ error: 'Requested quantity exceeds available stock' });
+        }
+
+        // Update the cart item quantity
         await Cart.updateOne(
-            { userId: useCart.userId, 'items.productId': productId },
-            { $inc: { 'items.$.quantity': parseInt(delta) } }
+            { userId: useCart.userId, 'items.productId': targetProductId },
+            { $inc: { 'items.$.quantity': newQuantity } }
         );
-        
+
         res.json({ success: true });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 const removeFormCart = async (req, res) => {
     try {

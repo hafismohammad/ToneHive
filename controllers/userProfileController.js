@@ -368,7 +368,7 @@ const viewProducrDetails = async (req, res) => {
         const orderedItems = await Order.findById(orderId).populate(
             'products.productId'
         )
-        const cartItems = await Cart.find({user:user});
+        const cartItems = await Cart.find({userId:user});
         let cartTotalCount = 0; 
         cartItems.forEach(cart => {
             cartTotalCount += cart.items.length; 

@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html class="no-js" lang="en">
+<!DOCTYPE HTML>
+<html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/index-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:09 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:00 GMT -->
 
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>Evara Dashboard</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,81 +15,343 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
-    <link rel="stylesheet" href="/public/assets/css/maind134.css?v=3.4">
+    <link href="/public/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-    <!-- Quick view -->
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="/admin/dashboard" class="brand-wrap ">
+                <img src="/public/assets/imgs/theme/Tonehive (1).png" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/customers"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Customers</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/productCatrgory"> <i
+                            class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Category</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu active">
+                    <a class="menu-link" href="/admin/orderDetails"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Orders</span>
+                    </a>
 
-  
-    <div class="card-body mt-50">
-        <div class="table-responsive">
-            <table class="table table-hover">
-             <thead>
-                 <tr>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Product</th>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Name</th>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Quantity</th>
-                     <th style="font-weight: bold; width: 20%;" class="text-center">Status</th>
-                     <th style="font-weight: bold; width: 20% " class="text-end text-center">Total</th>
-                  
-                 </tr>
-             </thead>
-             <tbody>
-                 <% if (locals.orderedItems) { %>
-                     <% let totalPrice = 0; %>
-                     <% orderedItems.products.forEach(element => { %>
-                         <% totalPrice += element.totalPrice; %>
-                         <% totalquantity =  element.productId.price * element.quantity  %>
-                         <tr>
-                             <td class="image product-thumbnail">
-                                 <div class="text-center">
-                                     <img  src="/public/uploads/<%= element.productId.image[0] %>" alt="#">
-                                 </div>
-                             </td>
-                             <td class="product-des product-name">
-                                 <h5 class=" mt-2 text-center "><a href="shop-product-right.html"><%= element.productId.name %></a></h5><br>
-                                 <p class="font-xs text-center"><%= element.productId.description.split('.')[0] %></p>
-                             </td>
-                             <td class="text-center"><%= element.quantity %></td>
-                             <% if(orderedItems.orderStatus === 'confirmed'){ %>
-                                <td class="text-center"><span class="badge rounded-pill  alert-dark  "><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                                <% if(orderedItems.orderStatus === 'cancelled'){ %>
-                                    <td class="text-center"><span class="badge rounded-pill alert-danger "><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                                <% if(orderedItems.orderStatus === 'shipped') {%>
-                                    <td class="text-center"><span class="badge rounded-pill alert-info "><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                                <% if(orderedItems.orderStatus === 'outForDelivery') {%>
-                                    <td class="text-center"><span class="badge rounded-pill alert-warning"><%= orderedItems.orderStatus %></span></td>
-                                <% } %>
-                            <% if(orderedItems.orderStatus === 'delivered') {%>
-                                <div class="text-center"><span  class="badge rounded-pill alert-success"><%= orderedItems.orderStatus %></span></div>
-                                <% } %>
-                             <td class="text-center">₹ <%=totalquantity %></td>
-                        
-                         </tr>
-                     <% }); %>
-                     <tr>
-                         <td colspan="4" class="text-end ">Total Price:</td>
-                         <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
-                     </tr>
-                  
-                 <% } %>
-             </tbody>
-         </table>
-         
-         </div>
-         </div>    
-         
-    </div> 
+                </li>
+                <!-- <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-form-product-1.html">Add product 1</a>
+                        <a href="page-form-product-2.html">Add product 2</a>
+                        <a href="page-form-product-3.html">Add product 3</a>
+                        <a href="page-form-product-4.html">Add product 4</a>
+                    </div>
+                </li> -->
+                <!-- <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Coupons</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-transactions-1.html">Transaction 1</a>
+                        <a href="page-transactions-2.html">Transaction 2</a>
+                    </div>
+                </li> -->
+                <!-- <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Account</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-account-login.html">User login</a>
+                        <a href="page-account-register.html">User registration</a>
+                        <a href="page-error-404.html">Error 404</a>
+                    </div>
+                </li> -->
+                <!-- <li class="menu-item">
+                    <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
+                        <span class="text">Reviews</span>
+                    </a>
+                </li> -->
+                <!-- <li class="menu-item">
+                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li> -->
+                <!-- <li class="menu-item">
+                    <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+            </ul> -->
+                <hr>
+                <ul class="menu-aside">
+                    <!-- <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-settings-1.html">Setting sample 1</a>
+                        <a href="page-settings-2.html">Setting sample 2</a>
+                    </div>
+                </li> -->
+                    <!-- <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li> -->
+                </ul>
+                <br>
+                <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i
+                                class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i
+                                class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage"
+                            aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img
+                                    src="/public/admin-assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/public/admin-assets/imgs/theme/flag-fr.png"
+                                    alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/public/admin-assets/imgs/theme/flag-jp.png"
+                                    alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/public/admin-assets/imgs/theme/flag-cn.png"
+                                    alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/public/admin-assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
+                                Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
+                                Settings</a>
+                            <a class="dropdown-item" href="#"><i
+                                    class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
+                                center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Order Details</h2>
+                    </div>
+                </div>
+                <div class="row mb-50 mt-20 order-info-wrap" style="background-color: rgb(228, 224, 224); height: 120px;
+                   align-items: center;">
+                    <div class="col-md-4" style=" text-align: center;">
+                        <article class="icontext align-items-start">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary material-icons md-person"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Customer</h6>
+                                <p class="mb-1">
+                                    <%= orderedItems.address.name %>
+                                </p>
+                                <a href="/admin/userProfile/">View profile</a>
+                            </div>
+                        </article>
+                    </div> <!-- col// -->
+                    <div class="col-md-4" style=" text-align: center;">
+                        <article class="icontext align-items-start">
+                            <span class="icon icon-sm rounded-circle bg-primary-light" style="margin-top: 13px;">
+                                <i class="text-primary material-icons md-local_shipping"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Order info</h6>
+                                <p class="mb-1">
+                                    Shipping: Fargo express <br> Pay method: <%= orderedItems.paymentMethod %> <br>
+                                        Status: new
+                                </p>
+                                <!-- <a href="#">Download info</a> -->
+                            </div>
+                        </article>
+                    </div> <!-- col// -->
+                    <div class="col-md-4" style=" text-align: center;">
+                        <article class="icontext align-items-start">
+                            <span class="icon icon-sm rounded-circle bg-primary-light">
+                                <i class="text-primary material-icons md-place"></i>
+                            </span>
+                            <div class="text">
+                                <h6 class="mb-1">Deliver to</h6>
+                                <p class="mb-1">
+                                    City: <%= orderedItems.address.city %>
+                                </p>
+                                <p class="mb-1">
+                                    Address : <%= orderedItems.address.house %>
+                                </p>
+                                <!-- <a href="#">View profile</a> -->
+                            </div>
+                        </article>
+                    </div> <!-- col// -->
+                </div>
+
+                <div class="card-body mt-50">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="font-weight: bold; width: 20%;" class="text-center">Product</th>
+                                    <th style="font-weight: bold; width: 20%;" class="text-center">Name</th>
+                                    <th style="font-weight: bold; width: 20%;" class="text-center">Quantity</th>
+                                    <th style="font-weight: bold; width: 20%;" class="text-center">Status</th>
+                                    <th style="font-weight: bold; width: 20% " class="text-end text-center">Total</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (locals.orderedItems) { %>
+                                    <% let totalPrice=0; %>
+                                        <% orderedItems.products.forEach(element=> { %>
+                                            <% totalPrice +=element.totalPrice; %>
+                                                <% totalquantity=element.productId.price * element.quantity %>
+                                                    <tr>
+                                                        <td class="image product-thumbnail">
+                                                            <div class="text-center">
+                                                                <img width="80px"
+                                                                    src="/public/uploads/<%= element.productId.image[0] %>"
+                                                                    alt="#">
+                                                            </div>
+                                                        </td>
+                                                        <td class="product-des product-name">
+                                                            <h5 class=" mt-2 text-center "><a
+                                                                    href="shop-product-right.html">
+                                                                    <%= element.productId.name %>
+                                                                </a></h5><br>
+                                                            <p class="font-xs text-center">
+                                                                <%= element.productId.description.split('.')[0] %>
+                                                            </p>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <%= element.quantity %>
+                                                        </td>
+                                                        <% if(orderedItems.orderStatus==='confirmed' ){ %>
+                                                            <td class="text-center"><span
+                                                                    class="badge rounded-pill  alert-dark  ">
+                                                                    <%= orderedItems.orderStatus %>
+                                                                </span></td>
+                                                            <% } %>
+                                                                <% if(orderedItems.orderStatus==='cancelled' ){ %>
+                                                                    <td class="text-center"><span
+                                                                            class="badge rounded-pill alert-danger ">
+                                                                            <%= orderedItems.orderStatus %>
+                                                                        </span></td>
+                                                                    <% } %>
+                                                                        <% if(orderedItems.orderStatus==='shipped' ) {%>
+                                                                            <td class="text-center"><span
+                                                                                    class="badge rounded-pill alert-info ">
+                                                                                    <%= orderedItems.orderStatus %>
+                                                                                </span></td>
+                                                                            <% } %>
+                                                                                <% if(orderedItems.orderStatus==='outForDelivery'
+                                                                                    ) {%>
+                                                                                    <td class="text-center"><span
+                                                                                            class="badge rounded-pill alert-warning">
+                                                                                            <%= orderedItems.orderStatus
+                                                                                                %>
+                                                                                        </span></td>
+                                                                                    <% } %>
+                                                                                        <% if(orderedItems.orderStatus==='delivered'
+                                                                                            ) {%>
+                                                                                            <div class="text-center">
+                                                                                                <span
+                                                                                                    class="badge rounded-pill alert-success">
+                                                                                                    <%= orderedItems.orderStatus
+                                                                                                        %>
+                                                                                                </span></div>
+                                                                                            <% } %>
+                                                                                                <td class="text-center">
+                                                                                                    ₹ <%=totalquantity
+                                                                                                        %>
+                                                                                                </td>
+
+                                                    </tr>
+                                                    <% }); %>
+                                                        <tr>
+                                                            <td colspan="4" class="text-end ">Total Price:</td>
+                                                            <td class="text-center">₹ <%= orderedItems.totalPrice %>
+                                                            </td>
+                                                        </tr>
+
+                                                        <% } %>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
 </body>
+
 </html>
-
-
-           
-
-

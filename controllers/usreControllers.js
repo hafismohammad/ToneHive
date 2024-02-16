@@ -239,11 +239,13 @@ const productViews = async (req, res) => {
         const productData = await Products.findOne({ _id: id });
         if (productData.product_status) {
 
-            const cartItems = await Cart.find({user:user});
+            const cartItems = await Cart.find({userId:user});
             let cartTotalCount = 0; 
             cartItems.forEach(cart => {
                 cartTotalCount += cart.items.length; 
             });
+    
+   
             res.render("user/page-viewProduct", { products: productData, userInfo: userInfo,cartTotalCount:cartTotalCount })
         }
         res.redirect("/userHome")
