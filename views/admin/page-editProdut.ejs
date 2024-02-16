@@ -87,60 +87,54 @@
 
         <div class="col-lg-3">
             <div class="card mb-4">
-                <!-- <div class="card-header">
-                    <h4>Media</h4>
-                </div> -->
+                <div id="addedImagesContainer" class="col-md-6">
+                    <% for (let i=0; i < productData.image.length; i++) { %>
+                        <div class="col-md-12 mb-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <img class="rounded" style="width: 50px; height: 60px;"
+                                        src="/public/uploads/<%= productData.image[i] %>"
+                                        alt="image" data-filename="<%= productData.image[i] %>">
+                                    <span class="delete-icon"
+                                        onclick="deleteImage('<%= productData._id %>', '<%= productData.image[i] %>')">❌</span>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+        
                 <div class="card-body">
                     <div class="input-upload">
-                        <% for (let i = 0; i < Math.min(4, productData.image.length); i++) { %>
-                            <div class="image-container">
-                                <img src="/public/uploads/<%= productData.image[i] %>" alt="img" data-filename="<%= productData.image[i] %>">
-                                <button class="remove-image-btn">Remove</button>
-                            </div>
-                        <% } %>
-                        <div id="preview" style="display: flex; flex-wrap: wrap;"></div>
-                        <input class="form-control" type="file" name="images" id="imageInput" multiple>
+                        <img src="assets/imgs/theme/upload.svg" alt="">
+                        <input class="form-control border" name="images" id="imageInput" type="file" multiple>
                     </div>
                 </div>
-                
-                
-                
-        <!-- card end// -->
-
-            <!-- <div id="imageList" class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Selected Images</h5>
-                    <div id="selectedImages" class="selected-images-container"></div>
-                </div>
-            </div> -->
-
-            <div class="card mb-4 ">
-                <div class="card-header">
-                    <h4>Select Category</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row gx-2">
-                       
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Sub-category</label>
-                            <select class="form-select" style="width: auto;" name="category">
-                              <% for( let i = 0; i < category.length; i++ ) { %>
-
-                              <option value="<%= category[i]._id %>" <% if(category[i]._id.equals(productData.category)) {%> Selected <% } %>>
-
-                                <%= category[i].name %>
-                            </option>
-                              <% } %>
-
-                            </select>
+        
+                <!-- Select Category Section -->
+                <div class="card mb-4 ">
+                    <div class="card-header">
+                        <h4>Select Category</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gx-2">
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label">Sub-category</label>
+                                <select class="form-select" style="width: auto;" name="category">
+                                    <% for( let i = 0; i < category.length; i++ ) { %>
+                                        <option value="<%= category[i]._id %>" <% if(category[i]._id.equals(productData.category)) {%> selected <% } %>>
+                                            <%= category[i].name %>
+                                        </option>
+                                    <% } %>
+                                </select>
+                            </div>
                         </div>
-                        
-                       
-                    </div> 
-            </div> 
-            <div>
-                <button value="Save" type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Edit
-                    Product</button> <!-- ms-auto d-block to move button to right-->
+                    </div>
+                </div>
+        
+                <!-- Save Button -->
+                <div>
+                    <button value="Save" type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Edit Product</button>
+                </div>
             </div>
         </div>
 
@@ -193,43 +187,55 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
 </html>
 
+
+
+
+
+
 <script>
-    document.getElementById('imageInput').addEventListener('change', function(event) {
-    const files = event.target.files;
-    const previewContainer = document.getElementById('preview');
+    const selectedImages = [];
+    document.getElementById("imageInput").addEventListener("change", (event) => {
+        const addedImagesContainer = document.getElementById("addedImagesContainer");
+        addedImagesContainer.innerHTML = ""; // Clear previous images
+        const files = event.target.files;
 
-    // Loop through each selected file
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
+        // Loop through selected files
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            selectedImages.push(file);
 
-        // Create a new image element
-        const imgElement = document.createElement('img');
-        imgElement.classList.add('image-container');
+            // Create thumbnail element
+            const thumbnail = document.createElement("div");
+            thumbnail.classList.add("thumbnail");
 
-        // Set up the remove button
-        const removeBtn = document.createElement('button');
-        removeBtn.innerText = 'Remove';
-        removeBtn.classList.add('remove-image-btn');
-        removeBtn.addEventListener('click', function() {
-            // Remove the image container when the remove button is clicked
-            previewContainer.removeChild(imgElement);
-        });
+            // Create image element
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(file);
+            img.alt = "thumbnail";
+            img.style.width = "50px"; // Adjust width as needed
+            img.style.height = "auto";
 
-        // Read the file and set the image source
-        reader.onload = function() {
-            imgElement.src = reader.result;
-        };
+            // Create remove icon
+            const removeIcon = document.createElement("span");
+            removeIcon.classList.add("remove-icon");
+            removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
 
-        // Read the file as a data URL
-        reader.readAsDataURL(file);
+            // Event listener to remove the image on icon click
+            removeIcon.addEventListener("click", function () {
+                const index = selectedImages.indexOf(file);
+                if (index !== -1) {
+                    selectedImages.splice(index, 1);
+                }
+                thumbnail.remove(); // Remove the thumbnail
+            });
 
-        // Append the image and remove button to the preview container
-        previewContainer.appendChild(imgElement);
-        imgElement.appendChild(removeBtn);
-    }
-});
+            // Append elements to thumbnail
+            thumbnail.appendChild(img);
+            thumbnail.appendChild(removeIcon);
 
+            // Append thumbnail to the container
+            addedImagesContainer.appendChild(thumbnail);
+        }
+    });
 </script>
-
 

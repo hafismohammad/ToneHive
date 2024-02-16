@@ -219,7 +219,8 @@
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <!-- <a href="/userHome"><img src="assets/imgs/theme/logo-tonehive" alt="logo"></a> -->
-                        <a href="/userHome" style="font-size: 24px;">ToneHive</a>
+                        <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
+
 
                     </div>
                     <div class="header-right">
@@ -243,7 +244,7 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/public/assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue"><%= cartTotalCount %></span>
                                     </a>
                                 </div>
 
@@ -469,7 +470,7 @@
                                                                         <% } %>
                                                                     <% } else { %>
                                                                         <tr>
-                                                                            <td colspan="7">No orders found</td>
+                                                                            <td colspan="7" class="text-center fw-bold fs-4">No orders found</td>
                                                                         </tr>
                                                                     <% } %>
                                                                 </tbody>
@@ -503,50 +504,52 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <ul class="list-group">
-                                                            <% for (let i=0; i < userAddress.length; i++) { %>
-                                                                <li class="list-group-item">
-                                                                    <div>
-                                                                        <span><strong>Name:</strong>
-                                                                            <%= userAddress[i].address.name %>
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        <span><strong>Mobile:</strong>
-                                                                            <%= userAddress[i].address.mobile %>
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        <span><strong>House:</strong>
-                                                                            <%= userAddress[i].address.house %>
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        <span><strong>City:</strong>
-                                                                            <%= userAddress[i].address.city %>
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        <span><strong>Pincode:</strong>
-                                                                            <%= userAddress[i].address.pincode %>
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <div class="d-flex justify-content-start mt-2">
-                                                                        <a href="/userProfileAddress/<%= userAddress[i].address._id %>"
-                                                                            class="btn btn-secondary btn-sm ml-15">Edit
-                                                                            Address</a>
-                                                                        <a onclick="deleteAddress('<%= userAddress[i].address._id %>')"
-                                                                            class="btn btn-text-danger btn-sm ml-15">Delete</a>
-                                                                    </div>
-                                                                </li>
+                                                            <% if (userAddress.length > 0) { %>
+                                                                <% for (let i = 0; i < userAddress.length; i++) { %>
+                                                                    <li class="list-group-item">
+                                                                        <div>
+                                                                            <span><strong>Name:</strong>
+                                                                                <%= userAddress[i].address.name %>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span><strong>Mobile:</strong>
+                                                                                <%= userAddress[i].address.mobile %>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span><strong>House:</strong>
+                                                                                <%= userAddress[i].address.house %>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span><strong>City:</strong>
+                                                                                <%= userAddress[i].address.city %>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span><strong>Pincode:</strong>
+                                                                                <%= userAddress[i].address.pincode %>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-start mt-2">
+                                                                            <a href="/userProfileAddress/<%= userAddress[i].address._id %>"
+                                                                                class="btn btn-secondary btn-sm ml-15">Edit
+                                                                                Address</a>
+                                                                            <a onclick="deleteAddress('<%= userAddress[i].address._id %>')"
+                                                                                class="btn btn-text-danger btn-sm ml-15">Delete</a>
+                                                                        </div>
+                                                                    </li>
                                                                 <% } %>
+                                                            <% } else { %>
+                                                                <li class="list-group-item">
+                                                                    <p class="text-center fw-bold fs-4">No addresses found.</p>
+                                                                 
+                                                                </li>
+                                                            <% } %>
                                                         </ul>
-
                                                     </div>
+                                                    
                                                 </div>
                                             </div>
 
@@ -771,7 +774,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="/public/assets/imgs/theme/logo.svg" alt="logo"></a>
+                                <a href="#"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">
@@ -1009,13 +1012,19 @@
                 $.ajax({
                     url: '/deleteAddress/' + addressId,
                     method: 'DELETE',
-                }).done((res) => {
+                    success:(res) => {
+                    console.log(res.message);
                     Swal.fire('Successful', `${res.message}`, 'success').then(() => {
-
+                        
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 1000);
 
                     });
-                }).fail((error) => {
+                },
+                error:(error) => {
                     console.log(error);
+                }
                 });
             }
         });

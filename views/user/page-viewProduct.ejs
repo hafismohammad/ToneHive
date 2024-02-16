@@ -219,7 +219,7 @@
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <!-- <a href="/userHome"><img src="/public/assets/imgs/theme/logo-tonehive" alt="logo"></a> -->
-                        <a href="/userHome" style="font-size: 24px;">ToneHive</a>
+                        <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
 
                     </div>
                     <div class="header-right">
@@ -243,7 +243,7 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/public/assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue"><%= cartTotalCount %></span>
                                     </a>
                                 </div>
 
@@ -307,7 +307,7 @@
                             <nav>
                                 <ul>
                                     <li>
-                                        <a href="#">Home </a>
+                                        <a href="/userHome">Home </a>
                                     </li>
                                     <li>
                                         <a href="#">About</a>
@@ -550,7 +550,7 @@
                                             <div class="product-price primary-color float-left">
                                                 <ins><span class="text-brand">₹ <%= products.price %></span></ins>
                                                 <!-- <ins><span class="old-price font-md ml-15">$200.00</span></ins> -->
-                                                <span class="save-price  font-md color3 ml-15"><%= products.discount %></span>
+                                                <span class="save-price  font-md color3 ml-15"><%= products.discount %>%</span>
                                             </div>
                                         </div>
                                         <div class="bt-1 border-color-1 mt-15 mb-15"></div>
@@ -600,8 +600,8 @@
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
                                             <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
-                                            <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
-                                            <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span></li>
+                                            <li class="mb-5">Tags: <a href="#" rel="tag">Headphones</a>, <a href="#" rel="tag">Home Audio</a>, <a href="#" rel="tag">Gaming</a> </li>
+                                            <li>Availability:<span class="in-stock text-success ml-5"><%= products.quantity  %> Items In Stock</span></li>
                                         </ul>
                                     </div>
                                     <!-- Detail Info -->
@@ -1066,7 +1066,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="/public/assets/imgs/theme/logo.svg" alt="logo"></a>
+                                <a href="#"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">

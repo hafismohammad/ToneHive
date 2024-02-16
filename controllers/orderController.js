@@ -38,17 +38,21 @@ const adminOrderStatus = async (req, res) => {
 
 const orderProductView = async (req, res) => {
     try {
-      const orderId = req.params.id
-  
-      const orderedItems = await Order.findById(orderId).populate(
-          'products.productId')
-          
-          res.render('admin/page-viewProductsDetails',{orderedItems:orderedItems})
+        const orderId = req.params.id;
 
+        const orderedItems = await Order.findById(orderId).populate('products.productId');
+
+        if (!orderedItems) {
+            return res.status(404).send('Order not found');
+        }
+
+        res.render('admin/page-viewProductsDetails', { orderedItems: orderedItems });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        res.status(500).send('Internal server error');
     }
-}
+};
+
 
 module.exports = {
     orderList,

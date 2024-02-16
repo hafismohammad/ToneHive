@@ -19,6 +19,16 @@ function nameValidate(e) {
             error1.style.display = "none";
             error1.innerHTML = "";
         }, 3000);
+        
+    }else if(/^(-?\d+)$/.test(nameVal)){
+        error1.style.display = "block";
+        error1.innerHTML = "Please enter a valid name without numbers"; 
+        
+        setTimeout(() => {
+            error1.style.display = "none";
+            error1.innerHTML = "";
+        }, 3000);
+       
     }else
     {
         error1.style.display = "none";

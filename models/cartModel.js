@@ -12,7 +12,12 @@ const cartSchema = new mongoose.Schema({
         quantity:{ type:Number, default:1 },
         price:{ type:Number, required:true }
     }],
-    createAt:{ type:Date, default:Date.now }
+    createAt:{ type:Date, default:Date.now },
+    
+    totalPrice:{
+        type:Number,
+        required:true
+    }
 }) 
 
 

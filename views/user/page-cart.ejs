@@ -197,8 +197,7 @@
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <!-- <a href="/userHome"><img src="assets/imgs/theme/logo-tonehive" alt="logo"></a> -->
-                        <a href="/userHome" style="font-size: 24px;">ToneHive</a>
-
+                        <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -221,7 +220,7 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue"><%= cartCount %></span>
                                     </a> 
                                 </div>
 
@@ -330,42 +329,49 @@
                                         <th scope="col">Remove</th>
                                     </tr>
                        
-<tbody>
-    <% cartItems.forEach(cartItem => { %>   
-        <tr>
-            <td class="image product-thumbnail">
-                <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
-            </td>
-            <td class="product-des product-name">
-                <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
-                <p class="font-xs"><%= cartItem.productDetails.description %></p>
-            </td>
-            <td class="price" data-title="Price">
-                <span>₹ <%= cartItem.productDetails.price %> </span>
-            </td>
-            <td class="text-center" data-title="Quantity">
-                <div>
-                    <button class="cart-item-count mr-5" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', -1)" <%= cartItem.items && cartItem.items.quantity === 1 ? 'disabled' : '' %>>-</button>
-                   
-                    <span class="qty-val"><%= cartItem.items ? cartItem.items.quantity : 0 %></span>
-                    <button class="cart-item-count ml-5" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', 1)">+</button>
-                </div>
-            </td>
-            <td class="text-right" data-title="Subtotal">
-                <span>₹ <%= cartItem.subtotal %> </span>
-            </td>
-            <td class="action" data-title="Remove">
-                <a  class="text-muted" onclick="productRemove('<%= cartItem.productDetails._id %>')"><i class="fi-rs-trash"></i></a>
-            </td>
-        </tr>
-        <% }) %>
-    <tr>
-        <td colspan="6" class="text-end">
-            <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
-        </td>
-    </tr>
-  
- </tbody>
+                                    <tbody>
+                                        <% if (cartItems.length === 0) { %>
+                                            <tr>
+                                                <td colspan="6" class="text-center fw-bold fs-4">Your cart is empty</td>
+                                            </tr>
+                                        <% } else { %>
+                                        <% cartItems.forEach(cartItem => { %>   
+                                            <tr>
+                                                <td class="image product-thumbnail">
+                                                    <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
+                                                </td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
+                                                    <p class="font-xs"><%= cartItem.productDetails.description %></p>
+                                                </td>
+                                                <td class="price" data-title="Price">
+                                                    <span>₹ <%= cartItem.productDetails.price %> </span>
+                                                </td>
+                                                <td class="text-center align-middle" data-title="Quantity">
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <button class="cart-item-count mr-10" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>','<%= cartItem.items.quantity%>', -1)" <%= cartItem.items && cartItem.items.quantity === 1 ? 'disabled' : '' %>>-</button>
+
+                                                        <span class="qty-val"><%= cartItem.items ? cartItem.items.quantity : 0 %></span>
+
+                                                        <button class="cart-item-count ml-10" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>','<%= cartItem.items.quantity%>', 1)">+</button>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right" data-title="Subtotal">
+                                                    <span>₹ <%= cartItem.subtotal %> </span>
+                                                </td>
+                                                <td class="action" data-title="Remove">
+                                                    <a class="text-muted" onclick="productRemove('<%= cartItem.productDetails._id %>')"><i class="fi-rs-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                        <tr>
+                                            <td colspan="6" class="text-end">
+                                                <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                    
                                     
                                     
              </table>    
@@ -374,7 +380,7 @@
                         </div>
                         <div class="cart-action text-end">
                             <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
-                            <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+                            <a href="/userHome" class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                         </div>
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50">
@@ -496,7 +502,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="public/assets/imgs/theme/logo.svg" alt="logo"></a>
+                                <a href="#"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">
@@ -576,20 +582,7 @@
         </div>
     </footer>
     <!-- Preloader Start -->
-    <div id="preloader-active">
-        <div class="preloader d-flex align-items-center justify-content-center">
-            <div class="preloader-inner position-relative">
-                <div class="text-center">
-                    <h5 class="mb-5">Now Loading</h5>
-                    <div class="loader">
-                        <div class="bar bar1"></div>
-                        <div class="bar bar2"></div>
-                        <div class="bar bar3"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <!-- Vendor JS-->
     <script src="public/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="public/assets/js/vendor/jquery-3.6.0.min.js"></script>
@@ -621,7 +614,16 @@
 </html>
 
 <script>
-    function changeQuantity(cartItemId, productId, delta) {
+    function changeQuantity(cartItemId, productId,qty, delta) {
+        const currentqty= qty;
+        console.log(currentqty)
+        if(delta=='-'){
+            // const qty = currentqty-1;
+            // qtyval.innerHTML=qty;
+            
+            
+
+        }
        
         fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
             method: 'PATCH', 
@@ -634,10 +636,9 @@
                 throw new Error('Network response was not ok');
             }
         
-            setTimeout(() => {
+         
                 window.location.reload();
     
-            }, 500); 
          })
         .catch(error => {
             console.error('Error:', error);

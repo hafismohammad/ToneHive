@@ -12,7 +12,7 @@ const userProfile = async (req, res) => {
     try {
         let userId = req.session.user._id;
         const userInfo = await User.findOne(userId)
-       
+
         const userData = await User.findById(userId);
         if (!userData) {
             return res.status(404).send('User not found');
@@ -30,34 +30,39 @@ const userProfile = async (req, res) => {
                     "address.state": 1,
                     "address.country": 1,
                     "address.pincode": 1,
-                    "address.mobile": 1 ,
-                    "address._id" : 1 
+                    "address.mobile": 1,
+                    "address._id": 1
                 }
             }
         ]);
 
-     //   const userOrders = await Order.findOne({userId:userId},{'address':1})
-// console.log(userOrders1);
-const userOrders = await Order.aggregate([
-    {
-        $match: { userId: userId }
-    },
-    {
-        $lookup: {
-            from: 'users',
-            localField: 'address',
-            foreignField: '_id',
-            as: 'lookedUpAddress'
-        }
-    },
-    {
-        $unwind: '$products' 
-    }
-]);
+        //   const userOrders = await Order.findOne({userId:userId},{'address':1})
+        // console.log(userOrders1);
+        const userOrders = await Order.aggregate([
+            {
+                $match: { userId: userId }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'address',
+                    foreignField: '_id',
+                    as: 'lookedUpAddress'
+                }
+            },
+            {
+                $unwind: '$products'
+            }
+        ]);
 
-     
-     
-    
+
+        const cartItems = await Cart.find({userId:userId});
+        let cartTotalCount = 0; 
+        cartItems.forEach(cart => {
+            cartTotalCount += cart.items.length; 
+        });
+
+
 
         const date = new Date();
         const momentDate = moment(date);
@@ -69,8 +74,9 @@ const userOrders = await Order.aggregate([
             userId: userData,
             userAddress: userAddress,
             userOrders: userOrders,
-            message:message,
-            userInfo:userInfo
+            message: message,
+            userInfo: userInfo,
+            cartTotalCount:cartTotalCount
 
         });
     } catch (error) {
@@ -101,7 +107,7 @@ const AddressPost = async (req, res) => {
             country: country,
             pincode: pincode,
             mobile: mobile,
-           
+
         };
 
         const user = await User.findById({ _id: userId })
@@ -121,11 +127,11 @@ const AddressPost = async (req, res) => {
     }
 };
 
-   const profileEditAddressLoad = async (req, res) => {
+const profileEditAddressLoad = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const addressId = req.params.id;
-       
+
         const userAddress = await User.findOne(
             { _id: userId, "address._id": addressId },
             { "address.$": 1, _id: 0 }
@@ -145,11 +151,11 @@ const editProfileAddress = async (req, res) => {
         const { name, house, city, state, country, pincode, mobile } = req.body;
 
         const updatedUser = await User.findOneAndUpdate(
-            { 
-                _id: userId, 
-                "address._id": addressId 
-            }, 
-            { 
+            {
+                _id: userId,
+                "address._id": addressId
+            },
+            {
                 $set: {
                     "address.$.name": name,
                     "address.$.house": house,
@@ -160,13 +166,13 @@ const editProfileAddress = async (req, res) => {
                     "address.$.mobile": mobile
                 }
             },
-            { 
-                new: true 
+            {
+                new: true
             }
         );
 
         if (updatedUser) {
-       
+
             res.redirect('/checkout');
         } else {
             console.log("User address update failed.");
@@ -180,72 +186,72 @@ const editProfileAddress = async (req, res) => {
 
 
 const profileAddressEditpost = async (req, res) => {
-        try {
-            const userId = req.session.user._id;
-            const addressId = req.params.id;
-            const { name, house, city, state, country, pincode, mobile } = req.body;
-    
-            const updatedUser = await User.findOneAndUpdate(
-                { 
-                    _id: userId, 
-                    "address._id": addressId 
-                }, 
-                { 
-                    $set: {
-                        "address.$.name": name,
-                        "address.$.house": house,
-                        "address.$.city": city,
-                        "address.$.state": state,
-                        "address.$.country": country,
-                        "address.$.pincode": pincode,
-                        "address.$.mobile": mobile
-                    }
-                },
-                { 
-                    new: true 
+    try {
+        const userId = req.session.user._id;
+        const addressId = req.params.id;
+        const { name, house, city, state, country, pincode, mobile } = req.body;
+
+        const updatedUser = await User.findOneAndUpdate(
+            {
+                _id: userId,
+                "address._id": addressId
+            },
+            {
+                $set: {
+                    "address.$.name": name,
+                    "address.$.house": house,
+                    "address.$.city": city,
+                    "address.$.state": state,
+                    "address.$.country": country,
+                    "address.$.pincode": pincode,
+                    "address.$.mobile": mobile
                 }
-            );
-    
-            if (updatedUser) {
-           
-                res.redirect('/userProfile');
-            } else {
-                console.log("User address update failed.");
-                res.status(404).send("User address update failed.");
+            },
+            {
+                new: true
             }
-        } catch (error) {
-            console.error("Error updating user address:", error);
-            res.status(500).send("Error updating user address. Please try again later.");
+        );
+
+        if (updatedUser) {
+
+            res.redirect('/userProfile');
+        } else {
+            console.log("User address update failed.");
+            res.status(404).send("User address update failed.");
         }
+    } catch (error) {
+        console.error("Error updating user address:", error);
+        res.status(500).send("Error updating user address. Please try again later.");
     }
+}
 
 
-    const userProfileAddressDelete = async (req, res) => {
-        try {
-            const userId = req.session.user._id
+const userProfileAddressDelete = async (req, res) => {
+    try {
+        const userId = req.session.user._id
 
-            const id = req.params.id;
- 
+        const id = req.params.id;
 
-    
-            const result = await User.updateOne(
-                { _id: userId },
-                { $pull: { address: { _id: id } } }
-            );
-    
-            if (result.nModified > 0) {
-                console.log("Address deleted successfully.");
-                res.status(200).json({ message: "Address deleted successfully." });
-            } else {
-                console.log("Address not found or already deleted.");
-                res.status(404).json({ message: "Address not found or already deleted." });
-            }
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({ message: "Internal Server Error" });
+
+
+        const result = await User.updateOne(
+            { _id: userId },
+            { $pull: { address: { _id: id } } }
+        );
+
+        if (result) {
+            console.log("Address deleted successfully.");
+            res.status(200).json({ message: "Address deleted successfully." });
+        } else {
+            console.log("Address not found or already deleted.");
+            res.status(404).json({ message: "Address not found or already deleted." });
         }
-    };
-    
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 
 const saltRounds = 10;
 const changePassword = async (req, res) => {
@@ -314,6 +320,12 @@ const viewOrderDetails = async (req, res) => {
             }
         ]);
 
+        const cartItems = await Cart.find({userId:userId});
+        let cartTotalCount = 0; 
+        cartItems.forEach(cart => {
+            cartTotalCount += cart.items.length; 
+        });
+
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
@@ -321,8 +333,8 @@ const viewOrderDetails = async (req, res) => {
 
 
 
-        console.log(userOrders.createdAt);
-        res.render('user/Page-viewDetails', { userOrders: userOrders })
+        
+        res.render('user/Page-viewDetails', { userOrders: userOrders,cartTotalCount:cartTotalCount })
     } catch (error) {
         console.log(error);
     }
@@ -350,20 +362,26 @@ const orderCancel = async (req, res) => {
 const viewProducrDetails = async (req, res) => {
     try {
         const user = req.session.user._id
-        const userId = await User.findById({_id:user})
+        
+        const userId = await User.findById({ _id: user })
         const orderId = req.params.id
         const orderedItems = await Order.findById(orderId).populate(
-        'products.productId'
-      )
+            'products.productId'
+        )
+        const cartItems = await Cart.find({user:user});
+        let cartTotalCount = 0; 
+        cartItems.forEach(cart => {
+            cartTotalCount += cart.items.length; 
+        });
 
-    
-   
-   console.log(orderedItems);
-        res.render("user/Page-viewDetails",{orderedItems:orderedItems,userId:userId})
+
+        res.render("user/Page-viewDetails", { orderedItems: orderedItems, userId: userId,cartTotalCount:cartTotalCount })
     } catch (error) {
         console.log(error);
     }
 }
+
+
 
 module.exports = {
     userProfile,
@@ -377,5 +395,6 @@ module.exports = {
     editProfileAddress,
     profileAddressEditpost,
     userProfileAddressDelete,
-    viewProducrDetails
+    viewProducrDetails,
+
 }

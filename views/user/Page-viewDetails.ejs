@@ -219,7 +219,7 @@
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <!-- <a href="/userHome"><img src="/public/assets/imgs/theme/logo-tonehive" alt="logo"></a> -->
-                        <a href="/userHome" style="font-size: 24px;">ToneHive</a>
+                        <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
 
                     </div>
                     <div class="header-right">
@@ -243,7 +243,7 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/public/assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue"><%= cartTotalCount %></span>
                                     </a>
                                 </div>
 
@@ -395,13 +395,18 @@
                          <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
                      </tr>
                   
-                 <% } %>
+          
              </tbody>
          </table>
          
          </div>
-         </div>    
-         
+         </div> 
+         <% if(orderedItems.orderStatus !== "cancelled") { %>   
+            <div class="text-end mt-4">
+                <a class="btn btn-danger" onclick="cancelOrder('<%= orderedItems._id %>')">Cancel Order</a></td>
+            </div>
+        <% } %>
+        <% } %>
     </div>
  
 
@@ -563,3 +568,51 @@
     <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
     </html>
     
+
+    
+<script>
+    function cancelOrder(orderId) {
+        console.log(orderId);
+        Swal.fire({
+            title: "Are you sure?",
+
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes`,
+            cancelButtonText: 'Cancel',
+            allowOutsideClick: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/cancelOrder/${orderId}`, { method: "PATCH" })
+                    .then(res => {
+                        if (res.ok) {
+                            Swal.fire({
+                                title: `Done`,
+                                text: "You clicked the button!",
+                                icon: "success",
+                                button: false
+                            });
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000)
+
+                        } else {
+                            swal({
+                                title: "somthing went wrong!",
+                                text: "You clicked the button!",
+                                icon: "error",
+                            });
+                        }
+                    })
+
+
+            } else {
+                swal({
+                    title: "canceled !",
+                    text: "You clicked the button!",
+                    icon: "cancel",
+                });
+            }
+        });
+    }
+</script>

@@ -110,6 +110,7 @@ const listOrUnlistProducts = async (req, res) => {
     }
 
 }
+
 const editProductLoad = async (req, res) => {
     try {
         const message=req.flash("message")
@@ -124,10 +125,22 @@ const editProductLoad = async (req, res) => {
 };
 
 
-const editedProduct = async (req, res) => {  
+const editedProduct = async (req, res) => {
     try {
-        id = req.params.id;
+        const id = req.params.id;
         const name = req.body.name;
+        const imageFile = req.files
+        const images = []; // Array to store filenames of edited images
+
+        if (req.files && req.files.length > 0) {
+            for (let i = 0; i < req.files.length; i++) {
+                images.push(req.files[i].filename);
+            }
+        }
+
+
+        const products = await Products.findById({_id: id})
+
         const duplicateProd = await Products.findOne({ name: name });
         if (!duplicateProd || duplicateProd._id.toString() === id) {
             const category = req.body.category;
@@ -135,31 +148,49 @@ const editedProduct = async (req, res) => {
             const price = req.body.price;
             const quantity = req.body.quantity;
             const discount = req.body.discount;
-            
-            await Products.findByIdAndUpdate(id, {
-                $set: {
-                    name: name, 
-                    category: category,
-                    description: description,
-                    price: price,
-                    quantity: quantity,
-                    discount: discount
+
+
+
+            const updateFields = {
+                name: name, 
+                category: category,
+                description: description,
+                price: price,
+                quantity: quantity,
+                discount: discount
+            };
+
+            if (req.files && req.files.length > 0) {
+                // Delete old images if they exist
+                if (req.body.images && req.body.images.length > 0) {
+                    for (let i = 0; i < req.body.images.length; i++) {
+                        try {
+                            fs.unlinkSync("public/uploads/" + req.body.images[i]);
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    }
                 }
-            });
+                // Update images in updateFields
+                updateFields.images = images;
+            }
             
-            req.flash("message","Product Edited")
+           const updatefiles = await Products.findByIdAndUpdate(id, { $set: updateFields });
+
+          
+            req.flash("message", "Product Edited");
             res.redirect(`/admin/products`);
         } else {
             console.log("Duplicate Product");
-            req.flash("message","Duplicate Product")
+            req.flash("message", "Duplicate Product");
             res.redirect("/admin/products");
         }
     } catch (error) {
         console.log(error);
+        req.flash("message", "Error editing product");
+        res.redirect("/admin/products");
     }
-}
-
-  
+};
 
 
 

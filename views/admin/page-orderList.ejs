@@ -23,8 +23,8 @@
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
-                <img src="/public/admin-assets/css/main.css" class="logo" alt="Evara Dashboard">
+            <a href="/admin/dashboard" class="brand-wrap ">
+                <img  src="/public/assets/imgs/theme/Tonehive (1).png" class="logo" alt="Evara Dashboard">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -218,12 +218,12 @@
                             <thead>
                                 <tr>
                                     <th>#ID</th>
-                                    <th class="text-center" scope="col">Name</th>
-                                    <th class="text-center" scope="col">Email</th>
+                                    <th class="text-center" scope="col">NAME</th>
+                                    <th class="text-center" scope="col">EMAIL</th>
                                     <th class="text-center" scope="col">PAYMENT METHOD</th>
-                                    <th class="text-center" scope="col">Total</th>
-                                    <th class="text-center" scope="col">Date</th>
-                                    <th class="text-center" scope="col">Status</th>
+                                    <th class="text-center" scope="col">TOTAL</th>
+                                    <th class="text-center" scope="col">DATE</th>
+                                    <th class="text-center" scope="col">STATUS</th>
                                     <th class="text-center" scope="col">CHANGE STATUS</th>
                                     <th class="text-center" scope="col">VIEW DETAILS</th>
                                     <!-- <th scope="col" class="text-end"> Action </th> -->
@@ -260,7 +260,7 @@
                                         <% } %>
                                     </td>
                                     
-                                    <td width="10%">
+                                    <td width="10%" style="vertical-align: middle;">
                                         <% if (orderDetails[i].orderStatus == 'pending') { %>
                                             <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','processing','confirmed')" class="btn btn-outline-primary rounded font-sm">processing</a>
                                         <% } else if (orderDetails[i].orderStatus == 'processing') {%>
@@ -275,6 +275,7 @@
                                             <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','returned','d-none')" class="btn btn-outline-primary rounded font-sm">Approve Return</a>
                                         <% } %>
                                     </td>
+                                    
                                    
                                    <td class="text-center">
                                     <a href="/admin/viewProductsDetails/<%= orderDetails[i]._id %>"><button class="btn btn-primary">View Details</button></a>

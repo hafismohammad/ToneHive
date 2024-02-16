@@ -68,19 +68,4 @@ router.get("/viewProductsDetails/:id",orderControllers.orderProductView)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router

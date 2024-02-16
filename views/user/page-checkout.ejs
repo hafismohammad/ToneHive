@@ -219,7 +219,8 @@
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <!-- <a href="/userHome"><img src="assets/imgs/theme/logo-tonehive" alt="logo"></a> -->
-                        <a href="/userHome" style="font-size: 24px;">ToneHive</a>
+                        <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
+
 
                     </div>
                     <div class="header-right">
@@ -243,7 +244,7 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue"><%= cartCount %></span>
                                     </a>
                                 </div>
 
@@ -378,7 +379,7 @@
                             }
                         </style>
 
-                        <div class="row">
+                        <div class="row mb-25">
                             <div class="col">
                                 <ul class="list-group">
                                     <% for (let i=0; i < userAddress.length; i++) { %>

@@ -11,32 +11,43 @@ const { set } = require("mongoose");
 //admin login 
 const adminLogin = (req, res) => {
     try {
+        
         if(req.session.admin){
             res.redirect("admin/dashboard")
         }else{
-            res.render("admin/page-adminLogin")
+            const error = req.query.error
+            res.render("admin/page-adminLogin",{error:error})
         }
     } catch (error) {
         console.log(error);
     }
 }
-const adminPost= async (req, res) => {
+const adminPost = async (req, res) => {
     try {
-        const {email, password } = req.body
+        const { email, password } = req.body;
         
         const adminData = await Admins.findOne({ email: email });
       
-        console.log('admin dataaaa', adminData);
-        if (adminData && adminData.password === password) {
-            req.session.admin = adminData;
-            res.render("admin/page-adminDashboard");
+        if (adminData) {
+           
+            if (adminData.password === password) {
+                req.session.admin = adminData;
+                res.render("admin/page-adminDashboard");
+            } else {
+            
+                res.redirect('/admin?error=Incorrect password');
+            }
         } else {
-            res.redirect('/admin');
+    
+            res.redirect('/admin?error=Email not found');
         }
     } catch (error) {
         console.log(error);
+  
+        res.redirect('/admin?error=An error occurred');
     }
 }
+
 
 const dashboardLoad = async (req, res) => {
     try {

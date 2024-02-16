@@ -48,7 +48,8 @@ const addToCart = async (req, res) => {
            
             useCart = new Cart({
                 userId: userId,
-                items: [cartItem] 
+                items: [cartItem],
+                totalPrice:cartItem.price * cartItem.quantity
             });
             
         }
@@ -94,7 +95,7 @@ const cartLoad = async (req, res) => {
             },
            
         ]);
-
+console.log(cartItems);
         let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
             const product = cartItem.productDetails[0];
@@ -107,9 +108,16 @@ const cartLoad = async (req, res) => {
             };
         });
         
+      
+        let cartTotalCount = 0; 
+        const cartItemss = await Cart.find({userId:userId});
+        const cartCount = cartItems.length;
+    
+        // Now you can use cartCount to display the count in your cart icon or perform other operations
+        
        
 
-        return res.render("user/page-cart", {userInfo:userInfo, cartItems: populatedCartItems, totalCartPrice });
+        return res.render("user/page-cart", {userInfo:userInfo, cartItems: populatedCartItems, totalCartPrice,cartCount:cartCount});
 
     } catch (error) {
         console.error(error);

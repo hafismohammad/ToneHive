@@ -38,19 +38,19 @@ router.get("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordLoad)
 router.post("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordPost)
 
 // otp login
-router.get("/verify-otp",otpControllers.verifyOTPLoad)
+router.get("/verify-otp",userAuth.isLogout,otpControllers.verifyOTPLoad)
 
 router.post("/verify-otp",userAuth.otpTimeOut, otpControllers.verifiedUser)
 
-router.get("/resend-otp",otpControllers.resendOtp)
+router.get("/resend-otp",userAuth.isLogout,otpControllers.resendOtp)
 
-router.get("/productView/",userControllers.productViews)
+router.get("/productView/",userAuth.isLogout,userControllers.productViews)
 
-router.get("/userProfile",userProfileController.userProfile)
+router.get("/userProfile",userAuth.isLogout,userProfileController.userProfile)
 
 router.post("/userProfileAddress",userProfileController.AddressPost)
 
-router.get("/userProfileAddress/:id",userProfileController.profileEditAddressLoad)
+router.get("/userProfileAddress/:id",userAuth.isLogout,userProfileController.profileEditAddressLoad)
 
 router.post("/porfileAddress/:id",userProfileController.editProfileAddress)
 
@@ -61,25 +61,25 @@ router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelet
 router.post("/accountDetails",userProfileController.changePassword)
 
 // otp register
-router.get("/otpRegister", otpControllers.otpRegisterLoad)
+router.get("/otpRegister",userAuth.isLogout, otpControllers.otpRegisterLoad)
 
 router.post("/otpRegister", otpControllers.otpRegisterPost)
 
 // cart
-router.get("/cart",cartControllers.cartLoad)
+router.get("/cart",userAuth.isLogout,cartControllers.cartLoad)
 
 router.patch("/cart/:cartItemId/:productId/:delta",setUserCart.setUserCart, cartControllers.updateCartQuantity);
 
-router.get("/addToCart/:id",cartControllers.addToCart)
+router.get("/addToCart/:id",userAuth.isLogout,cartControllers.addToCart)
 
 router.delete("/removeCartItem/:id",cartControllers.removeFormCart)
 
 // checkout
-router.get("/checkout",checkoutControllers.checkoutLoad)
+router.get("/checkout",userAuth.isLogout,checkoutControllers.checkoutLoad)
 
 router.post("/addressPost",checkoutControllers.addAddress)
 
-router.get("/editAddress/:id",checkoutControllers.editAddressLoad)
+router.get("/editAddress/:id",userAuth.isLogout,checkoutControllers.editAddressLoad)
 
 router.post("/editAddress/:id",checkoutControllers.edittedAddress)
 
@@ -87,12 +87,16 @@ router.post("/editAddress/:id",checkoutControllers.edittedAddress)
 
 router.post("/placeOrder",checkoutControllers.placeOrderPost)
 
-router.get("/orderSuccess",checkoutControllers.orderPlace)
+router.get("/orderSuccess",userAuth.isLogout,checkoutControllers.orderPlace)
 
-router.get("/viewDetails",userProfileController.viewOrderDetails)
+router.get("/viewDetails",userAuth.isLogout,userProfileController.viewOrderDetails)
 
 router.patch("/cancelOrder/:id",userProfileController.orderCancel)
 
-router.get("/vewProductDetails/:id",userProfileController.viewProducrDetails)
+router.get("/vewProductDetails/:id",userAuth.isLogout,userProfileController.viewProducrDetails)
+
+
+
+
 
 module.exports = router 

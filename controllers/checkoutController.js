@@ -67,13 +67,18 @@ const checkoutLoad = async (req, res) => {
             };
         });
 
+        let cartTotalCount = 0; 
+        const cartItemss = await Cart.find({userId:userId});
+        const cartCount = cartItems.length;
+
         res.render("user/page-checkout",
             {
                 userId: userId,
                 userAddress: userAddress,
                 cartItems: populatedCartItems,
                 totalCartPrice,
-                userInfo: userInfo
+                userInfo: userInfo,
+                cartCount:cartCount
             })
     } catch (error) {
         console.log(error);
