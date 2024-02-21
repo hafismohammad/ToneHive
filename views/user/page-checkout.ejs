@@ -15,7 +15,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon"  href="/public/assets/imgs/theme/Tonehive (1).png">
+    <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/Tonehive (1).png">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
 </head>
@@ -244,7 +244,9 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue"><%= cartCount %></span>
+                                        <span class="pro-count blue">
+                                            <%= cartCount %>
+                                        </span>
                                     </a>
                                 </div>
 
@@ -265,7 +267,7 @@
                                         <li class="dropdown nav-item">
                                             <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                                 id="dropdownAccount" aria-expanded="false">
-                                               <button class="btn  btn-primary ">hey.. <%= userInfo.name %></button>
+                                                <button class="btn  btn-primary ">hey.. <%= userInfo.name %></button>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="dropdownAccount">
@@ -280,7 +282,7 @@
                                                         class="material-icons md-exit_to_app"></i>Logout</a>
                                             </div>
                                         </li>
-                                    </ul>   
+                                    </ul>
                                 </div>
 
 
@@ -340,7 +342,7 @@
         </div>
     </header>
 
-    
+
     <main class="main mt-30">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
@@ -356,41 +358,50 @@
                 <div class="row">
                     <div class="col-lg-6 mb-sm-15">
                         <div class="toggle_info">
-                            <span><i class="fi-rs-user mr-10"></i><span class="text-muted">Select Coupons</span> <a href="#loginform" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here</a></span>
+                            <span><i class="fi-rs-money mr-10"></i><span class="text-muted">Select Coupons</span> <a
+                                    href="#loginform" data-bs-toggle="collapse" class="collapsed"
+                                    aria-expanded="false">Click here</a></span>
                         </div>
                         <div class="panel-collapse collapse login_form" id="loginform">
-                            <div class="panel-body">
-                                <% if (coupons && coupons.length > 0) { %>
+                            <div class="panel-body" id="couponsList">
+                                <% if (coupons && coupons.length> 0) { %>
                                     <ul>
-                                        <% coupons.forEach(coupon => { %>
+                                        <% coupons.forEach(coupon=> { %>
                                             <li>
-                                                <p>Name: <%= coupon.name %></p>
-                                                <p>Code: <%= coupon.code %></p>
-                                            </li><hr>
-                                        <% }); %>
+                                                <p>Name: <%= coupon.name %>
+                                                </p>
+                                                <p>Code: <%= coupon.code %>
+                                                </p>
+                                            </li>
+                                            <hr>
+                                            <% }); %>
                                     </ul>
-                                <% } else { %>
-                                    <p>No coupons available</p>
-                                <% } %>
+                                    <% } else { %>
+                                        <p>No coupons available</p>
+                                        <% } %>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="col-lg-6">
                         <div class="toggle_info">
-                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a
+                                    href="#coupon" data-bs-toggle="collapse" class="collapsed"
+                                    aria-expanded="false">Click here to enter your code</a></span>
                         </div>
                         <div class="panel-collapse collapse coupon_form " id="coupon">
                             <div class="panel-body">
                                 <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
-                                <form method="post">
+
+                                <form action="/applyCoupon" method="post">
                                     <div class="form-group">
-                                        <input type="text" placeholder="Enter Coupon Code...">
+                                        <input id="couponCode" name="couponCode" type="text" placeholder="Enter Coupon Code...">
                                     </div>
                                     <div class="form-group">
-                                        <button class="btn  btn-md" name="login">Apply Coupon</button>
+                                        <button class="btn btn-md" type="submit" onclick="applyCoupon('<%= totalCartPrice %>');">Apply Coupon</button>
                                     </div>
                                 </form>
+                                
                             </div>
                         </div>
                     </div>
@@ -456,12 +467,13 @@
                                                         name="addressSelected" value="<%= userAddress[i].address._id %>"
                                                         checked>
                                                 </div>
-                                                <label for="address<%= userAddress[i].address._id %>">Select Address</label>
+                                                <label for="address<%= userAddress[i].address._id %>">Select
+                                                    Address</label>
                                                 <a href="/editAddress/<%= userAddress[i].address._id %>"
                                                     class="btn btn-secondary btn-sm ml-15">Edit Address</a>
                                             </div>
-                                            
-                                            
+
+
                                         </li>
                                         <% } %>
                                 </ul>
@@ -494,53 +506,49 @@
                                 </div>
                                 <div id="collapseAddress" class="different_address collapse in">
                                     <div class="form-group">
-                                        <input id="name" type="text" required="" name="name"
-                                            placeholder="Name *">
+                                        <input id="name" type="text" required="" name="name" placeholder="Name *">
                                     </div>
-                                    <p><span id="error1" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
 
                                     <div class="form-group">
-                                        <input id="house" type="text" name="house" required=""
-                                            placeholder="House *">
+                                        <input id="house" type="text" name="house" required="" placeholder="House *">
                                     </div>
-                                    <p><span id="error2" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
 
                                     <div class="form-group">
                                         <input id="city" required="" type="text" name="city"
                                             placeholder="City / Town *">
                                     </div>
-                                    <p><span id="error3" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
 
                                     <div class="form-group">
-                                        <input id="state" required="" type="text" name="state"
-                                            placeholder="State *">
+                                        <input id="state" required="" type="text" name="state" placeholder="State *">
                                     </div>
-                                    <p><span id="error4" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error4" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
 
                                     <div class="form-group">
-                                        <input id="country" required="" type="text"
-                                            name="country" placeholder="Country *">
+                                        <input id="country" required="" type="text" name="country"
+                                            placeholder="Country *">
                                     </div>
-                                    <p><span id="error5" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
 
                                     <div class="form-group">
-                                        <input id="pincode" required="" type="text"
-                                            name="pincode" placeholder="Pincode *">
+                                        <input id="pincode" required="" type="text" name="pincode"
+                                            placeholder="Pincode *">
                                     </div>
-                                    <p><span id="error6" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error6" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
 
                                     <div class="form-group">
-                                        <input id="mobile" required="" type="text" name="mobile"
-                                            placeholder="Phone *">
+                                        <input id="mobile" required="" type="text" name="mobile" placeholder="Phone *">
                                     </div>
-                                    <p><span id="error7" style="display: none;"
-                                            class="mt-15 err text-danger"></span></p>
+                                    <p><span id="error7" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
                                     <div>
                                         <input type="hidden" name="userId" value="<%= userId %>" />
 
@@ -1142,4 +1150,30 @@
 
 
     watchPaymentMethod();
+</script>
+
+<script>
+    function applyCoupon(totalCartPrice) {
+        const couponCode = document.getElementById('couponCode').value;
+
+        $.ajax({
+            url: '/applyCoupon',
+            type: 'post',
+            data: { couponCode: couponCode }
+        }).done(function(res) {
+            if (res.status) {
+                console.log('Coupon applied successfully');
+                document.getElementById('couponApplyFail').classList.add('d-none');
+                document.getElementById('couponApplySuccess').classList.remove('d-none');
+                document.getElementById('couponApplySuccess').innerHTML = res.message;
+                document.getElementById('discount').innerHTML = '-' + res.discount;
+                document.getElementById('totalAmount').innerHTML = '₹' + res.cart.totalAmount;
+            } else {
+                console.log('Failed to apply coupon:', res.message);
+                document.getElementById('couponApplySuccess').classList.add('d-none');
+                document.getElementById('couponApplyFail').classList.remove('d-none');
+                document.getElementById('couponApplyFail').innerHTML = res.message;
+            }
+        });
+    }
 </script>

@@ -53,12 +53,23 @@ const postCoupon = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
-const listCoupon = (req, res ) => {
+const applyCoupon = async (req, res) => {
     try {
+        const userId = req.session.user._id; // Assuming you have user information stored in req.session.user
+        const { totalCartPrice, couponCode } = req.body; // Assuming totalCartPrice and couponCode are sent in the request body
+        console.log(totalCartPrice, couponCode);
         
+        // Call the applyCoupon function with userId and couponCode
+        const result = await couponModel(userId, couponCode); // Assuming applyCouponLogic is the correct function to call
+
+        // You can access the discount and cart properties from the result
+        const { discount, cart, status, message } = result;
+
+        // Send the response back to the client
+        res.json({ discount, newTotalCartPrice: cart.totalAmount, status, message });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        res.status(500).json({ status: false, message: "Internal server error" });
     }
 }
 
@@ -67,5 +78,5 @@ module.exports = {
     addCouponLoad,
     postCoupon,
     generateCouponCode,
-    listCoupon
+    applyCoupon
 };

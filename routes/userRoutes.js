@@ -91,7 +91,7 @@ router.patch("/cancelOrder/:id",userProfileController.orderCancel)
 
 router.get("/vewProductDetails/:id",userAuth.isLogout,userProfileController.viewProducrDetails)
 
-router.get("/listCoupon", couponsControllers.listCoupon)
+router.post("/applyCoupon", couponsControllers.applyCoupon)
 
 
 
