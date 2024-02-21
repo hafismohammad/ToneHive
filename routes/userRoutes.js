@@ -9,8 +9,9 @@ const userCheckng = require('../middleware/userChecking')
 const setUserCart = require('../middleware/cartProdQuantity')
 const checkoutControllers = require('../controllers/checkoutController')
 const userProfileController= require('../controllers/userProfileController')
+const couponsControllers = require("../controllers/couponsControllers")
 
-
+//router.get("/*",userControllers.pageNotFound)
 
 router.get("/",userAuth.isLogin,userControllers.loginLoad)
 
@@ -22,12 +23,7 @@ router.post("/register", userControllers.registeredUser)
 
 router.get("/userHome",userAuth.isLogout,userControllers.homeLoad)
 
-router.get("/logout", userControllers.userLogout)
-
-// forgott password
-// router.get("/forgottPassword",userAuth.isLogin,forgottPassworControl.forgottPasswordOtp)
-
-// router.post("/forgottPassword",forgottPassworControl.forgottPasswordOtpPost)
+router.get("/logout",userAuth.isLogout, userControllers.userLogout)
 
 router.get("/RecoverForgottPassword",forgottPassworControl.forgotPasswordLoad)
 
@@ -61,7 +57,7 @@ router.delete("/deleteAddress/:id",userProfileController.userProfileAddressDelet
 router.post("/accountDetails",userProfileController.changePassword)
 
 // otp register
-router.get("/otpRegister",userAuth.isLogout, otpControllers.otpRegisterLoad)
+router.get("/otpRegister", otpControllers.otpRegisterLoad)
 
 router.post("/otpRegister", otpControllers.otpRegisterPost)
 
@@ -95,7 +91,7 @@ router.patch("/cancelOrder/:id",userProfileController.orderCancel)
 
 router.get("/vewProductDetails/:id",userAuth.isLogout,userProfileController.viewProducrDetails)
 
-
+router.get("/listCoupon", couponsControllers.listCoupon)
 
 
 

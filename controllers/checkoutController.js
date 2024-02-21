@@ -6,6 +6,7 @@ const Order = require('../models/orderModel')
 const moment = require('moment');
 const mongoose = require('mongoose');
 const Products = require('../models/productModel');
+const couponModel = require("../models/couponModel")
 
 const checkoutLoad = async (req, res) => {
     try {
@@ -68,9 +69,11 @@ const checkoutLoad = async (req, res) => {
             };
         });
 
+        const coupons = await couponModel.find()
+
         let cartTotalCount = 0; 
         const cartItemss = await Cart.find({userId:userId});
-        const cartCount = cartItems.length;
+        const cartCount = cartItems.legth;
 
         res.render("user/page-checkout",
             {
@@ -79,7 +82,8 @@ const checkoutLoad = async (req, res) => {
                 cartItems: populatedCartItems,
                 totalCartPrice,
                 userInfo: userInfo,
-                cartCount:cartCount
+                cartCount:cartCount,
+                coupons:coupons
             })
     } catch (error) {
         console.log(error);

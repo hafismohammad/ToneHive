@@ -32,7 +32,7 @@ const adminPost = async (req, res) => {
            
             if (adminData.password === password) {
                 req.session.admin = adminData;
-                res.render("admin/page-adminDashboard");
+                res.redirect("/admin/dashboard");
             } else {
             
                 res.redirect('/admin?error=Incorrect password');
@@ -59,7 +59,19 @@ const dashboardLoad = async (req, res) => {
 }
 
 
-
+const userLogout = (req, res) => {
+    if (req.session.user || req.session.admin) {
+        req.session.destroy((error) => {
+            if (error) {
+                res.redirect("/dashboard")
+            } else {
+                res.redirect('/admin')
+            }
+        })
+    } else {
+        res.redirect("/admin")
+    }
+}
 
 
 
@@ -70,6 +82,7 @@ const dashboardLoad = async (req, res) => {
 module.exports = {
     dashboardLoad,
     adminLogin,
-    adminPost
+    adminPost,
+    userLogout
    
 }

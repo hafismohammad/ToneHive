@@ -20,6 +20,14 @@ const securePassword = async (password) => {
     }
 }
 
+// const pageNotFound = (req, res) => {
+//     try {
+//         res.r
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
 const homeLoad = async (req, res) => {
     try {
         const userId = req.session.user
@@ -88,45 +96,41 @@ const loginLoad = function (req, res) {
     if (req.session.user) {
         res.redirect("/userHome");
     } else {
+        const error = req.query.error
         const message = req.flash('message');
-        res.render("user/page-login", { message: message[0] });
+        res.render("user/page-login", { message: message[0],error:error });
     }
 };
 
 const logedUser = async (req, res) => {
     const logEmail = req.body.email;
     const logPassword = req.body.password;
-    // console.log(logEmail);
+    
     try {
-
-        const logedUser = await User.findOne({
-            email: logEmail
-        });
-        const id = logedUser._id
-
+        const logedUser = await User.findOne({ email: logEmail });
+        
         if (logedUser) {
             const comparePass = await bcrypt.compare(logPassword, logedUser.password);
             if (comparePass) {
-                //  console.log(req.body);
-                // if (logedUser.isAdmin === 1) {
-                //     req.session.admin = id
-                //     res.redirect("/adminhome")
-                if (logedUser.isBlocked == false) {
-                    req.session.user = id
-                    res.redirect("/userHome")
+                if (!logedUser.isBlocked) {
+                    req.session.user = logedUser._id;
+                    res.redirect("/userHome");
+                    return; // Add return statement to exit the function after redirecting
                 } else {
-                    console.log("This user not exist");
-                    res.render("user/page-login", { error: "This user does not exist" })
+                    return res.redirect("/?error=User is blocked");
                 }
-
             } else {
-                res.render("user/page-login", { error: "Failed to login" })
+                return res.redirect("/?error=Incorrect password");
             }
+        } else {
+            return res.redirect("/?error=User not found");
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).send("Internal server error");
     }
-}
+};
+
 
 
 // Generate a random OTP
@@ -265,5 +269,6 @@ module.exports = {
     registeredUser,
     userLogout,
     productViews,
-    generateRandomOtp
+    generateRandomOtp,
+   // pageNotFound
 }

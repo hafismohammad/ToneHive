@@ -124,33 +124,33 @@ const editProductLoad = async (req, res) => {
     }
 };
 
-
 const editedProduct = async (req, res) => {
     try {
         const id = req.params.id;
         const name = req.body.name;
-        const imageFile = req.files
         const images = []; // Array to store filenames of edited images
 
+        // Push filenames of edited images into the images array
         if (req.files && req.files.length > 0) {
             for (let i = 0; i < req.files.length; i++) {
                 images.push(req.files[i].filename);
             }
         }
 
+        // Retrieve the product by ID
+        const product = await Products.findById(id);
 
-        const products = await Products.findById({_id: id})
-
+        // Check for duplicate product name
         const duplicateProd = await Products.findOne({ name: name });
         if (!duplicateProd || duplicateProd._id.toString() === id) {
+            // Extract other form fields
             const category = req.body.category;
             const description = req.body.description;
             const price = req.body.price;
             const quantity = req.body.quantity;
             const discount = req.body.discount;
 
-
-
+            // Construct updateFields object
             const updateFields = {
                 name: name, 
                 category: category,
@@ -160,28 +160,33 @@ const editedProduct = async (req, res) => {
                 discount: discount
             };
 
+            // Handle image update
             if (req.files && req.files.length > 0) {
                 // Delete old images if they exist
-                if (req.body.images && req.body.images.length > 0) {
-                    for (let i = 0; i < req.body.images.length; i++) {
+                if (product.image && product.image.length > 0) {
+                    for (let i = 0; i < product.image.length; i++) {
                         try {
-                            fs.unlinkSync("public/uploads/" + req.body.images[i]);
+                            fs.unlinkSync("public/uploads/" + product.image[i]);
                         } catch (err) {
                             console.error(err);
                         }
                     }
                 }
                 // Update images in updateFields
-                updateFields.images = images;
+                updateFields.image = images;
             }
-            
-           const updatefiles = await Products.findByIdAndUpdate(id, { $set: updateFields });
 
-          
-            req.flash("message", "Product Edited");
-            res.redirect(`/admin/products`);
+            // Update the product in the database
+            const updatedProduct = await Products.findByIdAndUpdate(id, { $set: updateFields });
+
+            // Check if the update operation was successful
+            if (updatedProduct) {
+                req.flash("message", "Product Edited");
+                res.redirect(`/admin/products`);
+            } else {
+                throw new Error("Failed to update product");
+            }
         } else {
-            console.log("Duplicate Product");
             req.flash("message", "Duplicate Product");
             res.redirect("/admin/products");
         }
@@ -191,6 +196,7 @@ const editedProduct = async (req, res) => {
         res.redirect("/admin/products");
     }
 };
+
 
 
 

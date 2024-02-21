@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose")
 const path = require("path")
 const nocache = require("nocache");
+var createError = require('http-errors');
 const flash = require('express-flash')
 const nodemailer = require("nodemailer")
 const session = require("express-session")
@@ -83,6 +84,8 @@ app.use("/", userRoute);
 app.use('/admin', adminRute)  
 //app.use("/adminhome", adminRute)                             
 
-
+// app.use(function(req, res, next) {
+//   res.status(404).render("user/page-404");
+// });
 
 app.listen(PORT, () => console.log(`Server is running on the port ${PORT} just click here http://localhost:3000`))

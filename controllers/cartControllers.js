@@ -141,7 +141,6 @@ const updateCartQuantity = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        // Convert the productId parameter to ObjectId
         const targetProductId = new ObjectId(productId);
 
         // Find the item in the cart items array

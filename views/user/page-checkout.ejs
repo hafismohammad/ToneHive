@@ -353,7 +353,48 @@
         </div>
         <section class="mt-50 mb-50">
             <div class="container">
-
+                <div class="row">
+                    <div class="col-lg-6 mb-sm-15">
+                        <div class="toggle_info">
+                            <span><i class="fi-rs-user mr-10"></i><span class="text-muted">Select Coupons</span> <a href="#loginform" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here</a></span>
+                        </div>
+                        <div class="panel-collapse collapse login_form" id="loginform">
+                            <div class="panel-body">
+                                <% if (coupons && coupons.length > 0) { %>
+                                    <ul>
+                                        <% coupons.forEach(coupon => { %>
+                                            <li>
+                                                <p>Name: <%= coupon.name %></p>
+                                                <p>Code: <%= coupon.code %></p>
+                                            </li><hr>
+                                        <% }); %>
+                                    </ul>
+                                <% } else { %>
+                                    <p>No coupons available</p>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="toggle_info">
+                            <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                        </div>
+                        <div class="panel-collapse collapse coupon_form " id="coupon">
+                            <div class="panel-body">
+                                <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
+                                <form method="post">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Enter Coupon Code...">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn  btn-md" name="login">Apply Coupon</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="divider mt-50 mb-50"></div>
