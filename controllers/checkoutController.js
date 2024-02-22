@@ -10,6 +10,9 @@ const couponModel = require("../models/couponModel")
 
 const checkoutLoad = async (req, res) => {
     try {
+        const message = req.query.message;
+        const success = req.query.success
+        console.log(success);
         if (!req.session.user || !req.session.user._id) {
 
             throw new Error('User ID not found in session');
@@ -57,23 +60,26 @@ const checkoutLoad = async (req, res) => {
 
         ]);
 
-        let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
             const product = cartItem.productDetails[0];
-            const subtotal = product.price * cartItem.items.quantity;
-            totalCartPrice += subtotal;
             return {
                 ...cartItem,
                 productDetails: product,
-                subtotal: subtotal
+                subtotal: product.price * cartItem.items.quantity
             };
         });
+        const useCart = await Cart.findOne({ userId: userId });
+        // Assuming `useCart` represents the user's cart retrieved from the database
+        const totalCartPrice = useCart.totalPrice;
+        
+        console.log('Total Cart Price:', totalCartPrice);
+        
 
         const coupons = await couponModel.find()
 
         let cartTotalCount = 0; 
         const cartItemss = await Cart.find({userId:userId});
-        const cartCount = cartItems.legth;
+        const cartCount = cartItems.length;
 
         res.render("user/page-checkout",
             {
@@ -82,8 +88,10 @@ const checkoutLoad = async (req, res) => {
                 cartItems: populatedCartItems,
                 totalCartPrice,
                 userInfo: userInfo,
+                coupons:coupons,
                 cartCount:cartCount,
-                coupons:coupons
+                message:message,
+                success:success
             })
     } catch (error) {
         console.log(error);

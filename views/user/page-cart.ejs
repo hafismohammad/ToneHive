@@ -669,8 +669,8 @@
 </html>
 
 <script>
-    function changeQuantity(cartItemId, productId, qty, delta) {
-        const currentqty = qty;
+    function changeQuantity(cartItemId, productId, delta) {
+        
 
         fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
             method: 'PATCH',

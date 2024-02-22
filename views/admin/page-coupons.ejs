@@ -20,6 +20,33 @@
 </head>
 
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
+    <% if (message) { %>
+        <script>
+            // Check if there's a message in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+    
+            // If there's a message, remove it from the URL
+            if (message) {
+                const newUrl = window.location.pathname; // Get the current path without query parameters
+                window.history.replaceState({}, document.title, newUrl); // Replace the URL without the message
+    
+                // Display the message using Toastify
+                Toastify({
+                    text: message,
+                    duration: 5000, // Display duration in milliseconds
+                    gravity: "top",
+                    position: "center", // Display position: top, bottom, or middle
+                    backgroundColor: "#5cb85c", // Error message background color
+                    stopOnFocus: true // Stop the timer when the toast is focused
+                }).showToast();
+            }
+        </script>
+    <% } %>
+    
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
@@ -203,12 +230,7 @@
                 </div>
             </div>
                 
-                <% if (typeof message !== 'undefined') { %>
-                    <div id="error" class="col-6">
-                        <p class="text-danger"><%= message %></p>
-                    </div>
-                <% } %>
-            
+               
            
 
 
@@ -225,32 +247,39 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% for (let i = 0; i < couponData.length; i++) { %>
-                            <tr class="text-left">
-                                <td width="15%">
-                                    <%= i + 1 %>
-                                </td>
-                                <td width="20%">
-                                    <%= couponData[i].name %>
-                                </td>
-                                <td width="20%">
-                                    <%= couponData[i].code %>
-                                </td>
-                                <td width="10%">
-                                    <%= couponData[i].discount %>
-                                </td>
-                                <td width="15%">
-                                    <%= couponData[i].expiryDate.toLocaleDateString() %>
-                                </td>
-                                <td width="10%">
-                                    <a class="btn btn-sm btn-success rounded font-sm mt-15">Edit</a>
-                                </td>
-                                <td width="10%">
-                                    <a class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a>
-                                </td>
+                        <% if (couponData.length > 0) { %>
+                            <% for (let i = 0; i < couponData.length; i++) { %>
+                                <tr class="text-left">
+                                    <td width="15%">
+                                        <%= i + 1 %>
+                                    </td>
+                                    <td width="20%">
+                                        <%= couponData[i].name %>
+                                    </td>
+                                    <td width="20%">
+                                        <%= couponData[i].code %>
+                                    </td>
+                                    <td width="10%">
+                                        <%= couponData[i].discount %>
+                                    </td>
+                                    <td width="15%">
+                                        <%= couponData[i].expiryDate.toLocaleDateString() %>
+                                    </td>
+                                    <td width="10%">
+                                        <a href="/admin/editCoupon/<%= couponData[i]._id %>" class="btn btn-sm btn-success rounded font-sm mt-15">Edit</a>
+                                    </td>
+                                    <td width="10%">
+                                        <a onclick="deleteCoupon('<%= couponData[i]._id %>')" class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" class="text-center"><h1>No Coupons Added</h1></td>
                             </tr>
                         <% } %>
                     </tbody>
+                    
                     
                 </table>
 
@@ -285,15 +314,68 @@
         <script src="assets/js/main.js" type="text/javascript"></script>
            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
-        <script>
-
-
-    </script>
-
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        
 </body>
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
 </html>
+
+<script>
+    function deleteCoupon(couponId){
+        Swal.fire({
+            title: "Are you sure?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes`,
+            cancelButtonText: 'Cancel',
+            allowOutsideClick: true,
+        }).then((result) => {
+            if(result.isConfirmed){
+                fetch(`/admin/deleteCoupon/${couponId}`, { method: "delete" })
+                .then(response => {
+                    if (response.ok) {
+                        // Coupon deleted successfully
+                        Swal.fire({
+                            title: "Success",
+                            text: "Coupon deleted successfully!",
+                            icon: "success",
+                            timer: 5000, // 5 seconds
+                            timerProgressBar: true,
+                            allowOutsideClick: false,
+                            onClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        // Error deleting coupon
+                        Swal.fire({
+                            title: "Error",
+                            text: "Error deleting coupon.",
+                            icon: "error",
+                            timer: 5000, // 5 seconds
+                            timerProgressBar: true,
+                            allowOutsideClick: false,
+                        });
+                    }
+                })
+                .catch(error => {
+                    // Fetch request failed
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "An error occurred while deleting the coupon.",
+                        icon: "error",
+                        timer: 5000, // 5 seconds
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                    });
+                });
+            }
+        });
+    }
+</script>

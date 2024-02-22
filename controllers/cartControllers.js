@@ -6,14 +6,13 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 
 const addToCart = async (req, res) => {
-    const prodId = req.params.id; 
+    const prodId = req.params.id;
     try {
-    
         if (!req.session || !req.session.user || !req.session.user._id) {
             return res.status(401).send('Unauthorized');
         }
 
-        const userId = req.session.user._id; 
+        const userId = req.session.user._id;
 
         const product = await Products.findById(prodId);
         if (!product) {
@@ -23,57 +22,65 @@ const addToCart = async (req, res) => {
         // Create a new Cart item with productId, quantity, and price
         const cartItem = {
             productId: prodId,
-            quantity: 1, 
-            price: product.price 
+            quantity: 1,
+            price: product.price
         };
 
-        
         let useCart = await Cart.findOne({ userId: userId });
-        if (useCart) {   
 
-            // Converting to object 
-            const prodId = new mongoose.Types.ObjectId(req.params.id); 
+        if (useCart) {
+            // Update existing cart
+            const prodId = new mongoose.Types.ObjectId(req.params.id);
             let prodExist = useCart.items.findIndex(item => item.productId.equals(prodId));
 
-            // console.log(proExist);
-            if(prodExist !== -1){
+            if (prodExist !== -1) {
                 await Cart.updateOne(
                     { userId: useCart.userId, 'items.productId': prodId },
                     { $inc: { 'items.$.quantity': 1 } }
-                ); 
-            }else{
-                
+                );
+            } else {
                 useCart.items.push(cartItem);
             }
         } else {
-           
+            // Create new cart with initial cart item
             useCart = new Cart({
                 userId: userId,
-                items: [cartItem],
-                totalPrice:cartItem.price * cartItem.quantity
+                items: [cartItem]
             });
-          
         }
+
+        // Calculate totalCartPrice
+        let totalCartPrice = 0;
+        useCart.items.forEach(cartItem => {
+            const subtotal = cartItem.price * cartItem.quantity;
+            totalCartPrice += subtotal;
+        });
+        console.log('Total Cart Price:', totalCartPrice);
+
+        // Set totalPrice in the cart
+        useCart.totalPrice = totalCartPrice;
+
+        // Save the cart
         await useCart.save();
 
-       
     } catch (error) {
         console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
+
 const cartLoad = async (req, res) => {
-  
+
     if (!req.session || !req.session.user || !req.session.user._id) {
         return res.status(401).send('Unauthorized');
     }
 
     const userId = req.session.user._id;
-   
+
     try {
         const userInfo = await User.findOne(userId)
-      
+
         const cartItems = await Cart.aggregate([
             {
                 $match: { userId: userId }
@@ -83,18 +90,18 @@ const cartLoad = async (req, res) => {
             },
             {
                 $project: {
-                    items: 1 
+                    items: 1
                 }
             },
             {
                 $lookup: {
-                    from: 'products', 
-                    localField: 'items.productId', 
-                    foreignField: '_id', 
-                    as: 'productDetails' 
+                    from: 'products',
+                    localField: 'items.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
                 }
             },
-           
+
         ]);
 
         let totalCartPrice = 0;
@@ -108,17 +115,17 @@ const cartLoad = async (req, res) => {
                 subtotal: subtotal
             };
         });
-        
-      
-        let cartTotalCount = 0; 
-        const cartItemss = await Cart.find({userId:userId});
-        const cartCount = cartItems.length;
- 
-        // Now you can use cartCount to display the count in your cart icon or perform other operations
-        
-       
 
-        return res.render("user/page-cart", {userInfo:userInfo, cartItems: populatedCartItems, totalCartPrice,cartCount:cartCount});
+
+        let cartTotalCount = 0;
+        const cartItemss = await Cart.find({ userId: userId });
+        const cartCount = cartItems.length;
+
+        // Now you can use cartCount to display the count in your cart icon or perform other operations
+
+
+
+        return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartCount });
 
     } catch (error) {
         console.error(error);
@@ -176,12 +183,12 @@ const removeFormCart = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const productId = req.params.id;
-        const productid = new mongoose.Types.ObjectId(req.params.id); 
+        const productid = new mongoose.Types.ObjectId(req.params.id);
 
-       
+
         const findCart = await Cart.findOneAndUpdate(
-            { userId: userId }, 
-            { $pull: { items: { productId: productid } } } 
+            { userId: userId },
+            { $pull: { items: { productId: productid } } }
         );
 
         if (!findCart) {
@@ -204,5 +211,5 @@ module.exports = {
     addToCart,
     updateCartQuantity,
     removeFormCart
-  
+
 }
