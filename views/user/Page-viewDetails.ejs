@@ -417,68 +417,79 @@
                                 <% orderedItems.products.forEach(element=> { %>
                                     <% totalPrice +=element.totalPrice; %>
                                         <% totalquantity=element.productId.price * element.quantity %>
-                                            <tr>
-                                                <td class="image product-thumbnail">
-                                                    <div class="text-center">
-                                                        <img src="/public/uploads/<%= element.productId.image[0] %>"
-                                                            alt="#">
-                                                    </div>
-                                                </td>
-                                                <td class="product-des product-name">
-                                                    <h5 class=" mt-2 text-center "><a href="shop-product-right.html">
-                                                            <%= element.productId.name %>
-                                                        </a></h5><br>
-                                                    <p class="font-xs text-center">
-                                                        <%= element.productId.description.split('.')[0] %>
-                                                    </p>
-                                                </td>
-                                                <td class="text-center">
-                                                    <%= element.quantity %>
-                                                </td>
-                                                <% if(orderedItems.orderStatus==='confirmed' ){ %>
-                                                    <td class="text-center"><span
-                                                            class="badge rounded-pill  alert-dark  ">
-                                                            <%= orderedItems.orderStatus %>
-                                                        </span></td>
-                                                    <% } %>
-                                                        <% if(orderedItems.orderStatus==='cancelled' ){ %>
-                                                            <td class="text-center"><span
-                                                                    class="badge rounded-pill alert-danger ">
-                                                                    <%= orderedItems.orderStatus %>
-                                                                </span></td>
-                                                            <% } %>
-                                                                <% if(orderedItems.orderStatus==='shipped' ) {%>
-                                                                    <td class="text-center"><span
-                                                                            class="badge rounded-pill alert-info ">
-                                                                            <%= orderedItems.orderStatus %>
-                                                                        </span></td>
-                                                                    <% } %>
-                                                                        <% if(orderedItems.orderStatus==='outForDelivery'
-                                                                            ) {%>
-                                                                            <td class="text-center"><span
-                                                                                    class="badge rounded-pill alert-warning">
-                                                                                    <%= orderedItems.orderStatus %>
-                                                                                </span></td>
-                                                                            <% } %>
-                                                                                <% if(orderedItems.orderStatus==='delivered'
-                                                                                    ) {%>
-                                                                                    <div class="text-center"><span
-                                                                                            class="badge rounded-pill alert-success">
-                                                                                            <%= orderedItems.orderStatus
-                                                                                                %>
-                                                                                        </span></div>
-                                                                                    <% } %>
-                                                                                        <td class="text-center">₹
-                                                                                            <%=totalquantity %>
-                                                                                        </td>
-
-                                            </tr>
-                                            <% }); %>
+                                            <% totalCouponPrice=element.coupon * element.quantity %>
                                                 <tr>
-                                                    <td colspan="4" class="text-end ">Total Price:</td>
-                                                    <td class="text-center">₹ <%= orderedItems.totalPrice %>
+                                                    <td class="image product-thumbnail">
+                                                        <div class="text-center">
+                                                            <img src="/public/uploads/<%= element.productId.image[0] %>"
+                                                                alt="#">
+                                                        </div>
                                                     </td>
+                                                    <td class="product-des product-name">
+                                                        <h5 class=" mt-2 text-center "><a
+                                                                href="shop-product-right.html">
+                                                                <%= element.productId.name %>
+                                                            </a></h5><br>
+                                                        <p class="font-xs text-center">
+                                                            <%= element.productId.description.split('.')[0] %>
+                                                        </p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <%= element.quantity %>
+                                                    </td>
+                                                    <% if(orderedItems.orderStatus==='confirmed' ){ %>
+                                                        <td class="text-center"><span
+                                                                class="badge rounded-pill  alert-dark  ">
+                                                                <%= orderedItems.orderStatus %>
+                                                            </span></td>
+                                                        <% } %>
+                                                            <% if(orderedItems.orderStatus==='cancelled' ){ %>
+                                                                <td class="text-center"><span
+                                                                        class="badge rounded-pill alert-danger ">
+                                                                        <%= orderedItems.orderStatus %>
+                                                                    </span></td>
+                                                                <% } %>
+                                                                    <% if(orderedItems.orderStatus==='shipped' ) {%>
+                                                                        <td class="text-center"><span
+                                                                                class="badge rounded-pill alert-info ">
+                                                                                <%= orderedItems.orderStatus %>
+                                                                            </span></td>
+                                                                        <% } %>
+                                                                            <% if(orderedItems.orderStatus==='outForDelivery'
+                                                                                ) {%>
+                                                                                <td class="text-center"><span
+                                                                                        class="badge rounded-pill alert-warning">
+                                                                                        <%= orderedItems.orderStatus %>
+                                                                                    </span></td>
+                                                                                <% } %>
+                                                                                    <% if(orderedItems.orderStatus==='delivered'
+                                                                                        ) {%>
+                                                                                        <div class="text-center"><span
+                                                                                                class="badge rounded-pill alert-success">
+                                                                                                <%= orderedItems.orderStatus
+                                                                                                    %>
+                                                                                            </span></div>
+                                                                                        <% } %>
+                                                                                            <td class="text-center">₹
+                                                                                                <% if(orderedItems.co)
+                                                                                                    %>
+                                                                                                    <%=totalquantity %>
+                                                                                            </td>
+
                                                 </tr>
+
+                                                <% }); %>
+                                                    <tr>
+                                                        <% if (orderedItems.coupon === 0) { %>
+                                                            <td colspan="4" class="text-end">Total Price:</td>
+                                                            <td class="text-center">₹ <%= orderedItems.totalPrice %>
+                                                            </td>
+                                                            <% } else { %>
+                                                                <td colspan="4" class="text-end">Discount Price</td>
+                                                                <td class="text-center">₹ <%= orderedItems.coupon %>
+                                                                </td>
+                                                                <% } %>
+                                                    </tr>
 
 
                     </tbody>

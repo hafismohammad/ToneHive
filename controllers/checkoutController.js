@@ -71,14 +71,14 @@ const checkoutLoad = async (req, res) => {
         const useCart = await Cart.findOne({ userId: userId });
         // Assuming `useCart` represents the user's cart retrieved from the database
         const totalCartPrice = useCart.totalPrice;
-        
-        console.log('Total Cart Price:', totalCartPrice);
-        
+
+
+
 
         const coupons = await couponModel.find()
 
-        let cartTotalCount = 0; 
-        const cartItemss = await Cart.find({userId:userId});
+        let cartTotalCount = 0;
+        const cartItemss = await Cart.find({ userId: userId });
         const cartCount = cartItems.length;
 
         res.render("user/page-checkout",
@@ -88,10 +88,10 @@ const checkoutLoad = async (req, res) => {
                 cartItems: populatedCartItems,
                 totalCartPrice,
                 userInfo: userInfo,
-                coupons:coupons,
-                cartCount:cartCount,
-                message:message,
-                success:success
+                coupons: coupons,
+                cartCount: cartCount,
+                message: message,
+                success: success
             })
     } catch (error) {
         console.log(error);
@@ -112,7 +112,7 @@ const addAddress = async (req, res) => {
 
         } = req.body
         const userId = req.session.user._id;
-       
+
         const newAddress = {
             name: name,
             house: house,
@@ -207,7 +207,6 @@ const edittedAddress = async (req, res) => {
 //         res.status(500).json({ message: "Internal server error" });
 //     }
 // };
-
 const placeOrderPost = async (req, res) => {
     try {
         const userId = req.session.user._id;
@@ -223,7 +222,6 @@ const placeOrderPost = async (req, res) => {
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
         ]);
 
-
         let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
             const product = cartItem.productDetails[0];
@@ -231,6 +229,7 @@ const placeOrderPost = async (req, res) => {
             totalCartPrice += subtotal;
             return { ...cartItem, productDetails: product, subtotal: subtotal };
         });
+
         const cartProducts = await Cart.aggregate([
             { $match: { userId: userId } },
             { $unwind: '$items' },
@@ -256,14 +255,27 @@ const placeOrderPost = async (req, res) => {
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
 
+        const coupon = await Cart.findOne({ userId: userId }, { coupon: 1, _id: 0 });
+        let discountedPrice = totalCartPrice; // Initialize discounted price with total cart price
+        if (coupon && coupon.coupon) {
+            const couponCode = coupon.coupon;
+            const couponInfo = await couponModel.findOne({ code: couponCode }, { discount: 1, _id: 0 });
+            if (couponInfo && couponInfo.discount) {
+                const couponDiscount = couponInfo.discount;
+                // Calculate the discounted price
+                discountedPrice = (totalCartPrice * (100 - couponDiscount)) / 100;
+            }
+        }
+
         await Order.create({
             address: addressData.address[0],
             userId: userId,
             paymentMethod: paymentMethod,
             products: cartProducts,
-            totalPrice: totalCartPrice,
+            totalPrice: discountedPrice, // Use the discounted price
             orderStatus: status,
-            createdAt: formattedDate
+            createdAt: formattedDate,
+            coupon: coupon ? discountedPrice : null // Save the coupon amount or null if no coupon applied
         });
 
         await Cart.deleteOne({ userId: userId });
@@ -274,6 +286,7 @@ const placeOrderPost = async (req, res) => {
         res.status(500).json({ error: 'Failed to place the order.' });
     }
 }
+
 
 const orderPlace = (req, res) => {
     try {

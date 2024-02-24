@@ -38,24 +38,26 @@ const userProfile = async (req, res) => {
 
         //   const userOrders = await Order.findOne({userId:userId},{'address':1})
         // console.log(userOrders1);
-        const userOrders = await Order.aggregate([
-            {
-                $match: { userId: userId }
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'address',
-                    foreignField: '_id',
-                    as: 'lookedUpAddress'
-                }
-            },
-            {
-                $unwind: '$products'
-            }
-        ]);
+        // const userOrders = await Order.aggregate([
+        //     {
+        //         $match: { userId: userId }
+        //     },
+        //     {
+        //         $lookup: {
+        //             from: 'users',
+        //             localField: 'address',
+        //             foreignField: '_id',
+        //             as: 'lookedUpAddress'
+        //         }
+        //     },
+        //     {
+        //         $unwind: '$products'
+        //     },
+            
+        // ]);
+        const userOrders = await Order.find({userId:userId})
 
-
+console.log(userOrders);
         const cartItems = await Cart.find({userId:userId});
         let cartTotalCount = 0; 
         cartItems.forEach(cart => {
@@ -317,7 +319,8 @@ const viewOrderDetails = async (req, res) => {
                     foreignField: '_id',
                     as: 'lookedUpAddress'
                 }
-            }
+            },
+           
         ]);
 
         const cartItems = await Cart.find({userId:userId});
@@ -330,7 +333,6 @@ const viewOrderDetails = async (req, res) => {
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
         userOrders.createdAt = formattedDate
-
 
 
         
@@ -365,9 +367,11 @@ const viewProducrDetails = async (req, res) => {
         
         const userId = await User.findById({ _id: user })
         const orderId = req.params.id
+        
         const orderedItems = await Order.findById(orderId).populate(
             'products.productId'
         )
+     
         const cartItems = await Cart.find({userId:user});
         let cartTotalCount = 0; 
         cartItems.forEach(cart => {

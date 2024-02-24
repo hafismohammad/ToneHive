@@ -71,6 +71,7 @@ const applyCoupon = async (req, res) => {
 
                 // Calculate the discount amount
                 const discountAmount = (cart.totalPrice * coupon.discount) / 100;
+                console.log(cart);
                 // Calculate the discounted price
                 const discountedPrice = cart.totalPrice - discountAmount;
 

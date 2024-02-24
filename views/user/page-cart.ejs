@@ -383,18 +383,18 @@
                                                     <td class="text-center align-middle" data-title="Quantity">
                                                         <div class="d-flex align-items-center justify-content-center">
                                                             <button class="cart-item-count mr-10"
-                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>','<%= cartItem.items.quantity%>', -1)"
-                                                                <%=cartItem.items && cartItem.items.quantity===1
-                                                                ? 'disabled' : '' %>>-</button>
-
+                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', -1)"
+                                                                <%= cartItem.items && cartItem.items.quantity === 1 ? 'disabled' : '' %>>-</button>
+                                                    
                                                             <span class="qty-val">
                                                                 <%= cartItem.items ? cartItem.items.quantity : 0 %>
                                                             </span>
-
+                                                    
                                                             <button class="cart-item-count ml-10"
-                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>','<%= cartItem.items.quantity%>', 1)">+</button>
+                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', 1)">+</button>
                                                         </div>
                                                     </td>
+                                                    
                                                     <td class="text-right" data-title="Subtotal">
                                                         <span>₹ <%= cartItem.subtotal %> </span>
                                                     </td>
@@ -669,8 +669,9 @@
 </html>
 
 <script>
-    function changeQuantity(cartItemId, productId, delta) {
+    function changeQuantity(cartItemId, productId,quantity, delta) {
         
+        quantity = parseInt(quantity);
 
         fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
             method: 'PATCH',

@@ -55,7 +55,7 @@ const addToCart = async (req, res) => {
             const subtotal = cartItem.price * cartItem.quantity;
             totalCartPrice += subtotal;
         });
-        console.log('Total Cart Price:', totalCartPrice);
+    
 
         // Set totalPrice in the cart
         useCart.totalPrice = totalCartPrice;
@@ -166,10 +166,15 @@ const updateCartQuantity = async (req, res) => {
         }
 
         // Update the cart item quantity
+        // Update the cart item quantity and total price
         await Cart.updateOne(
             { userId: useCart.userId, 'items.productId': targetProductId },
-            { $inc: { 'items.$.quantity': newQuantity } }
+            {
+                $inc: { 'items.$.quantity': newQuantity },
+                $set: { 'totalPrice': product.price * (currentQuantity + newQuantity) }
+            }
         );
+
 
         res.json({ success: true });
     } catch (error) {

@@ -20,7 +20,7 @@ const cartSchema = new mongoose.Schema({
     },
     coupon:{
         type:String,
-        default:null  
+        default:0  
     },
 }) 
 
