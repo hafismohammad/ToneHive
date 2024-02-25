@@ -234,12 +234,12 @@
                         </div>
                         <div class="header-action-right">
                             <div class="header-action-2">
-                                <!-- <div class="header-action-icon-2">
-                                    <a href="#">
+                                <div class="header-action-icon-2">
+                                    <a href="/view-Wishlist">
                                         <img class="svgInject" alt="Evara" src="/public/assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                        <span class="pro-count blue"><%= wishlistCount %></span>
                                     </a>
-                                </div> -->
+                                </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/public/assets/imgs/theme/icons/icon-cart.svg">
@@ -593,9 +593,12 @@
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div> -->
-                                            <div class="col-md-6"> <!-- Adjust the column size based on your layout -->
+                                            <div class=""> <!-- Adjust the column size based on your layout -->
                                              
-                                                <button onclick="addtoCartBtn('<%= products._id %>')" id="addToCartBtn" type="submit" class="btn btn-primary">Add to cart</button>
+                                                <button  onclick="addtoCartBtn('<%= products._id %>')" id="addToCartBtn" type="submit" class="btn btn-primary mr-15"><i class="fi-rs-cart"></i>Add to cart</button>
+                                                <button onclick="addToWishlist('<%= products._id %>')" id="Wishlist" type="submit" class="btn btn-danger"><i class="fi-rs-heart"></i> Add to wishlist</button>
+
+
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
@@ -1211,6 +1214,29 @@
     }
 </script>
 
+<script>
+function addToWishlist(prodId) {
+    console.log(prodId);
+    fetch(`/addWishlist/${prodId}`, { method: 'GET' })
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Parse response body as JSON
+        } else {
+            throw new Error('Network response was not ok');
+        }
+    })
+    .then(data => {
+        console.log(data); // Log the JSON response data
+        swal("Good job!", "Item added to wishlist", "success");
+    })
+    .catch(error => {
+        console.error('There was an error with the fetch operation:', error);
+        swal( "Product already exists in the wishlist");
+    });
+}
+
+
+</script>
 
 
 <!-- 

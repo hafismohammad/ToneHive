@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const Products = require('../models/productModel');
 const Cart = require("../models/cartModel");
 const flash = require("express-flash");
+const wishlistModel = require("../models/wishlistModel");
 
 
 const securePassword = async (password) => {
@@ -79,10 +80,16 @@ const homeLoad = async (req, res) => {
             });
            
            
-            // Now you can use cartCount to display the count in your cart icon or perform other operations
+            const wishlistInfo = await wishlistModel.find({ user: user });
 
+            let wishlistCount = 0;
+            wishlistInfo.forEach(wishlist => {
+                wishlistCount += wishlist.products.length;
+            });
+            
+           
 
-            res.render("user/page-userHome", { userName: userName, category: category, products: productData, activeProducts: activeProducts,cartTotalCount:cartTotalCount })
+            res.render("user/page-userHome", { userName: userName, category: category, products: productData, activeProducts: activeProducts,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount })
         } else {
             redirect("/")
         }
@@ -240,6 +247,7 @@ const productViews = async (req, res) => {
         const userInfo = await User.findById({ _id: user })
 
         const id = req.query.id
+    
         const productData = await Products.findOne({ _id: id });
         if (productData.product_status) {
 
@@ -248,9 +256,20 @@ const productViews = async (req, res) => {
             cartItems.forEach(cart => {
                 cartTotalCount += cart.items.length; 
             });
+
     
-   
-            res.render("user/page-viewProduct", { products: productData, userInfo: userInfo,cartTotalCount:cartTotalCount })
+            
+            const wishlistInfo = await wishlistModel.find({ user: user });
+
+            let wishlistCount = 0;
+            wishlistInfo.forEach(wishlist => {
+                wishlistCount += wishlist.products.length;
+            });
+            
+           
+            
+         
+            res.render("user/page-viewProduct", { products: productData, userInfo: userInfo,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount })
         }
         res.redirect("/userHome")
     } catch (error) {
