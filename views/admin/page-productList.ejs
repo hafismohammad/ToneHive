@@ -303,10 +303,10 @@
                                          
                                           <% if (productData[i].product_status) { %>
                                                 <!-- Display unblock button -->
-                                             <br> <button onclick="listUnlistprod('<%= productData[i]._id %>')" type="button" class="btn btn-sm btn-danger rounded font-sm mt-15 px-3">List</button></br>
+                                             <br> <button onclick="listUnlistprod('<%= productData[i]._id %>')" type="button" class="btn  btn-outline-success rounded font-sm">List</button></br>
                                              <% } else { %>
                                                 <!-- Display block button -->
-                                                <br><button onclick="listUnlistprod('<%= productData[i]._id %>')" type="button" class="btn btn-sm btn-danger rounded font-sm mt-15 px-3">Unlist</button></br>
+                                                <br><button onclick="listUnlistprod('<%= productData[i]._id %>')" type="button" class="btn btn-outline-danger rounded font-sm">Unlist</button></br>
                                             <% } %>
                                         </td>
             
@@ -401,13 +401,7 @@
                         })
                    
                     console.log(`Customer ${isBlocking ? 'blocked' : 'unblocked'} successfully.`);
-                } else {
-                    swal({
-                        title: "canceled !",
-                        text: "You clicked the button!",
-                        icon: "cancel",
-                    });
-                }
+                } 
             });
         }
     

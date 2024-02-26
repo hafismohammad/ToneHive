@@ -92,8 +92,10 @@ const homeLoad = async (req, res) => {
                     parseInt(product.price) - (parseInt(product.price)* product.discount) / 100
                 ))
             }
-            
-            const activeOffer = await offerModel.find();
+  
+            const activeOffer = await offerModel.find({ status: true });
+
+         
             
             const products = await Products.find({ product_status: true })
             for (const product of products) {

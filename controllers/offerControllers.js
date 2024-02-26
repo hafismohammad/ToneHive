@@ -71,10 +71,29 @@ const postOffer = async (req, res) => {
     }
 }
 
+const listUnlistStatus = async (req, res) => {
+    const offerId = req.params.id;
+    console.log(offerId);
+    try {
+        const result = await offerModel.findById(offerId);
+        if (result) {
+            result.status = !result.status;
+            await result.save();
+            res.status(200).json({ res: "success" });
+        } else {
+            res.status(404).json({ error: "Offer not found" });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
 
 
 module.exports = {
     AddOffer,
     productOfferLoad,
-    postOffer
+    postOffer,
+    listUnlistStatus
 }
