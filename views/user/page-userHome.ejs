@@ -467,12 +467,19 @@
                                                 </div>
                                                 <h2><a href="shop-product-right.html"><%= products[i].name %></a></h2>
                                                 <div class="rating-result" title="90%">
-                                                    <span>
-                                                        <span><%= products[i].discount %>%</span>
-                                                    </span>
+                                                    <% if(products[i].productOffer){ %>
+                                                        <span><%= products[i].productOffer.discount %>%</span>
+                                                        <% }else{ %>
+                                                            <span><%= products[i].discount %>%</span>
+                                                            <% } %>
                                                 </div>
+                                                
+                                                
                                                 <div class="product-price">
-                                                    <span>₹ <%= products[i].price %> </span>
+                                                    <span>₹ <%= productsPrice[i].offerPrice %></span>
+                                                    <span class="old-price">₹ <%= productsPrice[i].price %></span>
+
+                                                    
                                                 </div>
                                                 <div class="product-action-1 show">
                                                     <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>

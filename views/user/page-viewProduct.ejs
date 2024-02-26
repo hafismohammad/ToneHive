@@ -548,7 +548,8 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand">₹ <%= products.price %></span></ins>
+                                                <span>₹ <%= products.offerPrice %></span>
+                                                <ins><span class="text-brand old-price">₹ <%= products.price %></span></ins>
                                                 <!-- <ins><span class="old-price font-md ml-15">$200.00</span></ins> -->
                                                 <span class="save-price  font-md color3 ml-15"><%= products.discount %>%</span>
                                             </div>
@@ -604,7 +605,13 @@
                                         <ul class="product-meta font-xs color-grey mt-50">
                                             <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
                                             <li class="mb-5">Tags: <a href="#" rel="tag">Headphones</a>, <a href="#" rel="tag">Home Audio</a>, <a href="#" rel="tag">Gaming</a> </li>
-                                            <li>Availability:<span class="in-stock text-success ml-5"><%= products.quantity  %> Items In Stock</span></li>
+                                            <% if(products.quantity < 5 ){ %>
+                                                <li>Availability:<span class="in-stock text-danger ml-5"><%= products.quantity  %> Items In Stock</span></li>
+                                                <% }else if(products.quantity < 15){ %>
+                                                    <li>Availability:<span class="in-stock text-warning ml-5"><%= products.quantity  %> Items In Stock</span></li>
+                                                <% }else { %>
+                                                    <li>Availability:<span class="in-stock text-success ml-5"><%= products.quantity  %> Items In Stock</span></li>
+                                                    <% } %>
                                         </ul>
                                     </div>
                                     <!-- Detail Info -->

@@ -69,6 +69,13 @@ const applyCoupon = async (req, res) => {
             if (!coupon.usedBy.includes(userId)) {
                 let cart = await Cart.findOne({ userId: userId });
 
+
+                if (cart.coupon !== null) {
+                    res.redirect("/checkout?message=One or more items in the cart already have a coupon applied");
+                    return; // Exit the function early
+                }
+                
+
                 // Calculate the discount amount
                 const discountAmount = (cart.totalPrice * coupon.discount) / 100;
                 console.log(cart);

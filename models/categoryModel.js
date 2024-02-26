@@ -7,8 +7,11 @@ const categoryModel = mongoose.Schema({
         return:true
       
     },
-  
- 
+    offerPrice:{
+        type:Number,
+        default:null
+    },
+   
     isList:{
         type:Boolean,
         default:false

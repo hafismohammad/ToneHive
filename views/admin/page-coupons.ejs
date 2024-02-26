@@ -25,23 +25,20 @@
 
     <% if (message) { %>
         <script>
-            // Check if there's a message in the URL
-            const urlParams = new URLSearchParams(window.location.search);
+          
+            const urlParams =  new URLSearchParams(window.location.search);
             const message = urlParams.get('message');
-    
-            // If there's a message, remove it from the URL
             if (message) {
-                const newUrl = window.location.pathname; // Get the current path without query parameters
-                window.history.replaceState({}, document.title, newUrl); // Replace the URL without the message
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl); 
     
-                // Display the message using Toastify
                 Toastify({
                     text: message,
-                    duration: 5000, // Display duration in milliseconds
+                    duration: 5000, 
                     gravity: "top",
-                    position: "center", // Display position: top, bottom, or middle
-                    backgroundColor: "#5cb85c", // Error message background color
-                    stopOnFocus: true // Stop the timer when the toast is focused
+                    position: "center",
+                    backgroundColor: "#5cb85c",
+                    stopOnFocus: true 
                 }).showToast();
             }
         </script>
@@ -116,6 +113,12 @@
                         <span class="text">Coupons</span>
                     </a>
                    
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/productOffer"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offer List</span>
+                    </a>
+                    
                 </li>
                 <!-- <li class="menu-item has-submenu">
                     <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
@@ -230,17 +233,13 @@
                 </div>
             </div>
                 
-               
-           
-
-
                 <table class="table table-hover" id="couponTable">
                     <thead>
                         <tr class="text-left">
                             <th>No</th>
                             <th>Coupon Name</th>
                             <th>Coupon Code</th>
-                            <th>Discount Amount</th>
+                            <th>Discount</th>
                             <th>Expiry Date</th>
                             <th>Edit</th>
                             <th>Delete</th>

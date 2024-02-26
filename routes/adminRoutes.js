@@ -2,13 +2,13 @@ const express = require('express')
 const router = express.Router()
 const adminAuth = require('../middleware/adminAuth')
 const userStatus = require('../middleware/userChecking')
-
 const adminControllers = require("../controllers/adminController")
 const customerController = require("../controllers/customerController")
 const categoryControllers = require("../controllers/categoryControllers")
 const productControllers = require("../controllers/productControllers")
 const orderControllers = require("../controllers/orderController")
 const couponsControllers = require("../controllers/couponsControllers")
+const offerControllers = require("../controllers/offerControllers")
 const { route } = require('./userRoutes');
 
 // admin login
@@ -80,5 +80,10 @@ router.get("/editCoupon/:id", couponsControllers.editCouponLoad)
 
 router.post("/editCoupon/:id", couponsControllers.editCouponPost)
 
+router.get("/productOffer", offerControllers.productOfferLoad)
+
+router.get("/AddOffer", offerControllers.AddOffer)
+
+router.post("/PostOffer", offerControllers.postOffer)
 
 module.exports = router

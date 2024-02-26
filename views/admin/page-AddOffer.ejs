@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/public/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+
+
+</head>
+
+<body>
+
+    <section class="content-main">
+        <div class="row justify-content-center mt-30 ">
+
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Add New Offer</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mx-auto"> 
+                            <form  action="/admin/PostOffer" id="editForm"  method="post">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Offer Name</label>
+                                    <input type="text" name="name" placeholder="Type here" class="form-control"
+                                        id="name">
+                                    <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Starting Date</label>
+                                  
+                                        <input name="startingDate" type="date" value="02.05.2021" class="form-control">
+                                 
+                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Ending Date</label>
+                                  
+                                        <input name="endingDate" type="date" value="02.05.2021" class="form-control">
+                                 
+                                    <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Product</label>
+                                    <select class="form-select"  name="product">
+                                        <% for(let i = 0; i< product.length; i++) {%>
+                                           <% if(product[i].product_status === false) %>
+                                                <option value="<%= product[i]._id %>">
+                                                    <%= product[i].name %>
+                                                </option>
+                                             
+                                            <% } %>
+                                    </select>
+                                    <p><span id="error4" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Product Discount</label>
+                                    <input placeholder="Type here" name="productDiscount" class="form-control" id="discount"
+                                        rows="4"></input>
+                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select"  name="category">
+                                        <% for(let i = 0; i< category.length; i++) {%>
+                                           <% if(category[i].isList === false) %>
+                                                <option value="<%= category[i]._id %>">
+                                                    <%= category[i].name %>
+                                                </option>
+                                             
+                                            <% } %>
+                                    </select>
+                                    <p><span id="error6" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Category Discount</label>
+                                    <input placeholder="Type here" name="categoryDiscount" class="form-control" id="discount"
+                                        rows="4"></input>
+                                    <p><span id="error7" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+
+                                <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add
+                                    Offer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!-- card end// -->
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+            <div class="col-sm-6">
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>
+            </div>
+
+        </div>
+    </footer>
+    </main>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="assets/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js" type="text/javascript"></script>
+    <script src="assets/js/custom-chart.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
+
+</html>
+<!-- <script>
+    function addOffer() {
+        fetch('/PostOffer', { method: 'post' })
+        .then((res) => {
+            if (res.ok) {
+                swal.fire("Success!", "Offer added successfully!", "success");
+            } else {
+                swal.fire("Error!", "Something went wrong!", "error");
+            }
+        })
+        .catch((error) => {
+            swal.fire("Error!", "Internal server error", "error");
+        });
+    }
+</script> -->

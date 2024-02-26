@@ -33,6 +33,11 @@ const productSchema = new mongoose.Schema({
         required:true,
 
     },
+    offerPrice:{
+        type:Number,
+        default:null
+    },
+   
     product_status:{
         type:Boolean,
         default:true

@@ -165,7 +165,7 @@ const updateCartQuantity = async (req, res) => {
             return res.status(400).json({ error: 'Requested quantity exceeds available stock' });
         }
 
-        // Update the cart item quantity
+     
         // Update the cart item quantity and total price
         await Cart.updateOne(
             { userId: useCart.userId, 'items.productId': targetProductId },

@@ -9,7 +9,7 @@ const Products = require('../models/productModel');
 const Cart = require("../models/cartModel");
 const flash = require("express-flash");
 const wishlistModel = require("../models/wishlistModel");
-
+const offerModel = require('../models/offerModel')
 
 const securePassword = async (password) => {
     try {
@@ -80,16 +80,55 @@ const homeLoad = async (req, res) => {
             });
            
            
-            const wishlistInfo = await wishlistModel.find({ user: user });
+             const wishlistInfo = await wishlistModel.find({ user: user });
 
             let wishlistCount = 0;
             wishlistInfo.forEach(wishlist => {
                 wishlistCount += wishlist.products.length;
             });
+
+            for(const product of productData){
+                product.offerPrice = parseInt(Math.round(
+                    parseInt(product.price) - (parseInt(product.price)* product.discount) / 100
+                ))
+            }
+            
+            const activeOffer = await offerModel.find();
+            
+            const products = await Products.find({ product_status: true })
+            for (const product of products) {
+                const ProductOffer = activeOffer.find((offer) => {
+                    return offer.productOffer.product.equals(product._id);
+                });
+            
+                let categoryOffer;
+                if (product.category[0] && product.category[0]._id) { // Add a check for category existence and _id property
+                    categoryOffer = activeOffer.find((offer) => {
+                        return offer.categoryOffer.category.equals(product.category[0]._id);
+                    });
+                }
+            
+                let offerPrice;
+            
+                if (ProductOffer && categoryOffer) {
+                    if (ProductOffer.productOffer.discount > categoryOffer.categoryOffer.discount) {
+                        offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+                    } else {
+                        offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+                    }
+                } else if (ProductOffer) {
+                    offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+                } else if (categoryOffer) {
+                    offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+                } else {
+                    offerPrice = product.price;
+                }
+            
+                product.offerPrice = parseInt(Math.round(offerPrice));
+            }
             
            
-
-            res.render("user/page-userHome", { userName: userName, category: category, products: productData, activeProducts: activeProducts,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount })
+            res.render("user/page-userHome", { userName: userName, category: category, products: productData, activeProducts: activeProducts,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount,productsPrice:products })
         } else {
             redirect("/")
         }
@@ -257,7 +296,7 @@ const productViews = async (req, res) => {
                 cartTotalCount += cart.items.length; 
             });
 
-    
+
             
             const wishlistInfo = await wishlistModel.find({ user: user });
 
@@ -265,10 +304,11 @@ const productViews = async (req, res) => {
             wishlistInfo.forEach(wishlist => {
                 wishlistCount += wishlist.products.length;
             });
-            
            
-            
-         
+            productData.offerPrice = parseInt(Math.round(
+                parseInt(productData.price) - (parseInt(productData.price)* productData.discount) / 100
+            ))
+     
             res.render("user/page-viewProduct", { products: productData, userInfo: userInfo,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount })
         }
         res.redirect("/userHome")
