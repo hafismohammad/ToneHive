@@ -259,6 +259,7 @@
                                         <th>Ending Date</th>
                                         <th>Product</th>
                                         <th>Category</th>
+                                        <th>Edit</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -280,6 +281,9 @@
                                                 </td>
                                                 <td>
                                                     <%= offer.categoryName %>
+                                                </td>
+                                                <td>
+                                                    <a href="/admin/editOffer/<%= offer._id %>"><button class="btn btn-primary mr-5">Edit</button></a>
                                                 </td>
                                                 <td>
                                                     <% if(offer.status) {%>
@@ -307,7 +311,7 @@
 
 
 
-                <div class="pagination-area mt-30 mb-50">
+                <!-- <div class="pagination-area mt-30 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
                             <li class="page-item active"><a class="page-link" href="#">01</a></li>
@@ -319,7 +323,7 @@
                                         class="material-icons md-chevron_right"></i></a></li>
                         </ul>
                     </nav>
-                </div>
+                </div> -->
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
@@ -387,3 +391,17 @@
         })
     }
 </script>
+
+
+<!-- <script>
+    function editOffer(offer_id) {
+        fetch(`/editOffer/${offer_id}`, {method:'GET'})
+        .then((res) => {
+            if(re.ok){
+                console.log('success');
+            }else{
+                console.log('error');
+            }
+        })
+    }
+</script> -->

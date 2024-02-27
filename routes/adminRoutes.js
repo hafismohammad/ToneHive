@@ -88,4 +88,6 @@ router.post("/PostOffer", offerControllers.postOffer)
 
 router.patch("/offerStatus/:id", offerControllers.listUnlistStatus)
 
+router.get('/editOffer/:id', offerControllers.editOffer)
+
 module.exports = router

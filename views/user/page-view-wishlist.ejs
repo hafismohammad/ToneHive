@@ -566,8 +566,10 @@
             method: 'get'
         }).done((res) => {
             swal("Success", "Product added to cart!", "success").then(() => {
-                // Reload the page after the user closes the success alert
-                window.location.reload();
+                
+              setTimeout(() => {
+                  window.location.reload()
+              }, 1000);
             });
         }).fail((error) => {
             console.error("Error adding to cart:", error);

@@ -73,7 +73,7 @@ const postOffer = async (req, res) => {
 
 const listUnlistStatus = async (req, res) => {
     const offerId = req.params.id;
-    console.log(offerId);
+    
     try {
         const result = await offerModel.findById(offerId);
         if (result) {
@@ -89,11 +89,30 @@ const listUnlistStatus = async (req, res) => {
     }
 }
 
+const editOffer = async (req, res) => {
+    try {
+        const offer_Id = req.params.id;
+        const offerData = await offerModel.findById(offer_Id);
+
+        if (!offerData) {
+            return res.status(404).send("Offer not found");
+        }
+
+        const product = await Products.findById(offerData.productOffer.product);
+        const category = await Category.findById(offerData.categoryOffer.category);
+
+        res.render("admin/page-editOffer", { offerData, product, category });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+}
 
 
 module.exports = {
     AddOffer,
     productOfferLoad,
     postOffer,
-    listUnlistStatus
+    listUnlistStatus,
+    editOffer
 }

@@ -11,6 +11,7 @@ const checkoutControllers = require('../controllers/checkoutController')
 const userProfileController= require('../controllers/userProfileController')
 const couponsControllers = require("../controllers/couponsControllers")
 const wishlistControllers = require("../controllers/wishlistControllers")
+const shopProductsControllers = require("../controllers/shopProducts")
 
 //router.get("/*",userControllers.pageNotFound)
 
@@ -99,5 +100,8 @@ router.get("/view-Wishlist",userAuth.isLogout,wishlistControllers.wishlistLoad)
 router.get("/addWishlist/:id",wishlistControllers.addWishlist)
 
 router.delete("/removeWishlist/:id",wishlistControllers.removeWishlist)
+
+router.get("/shopProducts", shopProductsControllers.shopProducts)
+
 
 module.exports = router 
