@@ -1,33 +1,38 @@
 const { model } = require("mongoose");
-const Order = require('../models/orderModel')
+const Order = require('../models/orderModel');
+const { param } = require("../routes/userRoutes");
+const Products = require("../models/productModel");
+
 const orderList = async (req, res) => {
     try {
    
         const orderDetails = await Order.find().populate('userId');
-      
     
-     
-        
-
         res.render("admin/page-orderList", { orderDetails: orderDetails });
     } catch (error) {
         console.log(error);
     }
 };
-
 const adminOrderStatus = async (req, res) => {
     try {
-        const statusDetails = req.params.id
-        const { orderId, status, nextButtonValue } = req.body;
+        const { orderId, status } = req.body;
 
-        console.log(req.body);
-
+        
         const order = await Order.findByIdAndUpdate(orderId, { orderStatus: status }, { new: true });
 
-       
         if (!order) {
             return res.status(404).json({ success: false, error: 'Order not found' });
         }
+
+     
+        order.products.forEach(async (product) => {
+        if (product.orderStatus !== 'cancelled') {
+                await Order.updateOne(
+                    { _id: orderId, 'products._id': product._id },
+                    { $set: { 'products.$.orderStatus': status } }
+                );
+            }
+            });
 
         res.json({ success: true, order });
     } catch (error) {
@@ -35,6 +40,7 @@ const adminOrderStatus = async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal server error' });
     }
 };
+
 
 const orderProductView = async (req, res) => {
     try {
@@ -53,9 +59,35 @@ const orderProductView = async (req, res) => {
     }
 };
 
+const acceptReturn = async (req, res) => {
+    try {
+        const orderId = req.params.orderId;
+        const productId = req.params.productId;
+    
+   
+        const order = await Order.findById(orderId);
+        const product = order.products.find(product => product._id.toString() === productId)
+
+        if (!product) {
+            return res.status(404).json({ success: false, error: "Product not found in the order" });
+        }
+       
+            if (product.orderStatus === "delivered") {
+                product.orderStatus = "return pending";
+      
+            } else if (product.orderStatus === "return pending") {
+                product.orderStatus = "returned";
+            }
+        await order.save();
+        
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 module.exports = {
     orderList,
     adminOrderStatus,
-    orderProductView
+    orderProductView,
+    acceptReturn
 }

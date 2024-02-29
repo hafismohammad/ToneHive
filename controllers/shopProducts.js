@@ -1,6 +1,9 @@
 const Products = require('../models/productModel');
 const User = require("../models/userModel")
 const Category = require("../models/categoryModel")
+const Cart = require("../models/cartModel");
+const wishlistModel = require("../models/wishlistModel");
+const offerModel = require('../models/offerModel')
 
 const shopProducts = async (req, res) => {
     try {
@@ -42,9 +45,60 @@ const shopProducts = async (req, res) => {
                 }
             }).filter(Boolean)
 
+            const cartItems = await Cart.find({userId:userId});
+            let cartTotalCount = 0; 
+            cartItems.forEach(cart => {
+                cartTotalCount += cart.items.length; 
+            });
            
+            const wishlistInfo = await wishlistModel.find({ user: user });
 
-            res.render("user/page-shopProduct", { userName, category, productData, activeProducts });
+            let wishlistCount = 0;
+            wishlistInfo.forEach(wishlist => {
+                wishlistCount += wishlist.products.length;
+            });
+            for(const product of productData){
+                product.offerPrice = parseInt(Math.round(
+                    parseInt(product.price) - (parseInt(product.price)* product.discount) / 100
+                ))
+            }
+  
+            const activeOffer = await offerModel.find({ status: true });
+
+         
+            
+            const products = await Products.find({ product_status: true })
+            for (const product of products) {
+                const ProductOffer = activeOffer.find((offer) => {
+                    return offer.productOffer.product.equals(product._id);
+                });
+            
+                let categoryOffer;
+                if (product.category[0] && product.category[0]._id) { // Add a check for category existence and _id property
+                    categoryOffer = activeOffer.find((offer) => {
+                        return offer.categoryOffer.category.equals(product.category[0]._id);
+                    });
+                }
+            
+                let offerPrice;
+            
+                if (ProductOffer && categoryOffer) {
+                    if (ProductOffer.productOffer.discount > categoryOffer.categoryOffer.discount) {
+                        offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+                    } else {
+                        offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+                    }
+                } else if (ProductOffer) {
+                    offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+                } else if (categoryOffer) {
+                    offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+                } else {
+                    offerPrice = product.price;
+                }
+            
+                product.offerPrice = parseInt(Math.round(offerPrice));
+            }
+            res.render("user/page-shopProduct", { userName, category, productData, activeProducts, cartTotalCount, wishlistCount,productsPrice:products  });
         } else {
             console.log('User not found');
             // Handle the case where the user is not logged in

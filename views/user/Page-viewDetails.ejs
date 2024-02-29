@@ -407,102 +407,125 @@
                             <th style="font-weight: bold; width: 20%;" class="text-center">Name</th>
                             <th style="font-weight: bold; width: 20%;" class="text-center">Quantity</th>
                             <th style="font-weight: bold; width: 20%;" class="text-center">Status</th>
-                            <th style="font-weight: bold; width: 20% " class="text-end text-center">Total</th>
-
+                            <th style="font-weight: bold; width: 20%" class="text-end text-center">Total</th>
+                            <th style="font-weight: bold; width: 20%" class="text-end text-center">Cancel</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% if (locals.orderedItems) { %>
-                            <% let totalPrice=0; %>
-                                <% orderedItems.products.forEach(element=> { %>
-                                    <% totalPrice +=element.totalPrice; %>
-                                        <% totalquantity=element.productId.price * element.quantity %>
-                                            <% totalCouponPrice=element.coupon * element.quantity %>
-                                                <tr>
-                                                    <td class="image product-thumbnail">
-                                                        <div class="text-center">
-                                                            <img src="/public/uploads/<%= element.productId.image[0] %>"
-                                                                alt="#">
-                                                        </div>
-                                                    </td>
-                                                    <td class="product-des product-name">
-                                                        <h5 class=" mt-2 text-center "><a
-                                                                href="shop-product-right.html">
-                                                                <%= element.productId.name %>
-                                                            </a></h5><br>
-                                                        <p class="font-xs text-center">
-                                                            <%= element.productId.description.split('.')[0] %>
-                                                        </p>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <%= element.quantity %>
-                                                    </td>
-                                                    <% if(orderedItems.orderStatus==='confirmed' ){ %>
-                                                        <td class="text-center"><span
-                                                                class="badge rounded-pill  alert-dark  ">
-                                                                <%= orderedItems.orderStatus %>
-                                                            </span></td>
-                                                        <% } %>
-                                                            <% if(orderedItems.orderStatus==='cancelled' ){ %>
-                                                                <td class="text-center"><span
-                                                                        class="badge rounded-pill alert-danger ">
-                                                                        <%= orderedItems.orderStatus %>
-                                                                    </span></td>
-                                                                <% } %>
-                                                                    <% if(orderedItems.orderStatus==='shipped' ) {%>
-                                                                        <td class="text-center"><span
-                                                                                class="badge rounded-pill alert-info ">
-                                                                                <%= orderedItems.orderStatus %>
-                                                                            </span></td>
-                                                                        <% } %>
-                                                                            <% if(orderedItems.orderStatus==='outForDelivery'
-                                                                                ) {%>
-                                                                                <td class="text-center"><span
-                                                                                        class="badge rounded-pill alert-warning">
-                                                                                        <%= orderedItems.orderStatus %>
-                                                                                    </span></td>
-                                                                                <% } %>
-                                                                                    <% if(orderedItems.orderStatus==='delivered'
-                                                                                        ) {%>
-                                                                                        <div class="text-center"><span
-                                                                                                class="badge rounded-pill alert-success">
-                                                                                                <%= orderedItems.orderStatus
-                                                                                                    %>
-                                                                                            </span></div>
-                                                                                        <% } %>
-                                                                                            <td class="text-center">₹
-                                                                                                <% if(orderedItems.co)
-                                                                                                    %>
-                                                                                                    <%=totalquantity %>
-                                                                                            </td>
-
-                                                </tr>
-
-                                                <% }); %>
-                                                    <tr>
-                                                        <% if (orderedItems.coupon === 0) { %>
-                                                            <td colspan="4" class="text-end">Total Price:</td>
-                                                            <td class="text-center">₹ <%= orderedItems.totalPrice %>
-                                                            </td>
-                                                            <% } else { %>
-                                                                <td colspan="4" class="text-end">Discount Price</td>
-                                                                <td class="text-center">₹ <%= orderedItems.coupon %>
-                                                                </td>
-                                                                <% } %>
-                                                    </tr>
-
-
+                            <% let totalPrice = 0; %>
+                            <% orderedItems.products.forEach(element => { %>
+                        
+                                <% totalPrice += element.totalPrice; %>
+                                <% totalquantity = element.productId.price * element.quantity; %>
+                                <% totalCouponPrice = element.coupon * element.quantity; %>
+                                <tr>
+                                    <td class="image product-thumbnail">
+                                        <div class="text-center">
+                                            <img src="/public/uploads/<%= element.productId.image[0] %>" alt="#">
+                                        </div>
+                                    </td>
+                                    <td class="product-des product-name">
+                                        <h5 class="mt-2 text-center">
+                                            <a href="shop-product-right.html"><%= element.productId.name %></a>
+                                        </h5><br>
+                                        <p class="font-xs text-center">
+                                            <%= element.productId.description.split('.')[0] %>
+                                        </p>
+                                    </td>
+                                    <td class="text-center"><%= element.quantity %></td>
+                                    <% if (element.orderStatus === 'pending') { %>
+                                      
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill  alert-dark">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    <% if (element.orderStatus === 'confirmed') { %>
+                                      
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill  alert-dark">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    <% if (element.orderStatus === 'cancelled') { %>
+                                        
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill alert-danger">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    
+                                    <% if (element.orderStatus === 'shipped') { %>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill alert-info">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    <% if (element.orderStatus === 'outForDelivery') { %>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill alert-warning">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    <% if (element.orderStatus === 'delivered') { %>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill alert-success">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    <% if (element.orderStatus === 'return pending') { %>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill alert-warning">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                    <% if (element.orderStatus === 'returned') { %>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill alert-danger">
+                                                <%= element.orderStatus %>
+                                            </span>
+                                        </td>
+                                    <% } %>
+                                        
+                                    <td class="text-center">₹ <%= totalquantity %></td>
+                                    
+                                    <td>
+                                        <% if (element.orderStatus !== 'delivered' && element.orderStatus !== 'return pending' && element.orderStatus !== 'cancelled' && element.orderStatus !== 'returned') { %>
+                                        <button onclick="cancelOrder('<%= orderedItems._id %>', '<%= element._id %>')" class="btn btn-danger">Cancel</button>
+                                        <% } %>
+                                        <% if(element.orderStatus === 'delivered') {%>
+                                         <button onclick="returnOrder('<%= orderedItems._id %>', '<%= element._id %>')" class="btn btn-warning">Return</button>
+                                        <% } %>
+                                    </td>
+                                    
+                                </tr>
+                            <% }); %>
+                            <tr>
+                                <% if (orderedItems.coupon === 0) { %>
+                                    <td colspan="4" class="text-end">Total Price:</td>
+                                    <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
+                                <% } else { %>
+                                    <td colspan="4" class="text-end">Discount Price</td>
+                                    <td class="text-center">₹ <%= orderedItems.coupon %></td>
+                                <% } %>
+                            </tr>
+                        <% } %>
                     </tbody>
                 </table>
+                
 
             </div>
         </div>
-        <% if(orderedItems.orderStatus !=="cancelled" ) { %>
-            <div class="text-end mt-4">
-                <a class="btn btn-danger" onclick="cancelOrder('<%= orderedItems._id %>')">Cancel Order</a></td>
-            </div>
-            <% } %>
-                <% } %>
+       
+                
     </div>
 
 
@@ -674,8 +697,9 @@
 
 
 <script>
-    function cancelOrder(orderId) {
+    function cancelOrder(orderId,prodId) {
         console.log(orderId);
+        console.log(prodId);
         Swal.fire({
             title: "Are you sure?",
 
@@ -686,7 +710,7 @@
             allowOutsideClick: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`/cancelOrder/${orderId}`, { method: "PATCH" })
+                fetch(`/cancelOrder/${orderId}/${prodId}`, { method: "PATCH" })
                     .then(res => {
                         if (res.ok) {
                             Swal.fire({
@@ -719,3 +743,52 @@
         });
     }
 </script>
+
+    <script>
+        function returnOrder(orderId,prodId) {
+            console.log(orderId);
+            console.log(prodId);
+            Swal.fire({
+                title: "Are you sure?",
+
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: `Yes`,
+                cancelButtonText: 'Cancel',
+                allowOutsideClick: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/returnOrder/${orderId}/${prodId}`, { method: "PATCH" })
+                        .then(res => {
+                            if (res.ok) {
+                                Swal.fire({
+                                    title: `Done`,
+                                    text: "You clicked the button!",
+                                    icon: "success",
+                                    button: false
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1000)
+
+                            } else {
+                                swal({
+                                    title: "somthing went wrong!",
+                                    text: "You clicked the button!",
+                                    icon: "error",
+                                });
+                            }
+                        })
+
+
+                } else {
+                    swal({
+                        title: "canceled !",
+                        text: "You clicked the button!",
+                        icon: "cancel",
+                    });
+                }
+            });
+        }
+    </script>
+        

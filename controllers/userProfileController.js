@@ -344,22 +344,27 @@ const viewOrderDetails = async (req, res) => {
 
 const orderCancel = async (req, res) => {
     try {
-        const order_id = req.params.id
+        const orderId = req.params.orderId;
+        const productId = req.params.productId;
 
-        const orderid = new ObjectId(order_id);
-
-        const result = await Order.findById({ _id: orderid });
-
-        result.orderStatus = "cancelled";
-        result.save();
-
+        
+        const order = await Order.findById(orderId);
+        const product = order.products.find(product => product._id.toString() === productId)
+        if (!product) {
+            return res.status(404).json({ success: false, error: "Product not found in the order" });
+        }
+        product.orderStatus = 'cancelled'
+   
+        await order.save();
 
         res.json({ success: true });
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ success: false, error: "Internal server error" });
     }
 }
+
 
 const viewProducrDetails = async (req, res) => {
     try {
@@ -386,6 +391,35 @@ const viewProducrDetails = async (req, res) => {
 }
 
 
+const orderReturn = async (req, res) => {
+    try {
+        const orderId = req.params.orderId
+        const productId = req.params.productId
+       
+       
+        const order = await Order.findById(orderId);
+        const product = order.products.find(product => product._id.toString() === productId)
+
+        if (!product) {
+            return res.status(404).json({ success: false, error: "Product not found in the order" });
+        }
+       
+            if (product.orderStatus === "delivered") {
+                product.orderStatus = "return pending";
+      
+            } else if (product.orderStatus === "return pending") {
+                product.orderStatus = "returned";
+            }
+        await order.save();
+
+        res.json({ success: true });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, error: "Internal server error" });
+    }
+}
+
 
 module.exports = {
     userProfile,
@@ -400,5 +434,7 @@ module.exports = {
     profileAddressEditpost,
     userProfileAddressDelete,
     viewProducrDetails,
+    orderReturn
+
 
 }

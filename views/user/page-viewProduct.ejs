@@ -1201,6 +1201,7 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-full.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
 </html>
+
 <script>
     function addtoCartBtn(prodId){
         console.log(prodId);
@@ -1210,14 +1211,21 @@
             url: '/addToCart/'+ prodId,
             method: 'get'
         }).done((res) => {
+            console.log(res);
             swal("Success", "Product added to cart!", "success").then(() => {
                 // Reload the page after the user closes the success alert
                 window.location.reload();
             });
         }).fail((error) => {
-            console.error("Error adding to cart:", error);
-            swal("Error", "Failed to add product to cart. Please try again later.", "error");
-        });
+    console.error("Error adding to cart:", error);
+    
+    swal({
+        title: 'Error',
+        text: 'Quantity exceeds available stock.',
+        icon: 'warning'
+    });
+});
+
     }
 </script>
 

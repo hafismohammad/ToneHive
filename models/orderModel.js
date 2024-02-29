@@ -29,7 +29,21 @@ const orderSchema = new mongoose.Schema({
        },
        productPrice: {
         type : Number
-       }
+       },
+       orderStatus: {
+        type: String,
+        enum: [
+            'pending',  
+            'confirmed',
+            'shipped',
+            'outForDelivery',
+            'delivered',
+            'cancelled',
+            'return pending',
+            'returned',
+        ],
+        default: 'pending',
+    },
     }],
     
     totalPrice: {

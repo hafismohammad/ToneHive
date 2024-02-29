@@ -318,6 +318,102 @@ const productViews = async (req, res) => {
 
     }
 }
+const searchProduct = async (req, res) => {
+    try {
+        const userId = req.session.user;
+        const user = await User.findById(userId);
+        const userName = user.name;
+        const searchQuery = req.query.search;
+
+        if (!userId) {
+            return res.redirect('/login');
+        }
+
+        const category = await Category.find({ isList: false });
+
+        let filter = { product_status: true };
+
+        if (searchQuery) {
+            // Search by name or category using regex for partial matches
+            filter.$or = [
+                { name: { $regex: new RegExp(searchQuery, "i") } },
+                { category: { $regex: new RegExp(searchQuery, "i") } }
+            ];
+        }
+
+        const searchResults = await Products.aggregate([{ $match: filter }]);
+        const productData = await Products.aggregate([
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category",
+                }
+            },
+            {
+                $match: {
+                    "category.isList": false,
+                    "product_status": true
+                }
+            }
+        ]);
+
+        const cartItems = await Cart.find({ userId });
+        const cartTotalCount = cartItems.reduce((totalCount, cart) => totalCount + cart.items.length, 0);
+
+        const wishlistInfo = await wishlistModel.find({ user });
+        const wishlistCount = wishlistInfo.reduce((totalCount, wishlist) => totalCount + wishlist.products.length, 0);
+
+        for (const product of productData) {
+            product.offerPrice = parseInt(Math.round(
+                parseInt(product.price) - (parseInt(product.price) * product.discount) / 100
+            ));
+        }
+
+        const activeOffer = await offerModel.find({ status: true });
+
+        const products = await Products.find({ product_status: true });
+        for (const product of products) {
+            const ProductOffer = activeOffer.find((offer) => offer.productOffer.product.equals(product._id));
+
+            let categoryOffer;
+            if (product.category[0] && product.category[0]._id) {
+                categoryOffer = activeOffer.find((offer) => offer.categoryOffer.category.equals(product.category[0]._id));
+            }
+
+            let offerPrice;
+            if (ProductOffer && categoryOffer) {
+                offerPrice = Math.min(
+                    product.price - (product.price * ProductOffer.productOffer.discount) / 100,
+                    product.price - (product.price * categoryOffer.categoryOffer.discount) / 100
+                );
+            } else if (ProductOffer) {
+                offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+            } else if (categoryOffer) {
+                offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+            } else {
+                offerPrice = product.price;
+            }
+
+            product.offerPrice = parseInt(Math.round(offerPrice));
+        }
+
+        res.render('user/page-userHome', {
+            products: searchResults,
+            userName,
+            category,
+            productData,
+            activeProducts: productData.filter(item => item.category[0] && item.category[0].isList),
+            cartTotalCount,
+            wishlistCount,
+            productsPrice: products
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
 
 
@@ -331,5 +427,6 @@ module.exports = {
     userLogout,
     productViews,
     generateRandomOtp,
+     searchProduct,
    // pageNotFound
 }

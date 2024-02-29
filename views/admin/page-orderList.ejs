@@ -234,6 +234,7 @@
                             </thead>
                             <tbody>
                                 <% if (orderDetails && orderDetails.length > 0) { %>
+                              
                                     <% for (let i = orderDetails.length - 1; i >= 0; i--) { %>
                                 <tr>
                                     <td>0901</td>
@@ -265,19 +266,20 @@
                                     
                                     <td width="10%" style="vertical-align: middle;">
                                         <% if (orderDetails[i].orderStatus == 'pending') { %>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','processing','confirmed')" class="btn btn-outline-primary rounded font-sm">processing</a>
-                                        <% } else if (orderDetails[i].orderStatus == 'processing') {%>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','confirmed','shipped')" class="btn btn-outline-primary rounded font-sm">confirmed</a>
-                                        <% } else if (orderDetails[i].orderStatus == 'confirmed') {%>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','shipped','outForDelivery')" class="btn btn-outline-primary rounded font-sm">shipped</a>
-                                        <% } else if (orderDetails[i].orderStatus == 'shipped') {%>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','outForDelivery','delivered')" class="btn  btn-outline-primary rounded font-sm">out for delivery</a>
-                                        <% } else if (orderDetails[i].orderStatus == 'outForDelivery') {%>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','delivered','d-none')" class="btn btn-outline-primary rounded font-sm">delivered</a>
-                                        <% } else if (orderDetails[i].orderStatus == 'return pending') {%>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i]._id %>','returned','d-none')" class="btn btn-outline-primary rounded font-sm">Approve Return</a>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','processing','confirmed')" class="btn btn-outline-primary rounded font-sm">processing</a>
+                                        <% } else if (orderDetails[i].orderStatus == 'processing') { %>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','confirmed','shipped')" class="btn btn-outline-primary rounded font-sm">confirmed</a>
+                                        <% } else if (orderDetails[i].orderStatus == 'confirmed') { %>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','shipped','outForDelivery')" class="btn btn-outline-primary rounded font-sm">shipped</a>
+                                        <% } else if (orderDetails[i].orderStatus == 'shipped') { %>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','outForDelivery','delivered')" class="btn  btn-outline-primary rounded font-sm">out for delivery</a>
+                                        <% } else if (orderDetails[i].orderStatus == 'outForDelivery') { %>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','delivered','d-none')" class="btn btn-outline-primary rounded font-sm">delivered</a>
+                                        <% } else if (orderDetails[i].orderStatus == 'return pending') { %>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','returned','d-none')" class="btn btn-outline-primary rounded font-sm">Approve Return</a>
                                         <% } %>
                                     </td>
+                                    
                                     
                                    
                                    <td class="text-center">
@@ -351,7 +353,8 @@
 </html>
 
 <script>
-    function changeOrderStatus(orderId, status, nextButtonValue) {
+    function changeOrderStatus(productId,orderId, status, nextButtonValue) {
+        console.log(productId);
         console.log(orderId);
         console.log(status);
         console.log(nextButtonValue);
@@ -366,6 +369,7 @@
                     url: '/admin/orderStatus',
                     type: 'post',
                     data: {
+                        productId:productId,
                         orderId: orderId,
                         status: status
                     }

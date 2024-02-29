@@ -19,6 +19,10 @@ const addToCart = async (req, res) => {
             return res.status(404).send('Product not found');
         }
 
+        if (product.quantity === 1) {
+            return res.status(400).send('Quantity exceeds available stock');
+        }
+
         // Create a new Cart item with productId, quantity, and price
         const cartItem = {
             productId: prodId,
@@ -62,7 +66,7 @@ const addToCart = async (req, res) => {
 
         // Save the cart
         await useCart.save();
-
+        return res.status(200).send('Product added to cart successfully');
     } catch (error) {
         console.log(error);
         return res.status(500).send('Internal server error');

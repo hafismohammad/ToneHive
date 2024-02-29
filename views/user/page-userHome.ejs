@@ -204,14 +204,16 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
+                            <form action="/search">
                                 <select class="select-active">
                                     <option>All Categories</option>
-                                   
+                                    <!-- Add your categories here -->
                                 </select>
-                                <input type="text" placeholder="Search for items...">
+                                <input name="search" type="text" placeholder="Search for items...">
+                                <button type="submit">Search</button>
                             </form>
                         </div>
+                        
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
@@ -463,8 +465,13 @@
                                             <div class="product-content-wrap">
                                                 
                                                 <div class="product-category">
-                                                    <a href="shop-grid-right.html"><%= products[i].category[0].name %></a>
+                                                    <% if (products[i].category && products[i].category[0] && products[i].category[0].name) { %>
+                                                        <a href="shop-grid-right.html"><%= products[i].category[0].name %></a>
+                                                    <% } else { %>
+                                                        <span>No category available</span>
+                                                    <% } %>
                                                 </div>
+                                                
                                                 <h2><a href="shop-product-right.html"><%= products[i].name %></a></h2>
                                                 <div class="rating-result" title="90%">
                                                     <% if(products[i].productOffer){ %>

@@ -89,7 +89,9 @@ router.get("/orderSuccess",userAuth.isLogout,checkoutControllers.orderPlace)
 
 router.get("/viewDetails",userAuth.isLogout,userProfileController.viewOrderDetails)
 
-router.patch("/cancelOrder/:id",userProfileController.orderCancel)
+router.patch("/cancelOrder/:orderId/:productId",userProfileController.orderCancel)
+
+router.patch("/returnOrder/:orderId/:productId", userProfileController.orderReturn)
 
 router.get("/vewProductDetails/:id",userAuth.isLogout,userProfileController.viewProducrDetails)
 
@@ -102,6 +104,8 @@ router.get("/addWishlist/:id",wishlistControllers.addWishlist)
 router.delete("/removeWishlist/:id",wishlistControllers.removeWishlist)
 
 router.get("/shopProducts", shopProductsControllers.shopProducts)
+
+router.get("/search", userControllers.searchProduct)
 
 
 module.exports = router 
