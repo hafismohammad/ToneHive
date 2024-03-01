@@ -23,14 +23,14 @@ const addCouponLoad = (req, res) => {
         console.log(error);
     }
 }
-const generateCouponCode = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-        code += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return code;
-};
+// const generateCouponCode = () => {
+//     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//     let code = '';
+//     for (let i = 0; i < 6; i++) {
+//         code += characters.charAt(Math.floor(Math.random() * characters.length));
+//     }
+//     return code;
+// };
 
 const voucher = require('voucher-code-generator');
 const { render } = require("ejs");
@@ -76,18 +76,18 @@ const applyCoupon = async (req, res) => {
                 }
                 
 
-                // Calculate the discount amount
+             
                 const discountAmount = (cart.totalPrice * coupon.discount) / 100;
                 console.log(cart);
-                // Calculate the discounted price
+             
                 const discountedPrice = cart.totalPrice - discountAmount;
 
-                // Update the cart with the discounted price and coupon code
                 cart.totalPrice = discountedPrice;
+
                 cart.coupon = couponCode;
+                
                 await cart.save();
 
-                // Mark the coupon as used by the user
                 coupon.usedBy.push(userId);
                 await coupon.save();
 
@@ -160,7 +160,7 @@ module.exports = {
     couponsLoad,
     addCouponLoad,
     postCoupon,
-    generateCouponCode,
+    //generateCouponCode,
     applyCoupon,
     deleteCoupon,
     editCouponLoad,

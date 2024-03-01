@@ -8,6 +8,34 @@ const mongoose = require('mongoose');
 const Products = require('../models/productModel');
 const couponModel = require("../models/couponModel")
 
+const {KEY_ID,KEY_SECRET} = process.env
+
+const Razorpay = require('razorpay');
+
+var razorpay = new Razorpay({
+    key_id:KEY_ID,
+    key_secret:KEY_SECRET
+})
+
+const createOrder = async (req, res) => {
+    try {
+        const amount = parseInt(req.body.totalPrice);
+        
+
+
+       const order = await razorpay.orders.create({
+        amount: amount * 100,
+        currency: "INR",
+        receipt: req.session.user
+       })
+       console.log(order);
+       res.json({orderId:order})
+ 
+    } catch (error) {
+     console.log(error);
+    }
+}
+
 const checkoutLoad = async (req, res) => {
     try {
         const message = req.query.message;
@@ -280,7 +308,7 @@ const placeOrderPost = async (req, res) => {
 
         await Cart.deleteOne({ userId: userId });
 
-        res.redirect('/orderSuccess');
+        res.json({success:true});
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to place the order.' });
@@ -288,13 +316,18 @@ const placeOrderPost = async (req, res) => {
 }
 
 
-const orderPlace = (req, res) => {
+const orderPlace  = async (req, res) => {
     try {
-        res.render('user/page-orderSuccess')
+        const userId = req.session.user._id
+        const lastOrder = await Order.findOne({ userId: userId }).sort({ createdAt: -1 });
+      
+        res.render('user/page-orderSuccess',{lastOrder})
     } catch (error) {
         console.log(error);
     }
 }
+
+
 
 module.exports = {
     checkoutLoad,
@@ -304,4 +337,5 @@ module.exports = {
     // deleteAddress,
     placeOrderPost,
     orderPlace,
+    createOrder
 }; 

@@ -398,7 +398,7 @@
                                 <% if(typeof category !== 'undefined') %>
                                 <% for(let i = 0; i < category.length; i++){ %>
 
-                                <li><a href="shop-grid-right.html"><%= category[i].name %></a></li>
+                                <li><a href="/productCategorySort/?id=<%= category[i]._id %>"><%= category[i].name %></a></li>
 
                                <% } %>
                             </ul>
@@ -483,7 +483,9 @@
                                                 
                                                 
                                                 <div class="product-price">
-                                                    <span>₹ <%= productsPrice[i].offerPrice %></span>
+
+                                                    <span>₹ <%= productsPrice[i].offerPrice - (products[i].price * products[i].discount) / 100 %></span>
+                                                   
                                                     <span class="old-price">₹ <%= productsPrice[i].price %></span>
 
                                                     

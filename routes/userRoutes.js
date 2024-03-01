@@ -107,5 +107,14 @@ router.get("/shopProducts", shopProductsControllers.shopProducts)
 
 router.get("/search", userControllers.searchProduct)
 
+router.get("/productCategorySort", shopProductsControllers.sortProductCategory);
+
+router.post("/ProductsPriceRange", shopProductsControllers.priceRange)
+
+router.post('/createorder', checkoutControllers.createOrder)
+
+router.post('/paymentSuccess', checkoutControllers)
+
+
 
 module.exports = router 

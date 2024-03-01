@@ -34,7 +34,7 @@
                     </div>
                     <div class="card-body">
                         <div class="mx-auto"> 
-                            <form action="/admin/UpdateOffer/<%= offerData._id %>" id="editForm" method="post">
+                            <form  action="/admin/editOffer/<%= offerData._id %>" id="offerForm" method="post">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Offer Name</label>
                                     <input value="<%= offerData.name %>" type="text" name="name" placeholder="Type here" class="form-control" id="name">
@@ -42,47 +42,48 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Starting Date</label>
-                                    <input name="startingDate" type="text" value="<%= offerData.startingDate.toLocaleDateString() %>" class="form-control">
-                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span></p>
+                                    <input name="startingDate" type="text" value="<%= offerData.startingDate.toLocaleDateString() %>" class="form-control" id="startingDate">                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Ending Date</label>
-                                    <input name="endingDate" type="text" value="<%= offerData.endingDate.toLocaleDateString() %>" class="form-control">
+                                    <input name="endingDate" type="text" value="<%= offerData.endingDate.toLocaleDateString() %>" class="form-control" id="endingDate">
                                     <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Product</label>
                                     <select class="form-select" name="product">
                                         <% for(let i = 0; i < product.length; i++) { %>
-                                            <option value="<%= product[i]._id %>" >
+                                            <option value="<%= product[i]._id %>"<% if(product[i]._id.toString() === offerData.productOffer.product.toString()) { %> selected <% } %> >
                                                 <%= product[i].name %>
                                             </option>
                                         <% } %>
-                                    </select>
+                                    </select><br>
                                     <p><span id="error4" style="display: none;" class="mt-15 err text-danger"></span></p>
+                                    <div class="mb-4">
+                                        <label class="form-label">Product Discount</label>
+                                        <input value="<%= offerData.productOffer.discount %>" type="text" name="productDiscount" placeholder="Type here" class="form-control" id="productDiscount">
+                                        
+                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Category</label>
                                     <select class="form-select" name="category">
                                         <% for(let i = 0; i < category.length; i++) { %>
-                                            <option value="<%= category[i]._id %>" <% if(offerData.category == category[i]._id) { %> selected <% } %>>
+                                            <option value="<%= category[i]._id %>"<% if(offerData.categoryOffer.category.toString() === category[i]._id.toString()) { %> selected <% } %> >
                                                 <%= category[i].name %>
                                             </option>
                                         <% } %>
                                     </select>
                                     <p><span id="error6" style="display: none;" class="mt-15 err text-danger"></span></p>
+                                    
                                 </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Product Discount</label>
-                                    <input value="<%= offerData.productOffer.discount %>" type="text" name="productDiscount" placeholder="Type here" class="form-control" id="productDiscount">
-                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span></p>
-                                </div>
+                             
                                 <div class="mb-4">
                                     <label class="form-label">Category Discount</label>
                                     <input value="<%= offerData.categoryOffer.discount %>" type="text" name="categoryDiscount" placeholder="Type here" class="form-control" id="categoryDiscount">
                                     <p><span id="error7" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
-                                <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Update Offer</button>
+                                <button onclick="updateOffer('<%= offerData._id %>')"  type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Update Offer</button>
                             </form>
                             
                         </div>
@@ -121,6 +122,152 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
 
 </html>
+
+<script>
+    const nameId = document.getElementById('name');
+    const dStartId = document.getElementById('startingDate');
+    const dEndingId = document.getElementById('endingDate');
+    const pDiscountId = document.getElementById('productDiscount');
+    const cDiscountId = document.getElementById('categoryDiscount');
+    const error1 = document.getElementById('error1');
+    const error2 = document.getElementById('error2');
+    const error3 = document.getElementById('error3');
+    const error5 = document.getElementById('error5');
+    const error7 = document.getElementById('error7');
+
+    const offerFormId = document.getElementById('offerForm');
+
+    function nameVal() {
+        const nameVal = nameId.value.trim();
+        if (nameVal === '') {
+            error1.style.display = 'block';
+            error1.innerHTML = 'Please enter a valid name';
+            setTimeout(() => {
+                error1.style.display = 'none';
+                error1.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (/^-?\d+$/.test(nameVal)) {
+            error1.style.display = 'block';
+            error1.innerHTML = 'Please enter a name without numbers';
+            setTimeout(() => {
+                error1.style.display = 'none';
+                error1.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            error1.style.display = 'none';
+            error1.innerHTML = '';
+        }
+        return true;
+    }
+    function startingDateVal() {
+    const startDateVal = dStartId.value.trim();
+    if (startDateVal === '') {
+        error2.style.display = 'block'; // <-- Error ID should be error1
+        error2.innerHTML = 'Please enter a valid start date';
+        setTimeout(() => {
+            error2.style.display = 'none';
+            error2.innerHTML = '';
+        }, 3000);
+        return false;
+    } else {
+        error2.style.display = 'none';
+        error2.innerHTML = '';
+    }
+    return true;
+}
+function endingDateVal() {
+    const endDateVal = dEndingId.value.trim();
+    if (endDateVal === '') {
+        error3.style.display = 'block'; // <-- Error ID should be error2
+        error3.innerHTML = 'Please enter a valid end date';
+        setTimeout(() => {
+            error3.style.display = 'none';
+            error3.innerHTML = '';
+        }, 3000);
+        return false;
+    } else {
+        error3.style.display = 'none';
+        error3.innerHTML = '';
+    }
+    return true;
+}
+    function pDiscountVal() {
+        const discountVal = pDiscountId.value.trim();
+        if (discountVal === '') {
+            error5.style.display = 'block';
+            error5.innerHTML = 'Please enter a valid product discount';
+            setTimeout(() => {
+                error5.style.display = 'none';
+                error5.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (isNaN(discountVal) || parseInt(discountVal) <= 0 || parseInt(discountVal) > 100) {
+            error5.style.display = 'block';
+            error5.innerHTML = 'Please enter a valid discount percentage (between 1 and 100)';
+            setTimeout(() => {
+                error5.style.display = 'none';
+                error5.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            error5.style.display = 'none';
+            error5.innerHTML = '';
+        }
+        return true;
+    }
+
+   
+    function cDiscountVal() {
+        const discountVal = cDiscountId.value.trim();
+        if (discountVal === '') {
+            error7.style.display = 'block';
+            error7.innerHTML = 'Please enter a valid category discount';
+            setTimeout(() => {
+                error7.style.display = 'none';
+                error7.innerHTML = '';
+            }, 3000);
+            return false;
+        } else if (isNaN(discountVal) || parseInt(discountVal) <= 0 || parseInt(discountVal) > 100) {
+            error7.style.display = 'block';
+            error7.innerHTML = 'Please enter a valid discount percentage (between 1 and 100)';
+            setTimeout(() => {
+                error7.style.display = 'none';
+                error7.innerHTML = '';
+            }, 3000);
+            return false;
+        } else {
+            error7.style.display = 'none';
+            error7.innerHTML = '';
+        }
+        return true;
+    }
+
+    nameId.addEventListener("blur", nameVal);
+    dStartId.addEventListener("blur", startingDateVal);
+    dEndingId.addEventListener("blur", endingDateVal);
+    pDiscountId.addEventListener("blur", pDiscountVal);
+
+    cDiscountId.addEventListener("blur", cDiscountVal);
+ 
+
+    offerFormId.addEventListener('submit', function (e) {
+        const validName = nameVal();
+        const validStartDate = startingDateVal();
+        const validEndDate = endingDateVal();
+       
+        const validProductDiscount = pDiscountVal();
+        const validCategoryDiscount = cDiscountVal();
+     
+
+        if (!validName || !validStartDate || !validEndDate || !validProductDiscount || !validCategoryDiscount) {
+            e.preventDefault();
+        }
+    });
+</script>
+
+
 <!-- <script>
     function addOffer() {
         fetch('/PostOffer', { method: 'post' })
@@ -136,3 +283,40 @@
         });
     }
 </script> -->
+<!-- <script>
+    function updateOffer(offerId) {
+        console.log("Offer ID:", offerId);
+        
+        fetch(`/admin/editOffer/${offerId}`, {
+            method: 'POST', // Specify the method as POST
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any other headers if needed
+            },
+            // Add body data if required
+            body: JSON.stringify({
+                offerId: offerId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Use SweetAlert to display offer details
+            swal({
+                title: "Offer Details",
+                text: `Name: ${data.name}\nStarting Date: ${data.startingDate}\nEnding Date: ${data.endingDate}`,
+                icon: "info",
+                button: "OK",
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching offer:', error);
+            swal("Error", "Failed to fetch offer details", "error");
+        });
+    }
+</script> -->
+

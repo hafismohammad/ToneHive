@@ -92,4 +92,6 @@ router.patch("/offerStatus/:id", offerControllers.listUnlistStatus)
 
 router.get('/editOffer/:id', offerControllers.editOffer)
 
+router.post("/editOffer/:id", offerControllers.editOfferPost)
+
 module.exports = router

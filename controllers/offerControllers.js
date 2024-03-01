@@ -24,6 +24,7 @@ const AddOffer = async (req, res) => {
     try {
         const category = await Category.find({ isList: false })
         const product = await Products.find({ product_status: true })
+      
         res.render('admin/page-AddOffer', { category: category, product: product })
     } catch (error) {
         console.log(error);
@@ -67,7 +68,7 @@ const postOffer = async (req, res) => {
     } catch (error) {
 
         console.log(error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).redirect('/admin/AddOffer')
     }
 }
 
@@ -98,8 +99,8 @@ const editOffer = async (req, res) => {
             return res.status(404).send("Offer not found");
         }
 
-        const product = await Products.findById(offerData.productOffer.product);
-        const category = await Category.findById(offerData.categoryOffer.category);
+        const product = await Products.find({ product_status: true })
+        const category = await Category.find({ isList: false })
 
         res.render("admin/page-editOffer", { offerData, product, category });
     } catch (error) {
@@ -108,11 +109,58 @@ const editOffer = async (req, res) => {
     }
 }
 
+const editOfferPost = async (req, res) => {
+    try {
+        const offerId = req.params.id;
+
+        const { name, startingDate, endingDate, product, productDiscount, category, categoryDiscount } = req.body;
+      
+        const duplicate = await offerModel.findOne({ _id: { $ne: offerId }, name: name });
+        if (duplicate) {
+            req.flash('error', 'Duplicate offer name. Please choose a different name.');
+            return res.redirect('/admin/productOffer');
+        }
+
+        const updatedOffer = {
+            name,
+            startingDate,
+            endingDate,
+            productOffer: {
+                product: product,
+                discount: productDiscount
+            },
+            categoryOffer: {
+                category: category,
+                discount: categoryDiscount
+            }
+            // Add other fields as necessary
+        };
+        
+        // Update the offer document in the database
+        const result = await offerModel.findByIdAndUpdate(offerId, updatedOffer, { new: true });
+
+        if (!result) {
+            req.flash('error', 'Offer not found.');
+            return res.redirect('/admin/productOffer');
+        }
+
+        req.flash('success', 'Offer updated successfully.');
+        res.redirect('/admin/productOffer');
+    } catch (error) {
+        console.error(error);
+        req.flash('error', 'Internal Server Error');
+        res.redirect('/admin/productOffer');
+    }
+};
+
+
+
 
 module.exports = {
     AddOffer,
     productOfferLoad,
     postOffer,
     listUnlistStatus,
-    editOffer
+    editOffer,
+    editOfferPost
 }

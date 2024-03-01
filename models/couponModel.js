@@ -15,7 +15,7 @@ const couponSchema = mongoose.Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 1000
+        max: 100 
     },
     expiryDate: {
         type: Date, // Changed to Date type

@@ -14,11 +14,11 @@ const offerSchema = mongoose.Schema({
         required: true
     },
     productOffer: {
-        product: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         discount: { type: Number }
     },
     categoryOffer: {
-        category: { type: mongoose.Schema.Types.ObjectId, ref: 'category'},
+        category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
         discount: { type: Number }
     },
     status:{
