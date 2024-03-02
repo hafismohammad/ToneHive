@@ -85,9 +85,24 @@ const acceptReturn = async (req, res) => {
     }
 };
 
+const salesReports = async (req, res) => {
+    try {
+       
+        const orders = await Order.find().populate('userId products.productId').sort({createdAt:-1})
+
+        res.render('admin/page-salesReport', { orders: orders });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
 module.exports = {
     orderList,
     adminOrderStatus,
     orderProductView,
-    acceptReturn
+    acceptReturn,
+    salesReports
+
 }

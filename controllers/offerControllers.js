@@ -34,11 +34,11 @@ const AddOffer = async (req, res) => {
 const postOffer = async (req, res) => {
     try {
         const { name, startingDate, endingDate, product, productDiscount, category, categoryDiscount } = req.body;
-
+ 
         const productDoc = await Products.findById(product);
         const categoryDoc = await Category.findById(category);
 
-        console.log(categoryDoc);
+      
         if (!productDoc || !categoryDoc) {
             return res.status(400).json({ error: "Invalid product or category ID" });
         }

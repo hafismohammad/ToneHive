@@ -94,4 +94,6 @@ router.get('/editOffer/:id', offerControllers.editOffer)
 
 router.post("/editOffer/:id", offerControllers.editOfferPost)
 
+router.get("/salesReport", orderControllers.salesReports)
+
 module.exports = router
