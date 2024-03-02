@@ -18,6 +18,11 @@ const cartSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
+     
+    // discountedPrice:{
+    //     type:Number,
+    //     required:true
+    // },
     coupon:{
         type:String,
         default:null  

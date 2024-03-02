@@ -28,7 +28,7 @@ const createOrder = async (req, res) => {
         currency: "INR",
         receipt: req.session.user
        })
-       console.log(order);
+      console.log(order);
        res.json({orderId:order})
  
     } catch (error) {
@@ -40,7 +40,7 @@ const checkoutLoad = async (req, res) => {
     try {
         const message = req.query.message;
         const success = req.query.success
-        console.log(success);
+   
         if (!req.session.user || !req.session.user._id) {
 
             throw new Error('User ID not found in session');
@@ -276,9 +276,11 @@ const placeOrderPost = async (req, res) => {
         for (const product of cartProducts) {
             await Products.updateOne({ _id: product.productId }, { $inc: { quantity: -product.quantity } });
         }
-
+    
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
-
+   
+       
+    
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
@@ -316,6 +318,7 @@ const placeOrderPost = async (req, res) => {
 }
 
 
+
 const orderPlace  = async (req, res) => {
     try {
         const userId = req.session.user._id
@@ -324,6 +327,28 @@ const orderPlace  = async (req, res) => {
         res.render('user/page-orderSuccess',{lastOrder})
     } catch (error) {
         console.log(error);
+    }
+}
+
+const paymentSuccess = (req, res) => {
+    try {
+        const { paymentid, razorpayorderid, signature, orderId } = req.body;
+        const { createHmac } = require('node:crypto');
+
+        const hash = createHmac('sha256', 'XViGIX1i2HyMgTUc0xt8xAir')
+            .update(orderId + "|" + paymentid)
+            .digest('hex');
+
+        if (hash === signature) {
+            console.log('success');
+            res.status(200).json({ success: true, message: 'Payment successful' }); 
+        } else {
+            console.log('error');
+            res.status(400).json({ success: false, message: 'Invalid payment details' }); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Internal server error' }); 
     }
 }
 
@@ -337,5 +362,6 @@ module.exports = {
     // deleteAddress,
     placeOrderPost,
     orderPlace,
-    createOrder
+    createOrder,
+    paymentSuccess
 }; 

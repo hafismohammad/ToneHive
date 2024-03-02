@@ -12,6 +12,7 @@ const userProfileController= require('../controllers/userProfileController')
 const couponsControllers = require("../controllers/couponsControllers")
 const wishlistControllers = require("../controllers/wishlistControllers")
 const shopProductsControllers = require("../controllers/shopProducts")
+const walletControllers = require("../controllers/walletControllers")
 
 //router.get("/*",userControllers.pageNotFound)
 
@@ -113,7 +114,9 @@ router.post("/ProductsPriceRange", shopProductsControllers.priceRange)
 
 router.post('/createorder', checkoutControllers.createOrder)
 
-router.post('/paymentSuccess', checkoutControllers)
+router.post('/paymentSuccess', checkoutControllers.paymentSuccess)
+
+router.get("/wallet", walletControllers.walletLoad)
 
 
 

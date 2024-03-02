@@ -250,7 +250,7 @@
                                         <% } else if (orderDetails[i].orderStatus == 'processing') {%>
                                             <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-secondary"><%= orderDetails[i].orderStatus %></span>
                                         <% } else if (orderDetails[i].orderStatus == 'confirmed') {%>
-                                            <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-dark"><%= orderDetails[i].orderStatus %></span>
+                                            <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-success"><%= orderDetails[i].orderStatus %></span>
                                         <% } else if (orderDetails[i].orderStatus == 'shipped') {%>
                                             <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-info"><%= orderDetails[i].orderStatus %></span>
                                         <% } else if (orderDetails[i].orderStatus == 'outForDelivery') {%>

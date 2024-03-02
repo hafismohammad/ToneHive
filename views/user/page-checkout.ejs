@@ -349,7 +349,7 @@
                                                                         class="material-icons md-perm_identity"></i>Edit
                                                                     Profile</a>
                                                                 <!-- <a class="dropdown-item" href="#address"><i class="material-icons md-settings"></i>Account Settings</a> -->
-                                                                <!-- <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
+                                                                <a class="dropdown-item" href="/wallet"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
                                                                 <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                                               <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
                                                                 <div class="dropdown-divider"></div>
@@ -661,122 +661,121 @@
                                     </div>
                                     <script src="/public/formValidation/user/editaddressScript.js"></script>
                                     <div class="col-md-6">
-                                       
-                                            <div class="order_review">
-                                                <div class="mb-20">
-                                                    <h4>Your Orders</h4>
-                                                </div>
-                                                <div class="table-responsive order_table text-center">
-                                                    <table class="table">
-                                                        <thead>
+
+                                        <div class="order_review">
+                                            <div class="mb-20">
+                                                <h4>Your Orders</h4>
+                                            </div>
+                                            <div class="table-responsive order_table text-center">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2">Product</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% cartItems.forEach(cartItem=> { %>
                                                             <tr>
-                                                                <th colspan="2">Product</th>
-                                                                <th>Total</th>
+                                                                <td class="image product-thumbnail">
+                                                                    <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>"
+                                                                        alt="<%= cartItem.productDetails.name %>">
+                                                                <td>
+                                                                    <h5><a href="shop-product-full.html">
+                                                                            <%= cartItem.productDetails.name %>
+                                                                        </a></h5>
+                                                                    <span class="product-qty">
+                                                                        <%= cartItem.items ? cartItem.items.quantity : 0
+                                                                            %>
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    ₹ <%= cartItem.subtotal %>
+                                                                </td>
                                                             </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <% cartItems.forEach(cartItem=> { %>
+                                                            <% }) %>
                                                                 <tr>
-                                                                    <td class="image product-thumbnail">
-                                                                        <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>"
-                                                                            alt="<%= cartItem.productDetails.name %>">
-                                                                    <td>
-                                                                        <h5><a href="shop-product-full.html">
-                                                                                <%= cartItem.productDetails.name %>
-                                                                            </a></h5>
-                                                                        <span class="product-qty">
-                                                                            <%= cartItem.items ? cartItem.items.quantity
-                                                                                : 0 %>
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>
-                                                                        ₹ <%= cartItem.subtotal %>
+                                                                    <th>SubTotal</th>
+                                                                    <td class="product-subtotal" colspan="2">
+                                                                        ₹ <%= totalCartPrice %>
                                                                     </td>
                                                                 </tr>
-                                                                <% }) %>
-                                                                    <tr>
-                                                                        <th>SubTotal</th>
-                                                                        <td class="product-subtotal" colspan="2">
-                                                                            ₹ <%= totalCartPrice %>
-                                                                        </td>
-                                                                    </tr>
 
-                                                                    <tr>
-                                                                        <th>Shipping</th>
-                                                                        <td colspan="2"><em>Free Shipping</em></td>
-                                                                    </tr>
+                                                                <tr>
+                                                                    <th>Shipping</th>
+                                                                    <td colspan="2"><em>Free Shipping</em></td>
+                                                                </tr>
 
-                                                                    <tr>
-                                                                        <th>Total</th>
-                                                                        <td colspan="2" class="product-subtotal"><span
-                                                                                id="totalAmount"
-                                                                                class="font-xl text-brand fw-900">
-                                                                                <%= totalCartPrice %>
-                                                                            </span></td>
-                                                                    </tr>
+                                                                <tr>
+                                                                    <th>Total</th>
+                                                                    <td colspan="2" class="product-subtotal"><span
+                                                                            id="totalAmount"
+                                                                            class="font-xl text-brand fw-900">
+                                                                            <%= totalCartPrice %>
+                                                                        </span></td>
+                                                                </tr>
 
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                                <div class="payment_method">
-                                                    <div class="mb-25">
-                                                        <h5>Payment</h5>
-                                                    </div>
-                                                    <div class="payment_option">
-                                                        <div class="custome-radio">
-                                                            <input value="Wallet" class="form-check-input" required=""
-                                                                type="radio" name="payment_option" id="exampleRadios3"
-                                                                checked="">
-                                                            <label class="form-check-label" for="exampleRadios3"
-                                                                data-bs-toggle="collapse" data-target="#bankTranfer"
-                                                                aria-controls="bankTranfer">Wallet
-                                                            </label>
-                                                            <div class="form-group collapse in" id="bankTranfer">
-                                                                <p class="text-muted mt-5">There are many variations of
-                                                                    passages of
-                                                                    Lorem
-                                                                    Ipsum available, but the majority have suffered
-                                                                    alteration. </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="custome-radio">
-                                                            <input value="COD" class="form-check-input" required=""
-                                                                type="radio" name="payment_option" id="exampleRadios4"
-                                                                checked="">
-                                                            <label value class="form-check-label" for="exampleRadios4"
-                                                                data-bs-toggle="collapse" data-target="#checkPayment"
-                                                                aria-controls="checkPayment">Cash on delivery
-                                                            </label>
-                                                            <div class="form-group collapse in" id="checkPayment">
-                                                                <p class="text-muted mt-5">Please send your cheque to
-                                                                    Store Name, Store
-                                                                    Street, Store Town, Store State / County, Store
-                                                                    Postcode. </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="custome-radio">
-                                                            <input value="Razorpay" class="form-check-input" required=""
-                                                                type="radio" name="payment_option" id="exampleRadios5"
-                                                                checked="">
-                                                            <label class="form-check-label" for="exampleRadios5"
-                                                                data-bs-toggle="collapse" data-target="#Razorpay"
-                                                                aria-controls="Razorpay">Razorpay</label>
-                                                            <div class="form-group collapse in" id="paypal">
-                                                                <p class="text-muted mt-5">Pay via PayPal; you can pay
-                                                                    with your credit
-                                                                    card
-                                                                    if you don't have a PayPal account.</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <button class="btn btn-fill-out btn-block mt-30"
-                                                    id="placeOrderButton">Place
-                                                    Order</button>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                       
+                                            <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                            <div class="payment_method">
+                                                <div class="mb-25">
+                                                    <h5>Payment</h5>
+                                                </div>
+                                                <div class="payment_option">
+                                                    <div class="custome-radio">
+                                                        <input value="Wallet" class="form-check-input" required=""
+                                                            type="radio" name="payment_option" id="exampleRadios3"
+                                                            checked="">
+                                                        <label class="form-check-label" for="exampleRadios3"
+                                                            data-bs-toggle="collapse" data-target="#bankTranfer"
+                                                            aria-controls="bankTranfer">Wallet
+                                                        </label>
+                                                        <div class="form-group collapse in" id="bankTranfer">
+                                                            <p class="text-muted mt-5">There are many variations of
+                                                                passages of
+                                                                Lorem
+                                                                Ipsum available, but the majority have suffered
+                                                                alteration. </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="custome-radio">
+                                                        <input value="COD" class="form-check-input" required=""
+                                                            type="radio" name="payment_option" id="exampleRadios4"
+                                                            checked="">
+                                                        <label value class="form-check-label" for="exampleRadios4"
+                                                            data-bs-toggle="collapse" data-target="#checkPayment"
+                                                            aria-controls="checkPayment">Cash on delivery
+                                                        </label>
+                                                        <div class="form-group collapse in" id="checkPayment">
+                                                            <p class="text-muted mt-5">Please send your cheque to
+                                                                Store Name, Store
+                                                                Street, Store Town, Store State / County, Store
+                                                                Postcode. </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="custome-radio">
+                                                        <input value="Razorpay" class="form-check-input" required=""
+                                                            type="radio" name="payment_option" id="exampleRadios5"
+                                                            checked="">
+                                                        <label class="form-check-label" for="exampleRadios5"
+                                                            data-bs-toggle="collapse" data-target="#Razorpay"
+                                                            aria-controls="Razorpay">Razorpay</label>
+                                                        <div class="form-group collapse in" id="paypal">
+                                                            <p class="text-muted mt-5">Pay via PayPal; you can pay
+                                                                with your credit
+                                                                card
+                                                                if you don't have a PayPal account.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button class="btn btn-fill-out btn-block mt-30" id="placeOrderButton">Place
+                                                Order</button>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -1221,12 +1220,10 @@
 <script>
 
     document.getElementById("placeOrderButton").addEventListener("click", function () {
-
         const selectedAddress = document.querySelector('input[name="addressSelected"]:checked').value;
-      console.log(selectedAddress);
+        console.log(selectedAddress);
 
         const selectedPaymentMethod = document.querySelector('input[name="payment_option"]:checked').value;
-       
 
         const totalAmount = document.getElementById('totalAmount')
         const totalPrice = totalAmount.textContent
@@ -1246,22 +1243,22 @@
                 .then(data => {
                     const parseAmount = parseInt(totalPrice)
                     var options = {
-                        "key": "rzp_test_Bimw1kt6COUeba", // Enter the Key ID generated from the Dashboard
-                        "amount": 100000, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "key": "rzp_test_Bimw1kt6COUeba",
+                        "amount": 100000,
                         "currency": "INR",
-                        "name": "Acme Corp", //your business name
+                        "name": "Acme Corp",
                         "description": "Test Transaction",
                         "image": "https://example.com/your_logo",
-                        "order_id": data.orderId.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "order_id": data.orderId.id,
                         "handler": function (response) {
-                            alert(response.razorpay_payment_id);
-                            alert(response.razorpay_order_id);
-                            alert(response.razorpay_signature)
+                            console.log(response);
+                          
+                            verify(response, data.orderId.id)
                         },
-                        "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-                            "name": "Gaurav Kumar", //your customer's name
+                        "prefill": {
+                            "name": "Gaurav Kumar",
                             "email": "gaurav.kumar@example.com",
-                            "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+                            "contact": "9000090000"
                         },
                         "notes": {
                             "address": "Razorpay Corporate Office"
@@ -1270,53 +1267,79 @@
                             "color": "#3399cc"
                         }
                     };
-                    var rzp = new Razorpay (options)
+                    var rzp = new Razorpay(options)
                     rzp.open();
-                    
-                   function verify(response, orderId){
-                    fetch('/paymentSuccess', {
-                        method:'post',
-                        headers:{
-                            "Content-Type":"application/json"
-                        },
-                        body:JSON.stringify({
-                          paymentid:razorpay_payment_id,
-                          orderid:razorpay_order_id,
-                          signature:razorpay_signature
+
+                    function verify(response, orderId) {
+                        console.log('heeeee', response, orderId);
+                        fetch('/paymentSuccess', {
+                            method: 'post',
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                paymentid: response.razorpay_payment_id,
+                                razorpayorderid: response.razorpay_order_id,
+                                signature: response.razorpay_signature,
+                                orderId
+                            })
                         })
-                        .then(response => response.json())
-                        .then((data) => {
-                            
-                        })
-                    })
-                   }
+                            .then(response => response.json())
+                            .then((data) => {
+                                if (data.success) {
+                                
+                                    fetch('/placeOrder', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify(
+                                        {address: selectedAddress,paymentMethod:selectedPaymentMethod}
+                                        ),
+                                       
+                                    })
+                                              
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            console.log(data);
+                                            window.location.href = '/orderSuccess'
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                        })
+                                } else {
+
+                                    console.error('Payment failed:', data.error);
+
+                                    alert('Payment failed. Please try again later.');
+                                }
+                            })
+                            .catch(error => {
+                                // Handle any errors that occur during the fetch operation
+                                console.error('Error:', error);
+                            });
+                    }
                 })
-         
-        }else
 
-
-       if(selectedPaymentMethod === 'COD'){
-        fetch('/placeOrder', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                window.location.href = '/orderSuccess'
-
-                // document.getElementById('paymentResult').innerText = `Payment Method: ${selectedPaymentMethod}`;
+        } else if (selectedPaymentMethod === 'COD') {
+            fetch('/placeOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
             })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-      }
-    });
 
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    window.location.href = '/orderSuccess'
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+    });
 
     function watchPaymentMethod() {
         let previousPaymentMethod = null;
@@ -1333,8 +1356,8 @@
         }, 100);
     }
 
-
     watchPaymentMethod();
+
 </script>
 
 <script>

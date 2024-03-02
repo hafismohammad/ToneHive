@@ -113,6 +113,7 @@ const cartLoad = async (req, res) => {
             const product = cartItem.productDetails[0];
             const subtotal = product.price * cartItem.items.quantity;
             totalCartPrice += subtotal;
+           // discountedPrice = product.price - (product.price * (product.discount / 100));
             return {
                 ...cartItem,
                 productDetails: product,
@@ -129,7 +130,7 @@ const cartLoad = async (req, res) => {
 
 
 
-        return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartCount });
+        return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartCount,  });
 
     } catch (error) {
         console.error(error);

@@ -98,7 +98,7 @@ const homeLoad = async (req, res) => {
          
             
             const products = await Products.find({ product_status: true }).populate("category")
-         console.log(products);
+        
             for (const product of products) {
                 const ProductOffer = activeOffer.find((offer) => {
                     return offer.productOffer.product.equals(product._id);
