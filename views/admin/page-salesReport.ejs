@@ -63,7 +63,7 @@
                                 <span class="text">Dashboard</span>
                             </a>
                         </li>
-                        <li class="menu-item has-submenu">
+                        <li class="menu-item ">
                             <a class="menu-link" href="/admin/customers"> <i class="icon material-icons md-person"></i>
                                 <span class="text">Customers</span>
                             </a>
@@ -73,14 +73,14 @@
                                 <a href="page-error-404.html">Error 404</a>
                             </div>
                         </li>
-                        <li class="menu-item has-submenu ">
+                        <li class="menu-item  ">
                             <a class="menu-link" href="/admin/products"> <i
                                     class="icon material-icons md-shopping_bag"></i>
                                 <span class="text">Products</span>
                             </a>
 
                         </li>
-                        <li class="menu-item has-submenu">
+                        <li class="menu-item ">
                             <a class="menu-link" href="/admin/productCatrgory"> <i
                                     class="icon material-icons md-shopping_cart"></i>
                                 <span class="text">category</span>
@@ -91,7 +91,7 @@
                                 <a href="page-orders-detail.html">Order detail</a>
                             </div>
                         </li>
-                        <li class="menu-item has-submenu">
+                        <li class="menu-item ">
                             <a class="menu-link" href="/admin/orderDetails"> <i
                                     class="icon material-icons md-store"></i>
                                 <span class="text">Orders</span>
@@ -102,7 +102,7 @@
                                 <a href="page-seller-detail.html">Seller profile</a>
                             </div>
                         </li>
-                        <!-- <li class="menu-item has-submenu">
+                        <!-- <li class="menu-item ">
                     <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Add product</span>
                     </a>
@@ -113,13 +113,13 @@
                         <a href="page-form-product-4.html">Add product 4</a>
                     </div>
                 </li> -->
-                        <li class="menu-item has-submenu ">
+                        <li class="menu-item  ">
                             <a class="menu-link" href="#"> <i class="icon material-icons md-monetization_on"></i>
                                 <span class="text">Coupons</span>
                             </a>
 
                         </li>
-                        <li class="menu-item has-submenu">
+                        <li class="menu-item ">
                             <a class="menu-link" href="/admin/productOffer"> <i
                                     class="icon material-icons md-monetization_on"></i>
                                 <span class="text">Offer List</span>
@@ -132,7 +132,7 @@
                                 <span class="text">Sales Report</span>
                             </a>
                         </li>
-                        <!-- <li class="menu-item has-submenu">
+                        <!-- <li class="menu-item ">
                     <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
                         <span class="text">Account</span>
                     </a>
@@ -159,7 +159,7 @@
             </ul> -->
                         <!-- <hr>
             <ul class="menu-aside"> -->
-                        <!-- <li class="menu-item has-submenu">
+                        <!-- <li class="menu-item ">
                     <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
                         <span class="text">Settings</span>
                     </a>
@@ -262,46 +262,76 @@
                         </div>
 
                     </div>
-
-                    <table class="table table-hover" id="couponTable">
-                        <thead>
-                            <tr class="text-left">
-                                <th>No</th>
-                                <th>Order Id</th>
-                                <th>Customer</th>
-                                <th>Order Date</th>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Payment Method</th>
-                                <th>Order Status</th>
-                                <th>Total Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (let i = 0; i < orders.length; i++) { %>
-                                <tr>
-                                    <td><%= i + 1 %></td>
-                                    <td><%= orders[i]._id %></td>
-                                    <td><%= orders[i].userId.name %></td>
-                                    <td><%= orders[i].createdAt.toLocaleDateString() %></td>
-                                    <td>
-                                        <% for (let j = 0; j < orders[i].products.length; j++) { %>
-                                            <%= orders[i].products[j].productId.name %><br>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <table class="table table-hover" id="couponTable">
+                                    <thead>
+                                        <tr class="text-left">
+                                            <th>No</th>
+                                            <th>Order Id</th>
+                                            <th>Customer</th>
+                                            <th>Order Date</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Payment Method</th>
+                                            <th>Order Status</th>
+                                            <th>Total Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for (let i = 0; i < orders.length; i++) { %>
+                                            <tr>
+                                                <td><%= i + 1 %></td>
+                                                <td><%= orders[i]._id %></td>
+                                                <td><%= orders[i].userId.name %></td>
+                                                <td><%= orders[i].createdAt.toLocaleDateString() %></td>
+                                                <td>
+                                                    <% for (let j = 0; j < orders[i].products.length; j++) { %>
+                                                        <%= orders[i].products[j].productId.name %><br>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <% for (let j = 0; j < orders[i].products.length; j++) { %>
+                                                        <%= orders[i].products[j].quantity %><br><br>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= orders[i].paymentMethod %></td> 
+                                                <td><%= orders[i].orderStatus %></td> 
+                                                <td><%= orders[i].totalPrice %></td>
+                                            </tr>
                                         <% } %>
-                                    </td>
-                                    <td>
-                                        <% for (let j = 0; j < orders[i].products.length; j++) { %>
-                                            <%= orders[i].products[j].quantity %><br>
-                                        <% } %>
-                                    </td>
-                                    <td><%= orders[i].paymentMethod %></td> 
-                                    <td><%= orders[i].orderStatus %></td> 
-                                    <td><%= orders[i].totalPrice %></td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     
+                    
+                    <td class="mb-30">
+                        <table style="float: right;">
+                            <thead>
+                                <tr>
+                                    <th style="font-weight: bold;">Overall Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <% let totalRevenue = 0; %>
+                                    <% for (let i = 0; i < orders.length; i++) { %>
+                                        <% totalRevenue += orders[i].totalPrice; %>
+                                    <% } %>
+                                    <td><%= totalRevenue %></td>
+                                </tr>
+                                <tr>
+                                    <th style="font-weight: bold;">Total Sales</th>
+                                </tr>
+                                <tr>
+                                    <td><%= orders.length %></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     
 
 
@@ -313,11 +343,7 @@
                                 document.write(new Date().getFullYear())
                             </script> ©, Evara - HTML Ecommerce Template .
                         </div>
-                        <div class="col-sm-6">
-                            <div class="text-sm-end">
-                                All rights reserved
-                            </div>
-                        </div>
+                       
                     </div>
                 </footer>
             </main>

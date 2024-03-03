@@ -6,7 +6,7 @@ const Cart = require('../models/cartModel');
 const Products = require("../models/productModel");
 const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment');
-
+const Wallet = require('../models/walletModel')
 
 const userProfile = async (req, res) => {
     try {
@@ -57,19 +57,22 @@ const userProfile = async (req, res) => {
         // ]);
         const userOrders = await Order.find({userId:userId})
 
-console.log(userOrders);
+
         const cartItems = await Cart.find({userId:userId});
         let cartTotalCount = 0; 
         cartItems.forEach(cart => {
             cartTotalCount += cart.items.length; 
         });
 
-
+   
 
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
 
+        const wallet = await Wallet.findOne({ user: userId });
+        console.log(wallet);
+        
         // const message = req.flash('message');
         const message = req.flash('message');
         res.render("user/page-userProfile", {
@@ -78,7 +81,8 @@ console.log(userOrders);
             userOrders: userOrders,
             message: message,
             userInfo: userInfo,
-            cartTotalCount:cartTotalCount
+            cartTotalCount:cartTotalCount,
+            wallet:wallet
 
         });
     } catch (error) {
@@ -344,26 +348,55 @@ const viewOrderDetails = async (req, res) => {
 
 const orderCancel = async (req, res) => {
     try {
+        const userId = req.session.user._id;
         const orderId = req.params.orderId;
         const productId = req.params.productId;
 
-        
         const order = await Order.findById(orderId);
-        const product = order.products.find(product => product._id.toString() === productId)
+        const product = order.products.find(product => product._id.toString() === productId);
+
         if (!product) {
             return res.status(404).json({ success: false, error: "Product not found in the order" });
+        } else {
+            product.orderStatus = 'cancelled';
         }
-        product.orderStatus = 'cancelled'
-   
+
         await order.save();
 
+        if (order.paymentMethod === 'Razorpay') {
+            const wallet = await Wallet.findOne({user:userId})
+            if(wallet){
+               wallet.balance += order.totalPrice
+               wallet.walletData.push({
+                amount:order.totalPrice,
+                date:Date.now(),
+                paymentMethod:'Razorpay'
+               })
+               await wallet.save()
+            }else{
+                const newWallet = new Wallet({
+                    user: userId,
+                    balance: order.totalPrice,
+                    walletData: [{
+                        amount: order.totalPrice,
+                        date: Date.now(),
+                        paymentMethod: 'Razorpay'
+                    }]
+                });
+
+                await newWallet.save();
+            }
+        }
         res.json({ success: true });
 
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, error: "Internal server error" });
     }
-}
+};
+
+
+
 
 
 const viewProducrDetails = async (req, res) => {
@@ -420,6 +453,14 @@ const orderReturn = async (req, res) => {
     }
 }
 
+const walletPost = (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.log(errror);
+    }
+}
+
 
 module.exports = {
     userProfile,
@@ -434,7 +475,8 @@ module.exports = {
     profileAddressEditpost,
     userProfileAddressDelete,
     viewProducrDetails,
-    orderReturn
+    orderReturn,
+    walletPost
 
 
 }

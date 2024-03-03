@@ -28,7 +28,7 @@ const createOrder = async (req, res) => {
         currency: "INR",
         receipt: req.session.user
        })
-      console.log(order);
+ 
        res.json({orderId:order})
  
     } catch (error) {

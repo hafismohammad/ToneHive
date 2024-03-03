@@ -270,9 +270,9 @@
                                             <div class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="dropdownAccount">
                                                 <a class="dropdown-item" href="/userProfile"><i
-                                                        class="material-icons md-perm_identity"></i>Edit Profile</a>
+                                                        class="material-icons md-perm_identity"></i> Profile</a>
                                                 <!-- <a class="dropdown-item" href="#address"><i class="material-icons md-settings"></i>Account Settings</a> -->
-                                                <a class="dropdown-item" href="/wallet"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                                                <!-- <a class="dropdown-item" href="/wallet"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
                                                 <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                                               <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
                                                 <div class="dropdown-divider"></div>
@@ -412,6 +412,11 @@
                                                         href="#account-detail" role="tab" aria-controls="account-detail"
                                                         aria-selected="true"><i class="fi-rs-user mr-10"></i>Account
                                                         details</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="Wallet-tab" data-bs-toggle="tab" href="#Wallet" role="tab" aria-controls="Wallet" aria-selected="true">
+                                                        <i class="fi-rs-money mr-10"></i>Wallet
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" href="/logout"><i
@@ -738,6 +743,39 @@
                                                 </div>
                                             </div>
 
+                                            <div class="tab-pane fade" id="Wallet" role="tabpanel" aria-labelledby="Wallet-tab">
+                                                <table class="table table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Date</th>
+                                                            <th>Payment Method</th>
+                                                            <th>Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% wallet.walletData.forEach(element => { %>
+                                                            <tr>
+                                                                <td><%= new Date(element.date).toLocaleDateString() %></td>
+                                                                <td><%= element.paymentMethod %></td>
+                                                                <td><%= element.amount %></td>
+                                                            </tr>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                                
+                                                <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; font-size: 24px; text-align: center;" class="d-flex justify-content-center">
+                                                    <div>
+                                                        Wallet Balance: <%= wallet.balance %>
+                                                    </div>
+                                                </div><br><br>
+                                                <!-- <div class="d-flex justify-content-center">
+                                                    <input class="text-center" type="text" placeholder="Enter Amount">
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <button class="btn btn-primary mt-40">Add Amount</button>
+                                                </div> -->
+                                                
+                                            
                                         </div>
                                     </div>
                                 </div>

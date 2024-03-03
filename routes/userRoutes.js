@@ -94,21 +94,21 @@ router.patch("/cancelOrder/:orderId/:productId",userProfileController.orderCance
 
 router.patch("/returnOrder/:orderId/:productId", userProfileController.orderReturn)
 
-router.get("/vewProductDetails/:id",userAuth.isLogout,userProfileController.viewProducrDetails)
+router.get("/vewProductDetails/:id",userAuth.isLogout,userAuth.isLogout,userProfileController.viewProducrDetails)
 
 router.post("/applyCoupon", couponsControllers.applyCoupon)
 
-router.get("/view-Wishlist",userAuth.isLogout,wishlistControllers.wishlistLoad)
+router.get("/view-Wishlist",userAuth.isLogout,userAuth.isLogout,wishlistControllers.wishlistLoad)
 
-router.get("/addWishlist/:id",wishlistControllers.addWishlist)
+router.get("/addWishlist/:id",userAuth.isLogout,wishlistControllers.addWishlist)
 
 router.delete("/removeWishlist/:id",wishlistControllers.removeWishlist)
 
-router.get("/shopProducts", shopProductsControllers.shopProducts)
+router.get("/shopProducts",userAuth.isLogout, shopProductsControllers.shopProducts)
 
-router.get("/search", userControllers.searchProduct)
+router.get("/search",userAuth.isLogout, userControllers.searchProduct)
 
-router.get("/productCategorySort", shopProductsControllers.sortProductCategory);
+router.get("/productCategorySort",userAuth.isLogout, shopProductsControllers.sortProductCategory);
 
 router.post("/ProductsPriceRange", shopProductsControllers.priceRange)
 
@@ -116,7 +116,9 @@ router.post('/createorder', checkoutControllers.createOrder)
 
 router.post('/paymentSuccess', checkoutControllers.paymentSuccess)
 
-router.get("/wallet", walletControllers.walletLoad)
+// router.get("/wallet",userAuth.isLogout, walletControllers.walletLoad)
+
+router.post("/wallet", userProfileController.walletPost)
 
 
 
