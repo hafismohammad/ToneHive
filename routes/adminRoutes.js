@@ -60,7 +60,9 @@ router.patch('/list-product/:prodid', productControllers.listOrUnlistProducts);
 
 router.get("/editproduct/:id", adminAuth.isLogout, productControllers.editProductLoad)
 
-router.post("/editprodut/:id", productControllers.editedProduct)
+router.post("/editprodut/:id",productControllers.upload.array("image", 4), productControllers.editedProduct)
+
+router.patch("/deleteImage/:prodId/:image", productControllers.deleteImages)
 
 router.get("/orderDetails", adminAuth.isLogout, orderControllers.orderList)
 

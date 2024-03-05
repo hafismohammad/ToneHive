@@ -51,8 +51,13 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     coupon:{
-        type: Number,
-        default: 0 
+        type: String,
+       
+    },
+    cancellationReason:{
+        type: String,
+        maxlength: 20,
+        default: null,
     },
     orderStatus: {
         type: String,

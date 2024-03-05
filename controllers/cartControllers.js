@@ -2,6 +2,7 @@ const User = require('../models/userModel')
 const Cart = require('../models/cartModel')
 const Products = require('../models/productModel')
 const mongoose = require('mongoose');
+const offerModel = require('../models/offerModel')
 
 const { ObjectId } = mongoose.Types;
 
@@ -107,13 +108,66 @@ const cartLoad = async (req, res) => {
             },
 
         ]);
+        
 
+
+
+        //  for(const product of cartItems){
+        //         product.offerPrice = parseInt(Math.round(
+        //             parseInt(product.productDetails[0].price) - (parseInt(product.productDetails[0].price)* product.productDetails[0].discount) / 100
+
+        //         ))
+        //     }
+         
+        //     const activeOffer = await offerModel.find({ status: true });
+
+        //      const product = await Products.findOne({ _id: cartItems[0].items.productId }).populate("category")
+        //    // console.log( 'khkj',cartItems[0].productDetails[0]);
+
+        //     const ProductOffer = await offerModel.findOne({
+        //         'productOffer.product': product._id
+        //     });
+
+           
+        //    // console.log(ProductOffer.productOffer.discount);
+
+        //         let categoryOffer;
+        //         if (product.category[0] && product.category[0]._id) { // Add a check for category existence and _id property
+        //             categoryOffer = activeOffer.find((offer) => {
+        //                 return offer.categoryOffer.category.equals(product.category[0]._id);
+        //             });
+        //         }
+            
+        //         let offerPrice;
+            
+        //         if (ProductOffer && categoryOffer) {
+        //             if (ProductOffer.productOffer.discount > categoryOffer.categoryOffer.discount) {
+        //                 offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+        //             } else {
+        //                 offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+        //             }
+        //         } else if (ProductOffer) {
+        //             offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
+        //         } else if (categoryOffer) {
+        //             offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
+        //         } else {
+        //             offerPrice = product.price;
+        //         }
+            
+        //         product.offerPrice = parseInt(Math.round(offerPrice));
+//console.log(product.offerPrice);
+            //    const discounted =  ( product.offerPrice  * (product.discount / 100))
+            //    const productDiscount = product.offerPrice - discounted
+            //    console.log('productDiscount',productDiscount);
+    
         let totalCartPrice = 0;
         const populatedCartItems = cartItems.map(cartItem => {
-            const product = cartItem.productDetails[0];
-            const subtotal = product.price * cartItem.items.quantity;
+            const product = cartItem.productDetails[0];    
+            product.discountedPrice = product.price - (product.price * (product.discount / 100));
+            const subtotal = product.discountedPrice * cartItem.items.quantity;
             totalCartPrice += subtotal;
-            // discountedPrice = product.price - (product.price * (product.discount / 100));
+          
+           
             return {
                 ...cartItem,
                 productDetails: product,
@@ -126,8 +180,8 @@ const cartLoad = async (req, res) => {
         const cartItemss = await Cart.find({ userId: userId });
         const cartCount = cartItems.length;
 
-        // Now you can use cartCount to display the count in your cart icon or perform other operations
-
+        
+        // const cartTotal = totalCartPrice - (totalCartPrice* cartItem.items.discount) / 100 
 
 
         return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartCount,  });

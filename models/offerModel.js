@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
 const offerSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
-       
     },
     startingDate: {
         type: Date,
@@ -18,14 +18,18 @@ const offerSchema = mongoose.Schema({
         discount: { type: Number }
     },
     categoryOffer: {
-        category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
+        category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
         discount: { type: Number }
     },
-    status:{
+    status: {
         type: Boolean,
-        default:true
+        default: true
+    },
+    calculatedProductOffer: {
+        type: Number,
+        default: null
     }
-})
+});
 
 offerSchema.pre("save", function (next) {
     const currentDate = new Date();
@@ -35,6 +39,5 @@ offerSchema.pre("save", function (next) {
     next();
 });
 
-
 const offerModel = mongoose.model('offerModel', offerSchema);
-module.exports = offerModel
+module.exports = offerModel;

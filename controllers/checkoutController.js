@@ -87,13 +87,18 @@ const checkoutLoad = async (req, res) => {
             },
 
         ]);
-
+        let totalCartAmount = 0;
         const populatedCartItems = cartItems.map(cartItem => {
-            const product = cartItem.productDetails[0];
+            const product = cartItem.productDetails[0];    
+            product.discountedPrice = product.price - (product.price * (product.discount / 100));
+            const subtotal = product.discountedPrice * cartItem.items.quantity;
+            totalCartAmount += subtotal;
+          
+           
             return {
                 ...cartItem,
                 productDetails: product,
-                subtotal: product.price * cartItem.items.quantity
+                subtotal: subtotal
             };
         });
         const useCart = await Cart.findOne({ userId: userId });
@@ -114,7 +119,7 @@ const checkoutLoad = async (req, res) => {
                 userId: userId,
                 userAddress: userAddress,
                 cartItems: populatedCartItems,
-                totalCartPrice,
+                totalCartPrice:totalCartAmount,
                 userInfo: userInfo,
                 coupons: coupons,
                 cartCount: cartCount,
@@ -296,7 +301,8 @@ const placeOrderPost = async (req, res) => {
                 discountedPrice = (totalCartPrice * (100 - couponDiscount)) / 100;
             }
         }
-
+console.log('heeeeere',coupon.coupon );
+                   
         await Order.create({
             address: addressData.address[0],
             userId: userId,
@@ -305,7 +311,7 @@ const placeOrderPost = async (req, res) => {
             totalPrice: discountedPrice, // Use the discounted price
             orderStatus: status,
             createdAt: formattedDate,
-            coupon: coupon ? discountedPrice : null // Save the coupon amount or null if no coupon applied
+            coupon: coupon ? coupon.coupon : null 
         });
 
         await Cart.deleteOne({ userId: userId });

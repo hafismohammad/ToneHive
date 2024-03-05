@@ -273,10 +273,14 @@
                             </thead>
                             <tbody>
                                 <% if (locals.orderedItems) { %>
-                                <% let totalPrice=0; %>
-                                <% orderedItems.products.forEach(element => { %>
-                                <% totalPrice +=element.totalPrice; %>
-                                <% totalquantity=element.productId.price * element.quantity %>
+                                    <% let totalPrice = 0; %>
+                                    <% orderedItems.products.forEach(element => { %>
+                                        <% totalPrice += (element.productId.price - (element.productId.price * element.productId.discount) / 100) * element.quantity; %>
+                                        <% totalquantity = element.productId.price * element.quantity; %>
+                                        <% let discountedPrice = element.productId.price - ((element.productId.price * element.productId.discount) / 100); %>
+                                        <% // Use discountedPrice as needed in your template %>        
+                                
+                                
                                 <tr>
                                     <td class="image product-thumbnail">
                                         <div class="text-center">
@@ -328,7 +332,7 @@
                                         <span class="badge rounded-pill alert-danger"><%= element.orderStatus %></span>
                                     </td>
                                     <% } %>
-                                    <td class="text-center">₹ <%=totalquantity %></td>
+                                    <td class="text-center">₹ <%=totalquantity  %></td>
                                     <td>
                                         <% if(element.orderStatus === 'return pending') {%>
                                         <button onclick="acceptReturn('<%= orderedItems._id %>', '<%= element._id %>')" class="btn btn-outline-primary">Accept Return</button>

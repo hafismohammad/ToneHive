@@ -1,10 +1,9 @@
-
-
 <!DOCTYPE HTML>
 <html lang="en">
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
+
 <head>
     <meta charset="utf-8">
     <title>Evara Dashboard</title>
@@ -19,152 +18,172 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/public/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
-  
-        
+
+
 </head>
 
 <body>
 
-<section class="content-main">
-    <div class="row">
-        <div class="col-9">
-            <div class="content-header">
-                <h2 class="content-title">Edit Product</h2>
+    <section class="content-main">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Edit Product</h2>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Basic</h4>
-                </div>
-                <div class="card-body">
-                 
-                    <form id="editForm" action="/admin/editprodut/<%=  productData._id %>" method="post"   >
-                     <% if(productData) {%>
-
-                    
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Product Name</label>
-                            <input value="<%= productData.name %>" type="text" name="name" placeholder="Type here" class="form-control" id="name">
-                            <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span></p>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="form-label">Product Description</label>
-                            <textarea placeholder="Type here" name="description" class="form-control" id="description" rows="4"><%= productData.description %></textarea>
-
-                            <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span></p>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label  class="form-label" for="product_price">Price</label>
-                            <input value="<%= productData.price %>" type="number" placeholder="Price" name="price" class="form-control" id="price">
-                            <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span></p>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <label for="product_quantity" class="form-label">Quantity</label>
-                                    <input value="<%= productData.quantity %>" type="number" name="quantity" placeholder="Quantity" class="form-control" id="quantity">
-                                    <p><span id="error4" style="display: none;" class="mt-15 err text-danger"></span></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <label for="product_discount" class="form-label">Discount</label>
-                                    <input value="<%= productData.discount %>" type="number" name="discount" placeholder="%" class="form-control" id="discount">
-                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span></p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    <% } %>
-        
-                </div>
-            </div> <!-- card end// -->
-        </div>
-
-        <div class="col-lg-3">
-            <div class="card mb-4">
-                <div id="addedImagesContainer" class="col-md-6">
-                    <% for (let i=0; i < productData.image.length; i++) { %>
-                        <div class="col-md-12 mb-4">
-                            <div class="row">
-                                <div class="col-12">
-                                    <img class="rounded" style="width: 50px; height: 60px;"
-                                        src="/public/uploads/<%= productData.image[i] %>"
-                                        alt="image" data-filename="<%= productData.image[i] %>">
-                                    <span class="delete-icon"
-                                        onclick="deleteImage('<%= productData._id %>', '<%= productData.image[i] %>')">❌</span>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>
-                </div>
-        
-                <div class="card-body">
-                    <div class="input-upload">
-                        <img src="assets/imgs/theme/upload.svg" alt="">
-                        <input class="form-control border" name="images" id="imageInput" type="file" multiple>
-                    </div>
-                </div>
-        
-                <!-- Select Category Section -->
-                <div class="card mb-4 ">
+            <div class="col-lg-6">
+                <div class="card mb-4">
                     <div class="card-header">
-                        <h4>Select Category</h4>
+                        <h4>Basic</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row gx-2">
-                            <div class="col-sm-6 mb-3">
-                                <label class="form-label">Sub-category</label>
-                                <select class="form-select" style="width: auto;" name="category">
-                                    <% for( let i = 0; i < category.length; i++ ) { %>
-                                        <option value="<%= category[i]._id %>" <% if(category[i]._id.equals(productData.category)) {%> selected <% } %>>
-                                            <%= category[i].name %>
-                                        </option>
-                                    <% } %>
-                                </select>
+
+                        <form id="editForm" action="/admin/editprodut/<%=  productData._id %>" method="post"
+                            enctype="multipart/form-data">
+                            <% if(productData) {%>
+
+
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input value="<%= productData.name %>" type="text" name="name"
+                                        placeholder="Type here" class="form-control" id="name">
+                                    <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Product Description</label>
+                                    <textarea placeholder="Type here" name="description" class="form-control"
+                                        id="description" rows="4"><%= productData.description %></textarea>
+
+                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label" for="product_price">Price</label>
+                                    <input value="<%= productData.price %>" type="number" placeholder="Price"
+                                        name="price" class="form-control" id="price">
+                                    <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span>
+                                    </p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_quantity" class="form-label">Quantity</label>
+                                            <input value="<%= productData.quantity %>" type="number" name="quantity"
+                                                placeholder="Quantity" class="form-control" id="quantity">
+                                            <p><span id="error4" style="display: none;"
+                                                    class="mt-15 err text-danger"></span></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_discount" class="form-label">Discount</label>
+                                            <input value="<%= productData.discount %>" type="number" name="discount"
+                                                placeholder="%" class="form-control" id="discount">
+                                            <p><span id="error5" style="display: none;"
+                                                    class="mt-15 err text-danger"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <% } %>
+
+                    </div>
+                </div> <!-- card end// -->
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div id="addedImagesContainer" class="col-md-6">
+                        <% for (let i=0; i < productData.image.length; i++) { %>
+                            <div class="col-md-12 mb-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <img class="rounded" style="width: 50px; height: 60px;"
+                                            src="/public/uploads/<%= productData.image[i] %>" alt="image"
+                                            data-filename="<%= productData.image[i] %>">
+                                        <span class="delete-icon"
+                                            onclick="deleteImage('<%= productData._id %>', '<%= productData.image[i] %>')">❌</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+
+                    <div class="card mb-4">
+                        <!-- <div class="card-header">
+                        <h4>Media</h4> 
+                    </div> -->
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <label class="form-label">Image</label>
+                                <input id="image" class="form-control" type="file" name="image" multiple>
+                                <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span></p>
+
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+
+                    <!-- Select Category Section -->
+                    <div class="card mb-4 ">
+                        <div class="card-header">
+                            <h4>Select Category</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Sub-category</label>
+                                    <select class="form-select" style="width: auto;" name="category">
+                                        <% for( let i=0; i < category.length; i++ ) { %>
+                                            <option value="<%= category[i]._id %>" <%
+                                                if(category[i]._id.equals(productData.category)) {%> selected <% } %>>
+                                                    <%= category[i].name %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-        
-                <!-- Save Button -->
-                <div>
-                    <button value="Save" type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Edit Product</button>
+
+                    <!-- Save Button -->
+                    <div>
+                        <button value="Save" type="submit"
+                            class="btn ms-auto d-block btn-md rounded font-sm hover-up">Edit Product</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        </form>
-    </div>
-</section> <!-- content-main end// -->
-
-<footer class="main-footer font-xs">
-    <div class="row pb-30 pt-15">
-        <div class="col-sm-6">
-            <script>
-            document.write(new Date().getFullYear())
-            </script> 
+            </form>
         </div>
-       
-    </div>
-</footer>
-</main>
-<script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-<script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-<script src="assets/js/vendors/select2.min.js"></script>
-<script src="assets/js/vendors/perfect-scrollbar.js"></script>
-<script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-<script src="assets/js/vendors/chart.js"></script>
-<!-- Main Script -->
-<script src="assets/js/main.js" type="text/javascript"></script>
-<script src="assets/js/custom-chart.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/public/formValidation/admin/addProductScript.js"></script>
-<!-- <script>
+    </section> <!-- content-main end// -->
+
+    <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+            <div class="col-sm-6">
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>
+            </div>
+
+        </div>
+    </footer>
+    </main>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="assets/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js" type="text/javascript"></script>
+    <script src="assets/js/custom-chart.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/public/formValidation/admin/addProductScript.js"></script>
+    <!-- <script>
     $(document).ready(function() {
         $('#imageInput').change(function() {
             $('#preview').html('');
@@ -183,59 +202,52 @@
 
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
+
 </html>
 
-
-
-
-
-
 <script>
-    const selectedImages = [];
-    document.getElementById("imageInput").addEventListener("change", (event) => {
-        const addedImagesContainer = document.getElementById("addedImagesContainer");
-        addedImagesContainer.innerHTML = ""; // Clear previous images
-        const files = event.target.files;
-
-        // Loop through selected files
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            selectedImages.push(file);
-
-            // Create thumbnail element
-            const thumbnail = document.createElement("div");
-            thumbnail.classList.add("thumbnail");
-
-            // Create image element
-            const img = document.createElement("img");
-            img.src = URL.createObjectURL(file);
-            img.alt = "thumbnail";
-            img.style.width = "50px"; // Adjust width as needed
-            img.style.height = "auto";
-
-            // Create remove icon
-            const removeIcon = document.createElement("span");
-            removeIcon.classList.add("remove-icon");
-            removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
-
-            // Event listener to remove the image on icon click
-            removeIcon.addEventListener("click", function () {
-                const index = selectedImages.indexOf(file);
-                if (index !== -1) {
-                    selectedImages.splice(index, 1);
-                }
-                thumbnail.remove(); // Remove the thumbnail
-            });
-
-            // Append elements to thumbnail
-            thumbnail.appendChild(img);
-            thumbnail.appendChild(removeIcon);
-
-            // Append thumbnail to the container
-            addedImagesContainer.appendChild(thumbnail);
-        }
-    });
+    function deleteImage(prodId, image) {
+        Swal.fire({
+            title: "Are you sure?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes`,
+            cancelButtonText: 'Cancel',
+            allowOutsideClick: true,
+        }).then((result) => { 
+            if (result.isConfirmed) {   
+                fetch(`/admin/deleteImage/${prodId}/${image}`, { method: "PATCH" })
+                    .then(res => {
+                        if (res.ok) {
+                            Swal.fire({
+                                title: `Done`,
+                                text: "Image deleted successfully",
+                                icon: "success",
+                                timer: 1000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: `Error`,
+                                text: "Image already deleted",
+                                icon: "error"
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: `Error`,
+                            text: "An error occurred while deleting the image",
+                            icon: "error"
+                        });
+                    });
+            }
+        });
+    }
 </script>
-

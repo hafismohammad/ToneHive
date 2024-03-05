@@ -1,6 +1,9 @@
 const Category = require("../models/categoryModel");
 const Products = require("../models/productModel")
 const multer = require('multer');
+const fs = require("fs");
+const path = require('path');
+const mongoose = require("mongoose");
 
 // products & image upload
 const storage = multer.diskStorage({
@@ -124,80 +127,99 @@ const editProductLoad = async (req, res) => {
     }
 };
 
+
 const editedProduct = async (req, res) => {
     try {
         const id = req.params.id;
         const name = req.body.name;
-        const images = []; // Array to store filenames of edited images
+        const images = req.files ? req.files.map(file => file.filename) : [];
 
-        // Push filenames of edited images into the images array
-        if (req.files && req.files.length > 0) {
-            for (let i = 0; i < req.files.length; i++) {
-                images.push(req.files[i].filename);
-            }
-        }
-
-        // Retrieve the product by ID
         const product = await Products.findById(id);
 
-        // Check for duplicate product name
-        const duplicateProd = await Products.findOne({ name: name });
-        if (!duplicateProd || duplicateProd._id.toString() === id) {
-            // Extract other form fields
-            const category = req.body.category;
-            const description = req.body.description;
-            const price = req.body.price;
-            const quantity = req.body.quantity;
-            const discount = req.body.discount;
+        if (!product) {
+            throw new Error("Product not found");
+        }
 
-            // Construct updateFields object
-            const updateFields = {
-                name: name, 
-                category: category,
-                description: description,
-                price: price,
-                quantity: quantity,
-                discount: discount
-            };
+        const duplicateProd = await Products.findOne({ name: name, _id: { $ne: id } });
+        if (duplicateProd) {
+            throw new Error("Duplicate product name");
+        }
 
-            // Handle image update
-            if (req.files && req.files.length > 0) {
-                // Delete old images if they exist
-                if (product.image && product.image.length > 0) {
-                    for (let i = 0; i < product.image.length; i++) {
-                        try {
-                            fs.unlinkSync("public/uploads/" + product.image[i]);
-                        } catch (err) {
-                            console.error(err);
+        const { category, description, price, quantity, discount } = req.body;
+
+        // Check if new images are uploaded, if not, retain existing images
+        const updatedImages = images.length > 0 ? images : product.image;
+
+        const updateFields = {
+            name: name,
+            category: category,
+            description: description,
+            price: price,
+            quantity: quantity,
+            discount: discount,
+            image: updatedImages
+        };
+
+        // Delete old images only if new images are uploaded
+        if (req.files && req.files.length > 0) {
+            // Remove images that are no longer associated with the product
+            product.image.forEach(oldImage => {
+                if (!updatedImages.includes(oldImage)) {
+                    try {
+                        const imagePath = path.join("public/uploads/", oldImage);
+                        if (fs.existsSync(imagePath)) {
+                            fs.unlinkSync(imagePath);
+                        } else {
+                            console.log(`File ${imagePath} does not exist.`);
                         }
+                    } catch (err) {
+                        console.error(err);
                     }
                 }
-                // Update images in updateFields
-                updateFields.image = images;
-            }
-
-            // Update the product in the database
-            const updatedProduct = await Products.findByIdAndUpdate(id, { $set: updateFields });
-
-            // Check if the update operation was successful
-            if (updatedProduct) {
-                req.flash("message", "Product Edited");
-                res.redirect(`/admin/products`);
-            } else {
-                throw new Error("Failed to update product");
-            }
-        } else {
-            req.flash("message", "Duplicate Product");
-            res.redirect("/admin/products");
+            });
         }
+
+        const updatedProduct = await Products.findByIdAndUpdate(id, { $set: updateFields }, { new: true });
+
+        if (!updatedProduct) {
+            throw new Error("Failed to update product");
+        }
+
+        req.flash("message", "Product edited successfully");
+        res.redirect(`/admin/products`);
     } catch (error) {
-        console.log(error);
-        req.flash("message", "Error editing product");
+        console.error(error.message);
+        req.flash("message", "Error editing product: " + error.message);
         res.redirect("/admin/products");
     }
 };
 
 
+
+
+const deleteImages = (req, res) => {
+    try {
+        const prodId = req.params.prodId;
+        const image = req.params.image;
+
+        // Construct the path to the image file
+        const imagePath = `public/uploads/${image}`;
+
+        // Check if the file exists
+        if (fs.existsSync(imagePath)) {
+            // Delete the file
+            fs.unlinkSync(imagePath);
+            console.log(`Image ${image} deleted successfully.`);
+            res.status(200).send("Image deleted successfully.");
+        } else {
+            console.log(`Image ${image} does not exist.`);
+            res.status(404).send("Image not found.");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal server error.");
+    }
+};
 
 
 module.exports = {
@@ -207,6 +229,7 @@ module.exports = {
     upload,
     listOrUnlistProducts,
     editProductLoad,
-    editedProduct
+    editedProduct,
+    deleteImages
 
 }

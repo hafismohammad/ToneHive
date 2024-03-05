@@ -51,7 +51,9 @@ const orderProductView = async (req, res) => {
         if (!orderedItems) {
             return res.status(404).send('Order not found');
         }
-
+        orderedItems.offerPrice = orderedItems.products[0].productId.price - ((orderedItems.products[0].productId.price * orderedItems.products[0].productId.discount) / 100)
+        console.log(orderedItems);
+        
         res.render('admin/page-viewProductsDetails', { orderedItems: orderedItems });
     } catch (error) {
         console.error(error);

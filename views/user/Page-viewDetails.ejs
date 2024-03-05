@@ -418,6 +418,7 @@
                         
                                 <% totalPrice += element.totalPrice; %>
                                 <% totalquantity = element.productId.price * element.quantity; %>
+                           
                                 <% totalCouponPrice = element.coupon * element.quantity; %>
                                 <tr>
                                     <td class="image product-thumbnail">
@@ -511,10 +512,10 @@
                             <tr>
                                 <% if (orderedItems.coupon === 0) { %>
                                     <td colspan="4" class="text-end">Total Price:</td>
-                                    <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
+                                    <td class="text-center">₹ <%= orderedItems.totalPrice   %></td>
                                 <% } else { %>
                                     <td colspan="4" class="text-end">Discount Price</td>
-                                    <td class="text-center">₹ <%= orderedItems.coupon %></td>
+                                    <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
                                 <% } %>
                             </tr>
                         <% } %>

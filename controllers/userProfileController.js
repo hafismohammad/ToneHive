@@ -53,18 +53,18 @@ const userProfile = async (req, res) => {
         //     {
         //         $unwind: '$products'
         //     },
-            
+
         // ]);
-        const userOrders = await Order.find({userId:userId})
+        const userOrders = await Order.find({ userId: userId })
 
 
-        const cartItems = await Cart.find({userId:userId});
-        let cartTotalCount = 0; 
+        const cartItems = await Cart.find({ userId: userId });
+        let cartTotalCount = 0;
         cartItems.forEach(cart => {
-            cartTotalCount += cart.items.length; 
+            cartTotalCount += cart.items.length;
         });
 
-   
+
 
         const date = new Date();
         const momentDate = moment(date);
@@ -72,7 +72,7 @@ const userProfile = async (req, res) => {
 
         const wallet = await Wallet.findOne({ user: userId });
         console.log(wallet);
-        
+
         // const message = req.flash('message');
         const message = req.flash('message');
         res.render("user/page-userProfile", {
@@ -81,8 +81,8 @@ const userProfile = async (req, res) => {
             userOrders: userOrders,
             message: message,
             userInfo: userInfo,
-            cartTotalCount:cartTotalCount,
-            wallet:wallet
+            cartTotalCount: cartTotalCount,
+            wallet: wallet
 
         });
     } catch (error) {
@@ -324,13 +324,13 @@ const viewOrderDetails = async (req, res) => {
                     as: 'lookedUpAddress'
                 }
             },
-           
+
         ]);
 
-        const cartItems = await Cart.find({userId:userId});
-        let cartTotalCount = 0; 
+        const cartItems = await Cart.find({ userId: userId });
+        let cartTotalCount = 0;
         cartItems.forEach(cart => {
-            cartTotalCount += cart.items.length; 
+            cartTotalCount += cart.items.length;
         });
 
         const date = new Date();
@@ -339,8 +339,8 @@ const viewOrderDetails = async (req, res) => {
         userOrders.createdAt = formattedDate
 
 
-        
-        res.render('user/Page-viewDetails', { userOrders: userOrders,cartTotalCount:cartTotalCount })
+
+        res.render('user/Page-viewDetails', { userOrders: userOrders, cartTotalCount: cartTotalCount })
     } catch (error) {
         console.log(error);
     }
@@ -364,16 +364,16 @@ const orderCancel = async (req, res) => {
         await order.save();
 
         if (order.paymentMethod === 'Razorpay') {
-            const wallet = await Wallet.findOne({user:userId})
-            if(wallet){
-               wallet.balance += order.totalPrice
-               wallet.walletData.push({
-                amount:order.totalPrice,
-                date:Date.now(),
-                paymentMethod:'Razorpay'
-               })
-               await wallet.save()
-            }else{
+            const wallet = await Wallet.findOne({ user: userId })
+            if (wallet) {
+                wallet.balance += order.totalPrice
+                wallet.walletData.push({
+                    amount: order.totalPrice,
+                    date: Date.now(),
+                    paymentMethod: 'Razorpay'
+                })
+                await wallet.save()
+            } else {
                 const newWallet = new Wallet({
                     user: userId,
                     balance: order.totalPrice,
@@ -402,22 +402,25 @@ const orderCancel = async (req, res) => {
 const viewProducrDetails = async (req, res) => {
     try {
         const user = req.session.user._id
-        
+
         const userId = await User.findById({ _id: user })
         const orderId = req.params.id
-        
+
         const orderedItems = await Order.findById(orderId).populate(
             'products.productId'
         )
-     
-        const cartItems = await Cart.find({userId:user});
-        let cartTotalCount = 0; 
+       
+        // orderedItems.offerPrice = orderedItems.products[0].productId.price - ((orderedItems.products[0].productId.price * orderedItems.products[0].productId.discount) / 100)
+        // console.log(orderedItems);
+
+        const cartItems = await Cart.find({ userId: user });
+        let cartTotalCount = 0;
         cartItems.forEach(cart => {
-            cartTotalCount += cart.items.length; 
+            cartTotalCount += cart.items.length;
         });
 
 
-        res.render("user/Page-viewDetails", { orderedItems: orderedItems, userId: userId,cartTotalCount:cartTotalCount })
+        res.render("user/Page-viewDetails", { orderedItems: orderedItems, userId: userId, cartTotalCount: cartTotalCount })
     } catch (error) {
         console.log(error);
     }
@@ -428,21 +431,21 @@ const orderReturn = async (req, res) => {
     try {
         const orderId = req.params.orderId
         const productId = req.params.productId
-       
-       
+
+
         const order = await Order.findById(orderId);
         const product = order.products.find(product => product._id.toString() === productId)
 
         if (!product) {
             return res.status(404).json({ success: false, error: "Product not found in the order" });
         }
-       
-            if (product.orderStatus === "delivered") {
-                product.orderStatus = "return pending";
-      
-            } else if (product.orderStatus === "return pending") {
-                product.orderStatus = "returned";
-            }
+
+        if (product.orderStatus === "delivered") {
+            product.orderStatus = "return pending";
+
+        } else if (product.orderStatus === "return pending") {
+            product.orderStatus = "returned";
+        }
         await order.save();
 
         res.json({ success: true });
@@ -455,7 +458,7 @@ const orderReturn = async (req, res) => {
 
 const walletPost = (req, res) => {
     try {
-        
+
     } catch (error) {
         console.log(errror);
     }
