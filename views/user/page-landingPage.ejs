@@ -219,13 +219,13 @@
                                 <div class="header-action-icon-2">
                                     <a href="/view-Wishlist">
                                         <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue"><%= wishlistCount %></span>
+                                        <span class="pro-count blue"></span>
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue"><%= cartTotalCount %></span>
+                                        <span class="pro-count blue">></span>
                                     </a> 
                                 </div>
 
@@ -243,7 +243,7 @@
         <li class="dropdown nav-item">
             <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
                 id="dropdownAccount" aria-expanded="false">
-               <button class="btn  btn-primary ">hey.. <%= userName %></button>
+               <button class="btn  btn-primary ">hey.. </button>
             </a>
             <div class="dropdown-menu dropdown-menu-end"
                 aria-labelledby="dropdownAccount">
@@ -443,61 +443,58 @@
                         <div class="tab-content wow fadeIn animated" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
                                 <div class="row product-grid-4">
-                                    <% if(typeof products !== 'undefined') %>
-                                    <% for(let i = 0; i< products.length; i++){ %>
-                                        <% if(!products.product_status) {%>
-                                    <div class="col-lg-4 col-md-4 col-12 col-sm-6">
-                                        <div class="product-cart-wrap mb-30">
-                                            <div class="product-img-action-wrap">
-                                                <div class="product-img product-img-zoom">
-                                                    <a href="/productView/?id=<%= products[i]._id %>">
-                                                        <img class="default-img" src="public/uploads/<%= products[i].image[0] %>" alt="">
-                                                        <img class="hover-img" src="assets/imgs/shop/product-1-2.jpg" alt="">
-                                                    </a>
+                                    <% if(typeof products !== 'undefined') { %>
+                                        <% for(let i = 0; i < products.length; i++) { %>
+                                            <% if(products[i].product_status) { %>
+                                                <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                                                    <div class="product-cart-wrap mb-30">
+                                                        <div class="product-img-action-wrap">
+                                                            <div class="product-img product-img-zoom">
+                                                                <a href="/productView/?id=<%= products[i]._id %>">
+                                                                    <img class="default-img" src="public/uploads/<%= products[i].image[0] %>" alt="">
+                                                                    <img class="hover-img" src="assets/imgs/shop/product-1-2.jpg" alt="">
+                                                                </a>
+                                                            </div>
+                                                            <div class="product-action-1">
+                                                                <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
+                                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
+                                                                <a aria-label="Compare" class="action-btn hover-up" href="#"><i class="fi-rs-shuffle"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-content-wrap">
+                                                            <div class="product-category">
+                                                                <% if(products[i].category && products[i].category[0] && products[i].category[0].name) { %>
+                                                                    <a href="shop-grid-right.html"><%= products[i].category[0].name %></a>
+                                                                <% } else { %>
+                                                                    <span>No category available</span>
+                                                                <% } %>
+                                                            </div>
+                                                            <h2><a href="shop-product-right.html"><%= products[i].name %></a></h2>
+                                                            <div class="rating-result" title="90%">
+                                                                <% if(products[i].productOffer) { %>
+                                                                    <span><%= products[i].productOffer.discount %>%</span>
+                                                                <% } else { %>
+                                                                    <span><%= products[i].discount %>%</span>
+                                                                <% } %>
+                                                            </div>
+                                                            <div class="product-price">
+                                                                <% if(products[i].productOffer) { %>
+                                                                    <span>₹ <%= products[i].offerPrice %></span>
+                                                                <% } else { %>
+                                                                    <span>₹ <%= products[i].price %></span>
+                                                                <% } %>
+                                                                <span class="old-price">₹ <%= products[i].price %></span>
+                                                            </div>
+                                                            <div class="product-action-1 show">
+                                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="product-action-1">
-                                                    <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
-                                                    <a aria-label="Compare" class="action-btn hover-up" href="#"><i class="fi-rs-shuffle"></i></a>
-                                                </div>
-                                              
-                                            </div>
-                                            <div class="product-content-wrap">
-                                                
-                                                <div class="product-category">
-                                                    <% if (products[i].category && products[i].category[0] && products[i].category[0].name) { %>
-                                                        <a href="shop-grid-right.html"><%= products[i].category[0].name %></a>
-                                                    <% } else { %>
-                                                        <span>No category available</span>
-                                                    <% } %>
-                                                </div>
-                                                
-                                                <h2><a href="shop-product-right.html"><%= products[i].name %></a></h2>
-                                                <div class="rating-result" title="90%">
-                                                    <% if(products[i].productOffer){ %>
-                                                        <span><%= products[i].productOffer.discount %>%</span>
-                                                        <% }else{ %>
-                                                            <span><%= products[i].discount %>%</span>
-                                                            <% } %>
-                                                </div>
-                                                
-                                                
-                                                <div class="product-price">
-
-                                                    <span>₹ <%= products[i].offerPrice  %></span>
-                                                   
-                                                    <span class="old-price">₹ <%= productsPrice[i].price %></span>
-
-                                                    
-                                                </div>
-                                                <div class="product-action-1 show">
-                                                    <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            <% } %>
+                                        <% } %>
                                     <% } %>
-                                    <% } %>
+                                    
                                    
                                 </div>
                                 <!--End product-grid-4-->

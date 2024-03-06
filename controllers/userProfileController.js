@@ -71,7 +71,7 @@ const userProfile = async (req, res) => {
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
 
         const wallet = await Wallet.findOne({ user: userId });
-        console.log(wallet);
+       
 
         // const message = req.flash('message');
         const message = req.flash('message');

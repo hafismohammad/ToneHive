@@ -30,6 +30,11 @@ const orderSchema = new mongoose.Schema({
        productPrice: {
         type : Number
        },
+       cancellationReason:{
+        type: String,
+        maxlength: 20,
+        default: null,
+    },
        orderStatus: {
         type: String,
         enum: [
@@ -54,11 +59,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
        
     },
-    cancellationReason:{
-        type: String,
-        maxlength: 20,
-        default: null,
-    },
+    
     orderStatus: {
         type: String,
         enum: [

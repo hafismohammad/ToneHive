@@ -2,12 +2,14 @@ const User = require("../models/userModel")
 const wishlistModel = require("../models/wishlistModel")
 const Products = require('../models/productModel');
 const Cart = require("../models/cartModel");
-
+const offerModel = require("../models/offerModel")
 const wishlistLoad = async (req, res) => {
     try {
         const userId = req.session.user._id;
-        const userInfo = await User.findOne({ _id: userId });
         
+        // Fetch the user information
+        const userInfo = await User.findOne({ _id: userId });
+
         // Fetch the wishlist data using the aggregation pipeline
         const wishlist = await wishlistModel.aggregate([
             { $match: { user: userId } },
@@ -21,22 +23,74 @@ const wishlistLoad = async (req, res) => {
                     as: 'product'
                 }
             }
-            
-            
         ]);
 
-        const wishlistCount = wishlist.length
+        // Fetch active offer
+        const activeOffer = await offerModel.findOne({ status: true });
+
+        // Calculate offer price for each product in the wishlist
+        for (const item of wishlist) {
+            const product = item.product[0]; // Get the product data from the wishlist item
+
+            // Check if product is defined and has a price
+            if (product && product.price) {
+                let offerPrice = parseInt(product.price); // Default to product price
+                let appliedDiscount = 0; // Track the highest applied discount
+
+                // Check if there is an active product offer
+                if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                    const productDiscount = activeOffer.productOffer.discount;
+                    const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Check if there is an active category offer
+                if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
+                    const categoryDiscount = activeOffer.categoryOffer.discount;
+                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Check if product discount is greater than applied discount
+                if (product.discount > appliedDiscount) {
+                    const discountedPrice = (offerPrice * product.discount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Assign the calculated offer price to the product in the wishlist
+                item.product[0].offerPrice = parseInt(Math.round(offerPrice));
+            } else {
+                // Handle the case where product or product price is undefined
+                console.error('Product or product price is undefined:', product);
+                // For example, you can skip processing this product or set a default offer price
+            }
+        }
+
+        const wishlistCount = wishlist.length;
     
-        const cartItems = await Cart.find({userId:userId});
+        const cartItems = await Cart.find({ userId });
         let cartCount = 0; 
         cartItems.forEach(cart => {
             cartCount += cart.items.length; 
         });
 
         // Pass the userId and wishlist data to the view
-        res.render("user/page-view-wishlist", { userId: userInfo, wishlist: wishlist,wishlistCount:wishlistCount,cartCount:cartCount     });
+        res.render("user/page-view-wishlist", { userId: userInfo, wishlist: wishlist, wishlistCount: wishlistCount, cartCount: cartCount });
     } catch (error) {
         console.log(error);
+        res.status(500).send("Internal Server Error"); // Add proper error handling for the response
     }
 }
 

@@ -31,109 +31,96 @@ const securePassword = async (password) => {
 
 const homeLoad = async (req, res) => {
     try {
-        const userId = req.session.user
-        const user = await User.findById(userId)
+        const userId = req.session.user;
+        const user = await User.findById(userId);
         const userName = user.name;
 
-
         if (req.session.user) {
-            const category = await Category.find({ isList: false })
-
-            // const products = await Product.find({product_status:false})
-            const productData = await Products.aggregate([{
-
-                $lookup: {
-                    from: "categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "category",
-                }
-            },
-            {
-                $match: {
-                    "category.isList": false,
-                    "product_status": true
-                }
-            }
-            ])
-
-
-            const activeProducts = productData
-                .map((item) => {
-                    const category = item.category[0]
-                    if (category && category.isList) {
-
-                        const category = item.category[0]
-                        if (item.product_status) {
-                            return item
-                        }
-                    } else {
-                        return null;
+            const category = await Category.find({ isList: false });
+            const productData = await Products.aggregate([
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "category",
+                        foreignField: "_id",
+                        as: "category",
                     }
-                }).filter(Boolean)
-            // console.log(activeProducts);
+                },
+                {
+                    $match: {
+                        "category.isList": false,
+                        "product_status": true
+                    }
+                }
+            ]);
 
-            const cartItems = await Cart.find({userId:userId});
-            let cartTotalCount = 0; 
+            // Fetch active offer
+            const activeOffer = await offerModel.findOne({ status: true });
+
+            // Fetch products
+            const products = await Products.find({ product_status: true }).populate("category");
+
+       
+            // Calculate offer price for each product
+            for (const product of productData) {
+                let offerPrice = parseInt(product.price); // Default to product price
+                let appliedDiscount = 0; // Track the highest applied discount
+
+                // Check if there is an active product offer
+                if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                    const productDiscount = activeOffer.productOffer.discount;
+                    const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Check if there is an active category offer
+                if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category[0]._id.toString()) {
+                    const categoryDiscount = activeOffer.categoryOffer.discount;
+                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Check if product discount is greater than applied discount
+                if (product.discount > appliedDiscount) {
+                    const discountedPrice = (offerPrice * product.discount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                       
+                    }
+                }
+
+                // Assign the calculated offer price to the product
+                product.offerPrice = parseInt(Math.round(offerPrice));
+            }
+
+
+            // Fetch cart items and calculate total count
+            const cartItems = await Cart.find({ userId });
+            let cartTotalCount = 0;
             cartItems.forEach(cart => {
-                cartTotalCount += cart.items.length; 
+                cartTotalCount += cart.items.length;
             });
-           
-           
-             const wishlistInfo = await wishlistModel.find({ user: user });
 
+            // Fetch wishlist info and calculate total count
+            const wishlistInfo = await wishlistModel.find({ user });
             let wishlistCount = 0;
             wishlistInfo.forEach(wishlist => {
                 wishlistCount += wishlist.products.length;
             });
 
-            for(const product of productData){
-                product.offerPrice = parseInt(Math.round(
-                    parseInt(product.price) - (parseInt(product.price)* product.discount) / 100
-                ))
-            }
-  
-            const activeOffer = await offerModel.find({ status: true });
-
-         
-            
-            const products = await Products.find({ product_status: true }).populate("category")
-        
-            for (const product of products) {
-                const ProductOffer = activeOffer.find((offer) => {
-                    return offer.productOffer.product.equals(product._id);
-                });
-            
-                let categoryOffer;
-                if (product.category[0] && product.category[0]._id) { // Add a check for category existence and _id property
-                    categoryOffer = activeOffer.find((offer) => {
-                        return offer.categoryOffer.category.equals(product.category[0]._id);
-                    });
-                }
-            
-                let offerPrice;
-            
-                if (ProductOffer && categoryOffer) {
-                    if (ProductOffer.productOffer.discount > categoryOffer.categoryOffer.discount) {
-                        offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
-                    } else {
-                        offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
-                    }
-                } else if (ProductOffer) {
-                    offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
-                } else if (categoryOffer) {
-                    offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
-                } else {
-                    offerPrice = product.price;
-                }
-            
-                product.offerPrice = parseInt(Math.round(offerPrice));
-            }
-            
-           
-            res.render("user/page-userHome", { userName: userName, category: category, products: productData, activeProducts: activeProducts,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount,productsPrice:products })
+            // Render the view with data
+            res.render("user/page-userHome", { userName, category, products: productData, cartTotalCount, wishlistCount, productsPrice: products });
         } else {
-            redirect("/")
+            res.redirect("/");
         }
     } catch (error) {
         console.log(error);
@@ -141,23 +128,24 @@ const homeLoad = async (req, res) => {
     }
 }
 
+
 const loginLoad = function (req, res) {
     if (req.session.user) {
         res.redirect("/userHome");
     } else {
         const error = req.query.error
         const message = req.flash('message');
-        res.render("user/page-login", { message: message[0],error:error });
+        res.render("user/page-login", { message: message[0], error: error });
     }
 };
 
 const logedUser = async (req, res) => {
     const logEmail = req.body.email;
     const logPassword = req.body.password;
-    
+
     try {
         const logedUser = await User.findOne({ email: logEmail });
-        
+
         if (logedUser) {
             const comparePass = await bcrypt.compare(logPassword, logedUser.password);
             if (comparePass) {
@@ -285,40 +273,86 @@ const userLogout = (req, res) => {
 
 const productViews = async (req, res) => {
     try {
-        const user = req.session.user
-        const userInfo = await User.findById({ _id: user })
+        const user = req.session.user;
+        const userInfo = await User.findById(user);
 
-        const id = req.query.id
-    
+        const id = req.query.id;
+
+        // Fetch the product data
         const productData = await Products.findOne({ _id: id });
-        if (productData.product_status) {
 
-            const cartItems = await Cart.find({userId:user});
-            let cartTotalCount = 0; 
+        // Check if the product is active
+        if (productData.product_status) {
+            // Fetch cart items and calculate total count
+            const cartItems = await Cart.find({ userId: user });
+            let cartTotalCount = 0;
             cartItems.forEach(cart => {
-                cartTotalCount += cart.items.length; 
+                cartTotalCount += cart.items.length;
             });
 
-
-            
+            // Fetch wishlist info and calculate total count
             const wishlistInfo = await wishlistModel.find({ user: user });
-
             let wishlistCount = 0;
             wishlistInfo.forEach(wishlist => {
                 wishlistCount += wishlist.products.length;
             });
-           
-            productData.offerPrice = parseInt(Math.round(
-                parseInt(productData.price) - (parseInt(productData.price)* productData.discount) / 100
-            ))
-     
-            res.render("user/page-viewProduct", { products: productData, userInfo: userInfo,cartTotalCount:cartTotalCount,wishlistCount:wishlistCount })
-        }
-        res.redirect("/userHome")
-    } catch (error) {
 
+            // Fetch active offer
+            const activeOffer = await offerModel.findOne({ status: true });
+
+            // Calculate offer price for the product
+            let offerPrice = parseInt(productData.price); // Default to product price
+            let appliedDiscount = 0; // Track the highest applied discount
+
+            // Check if there is an active product offer
+            if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === productData._id.toString()) {
+                const productDiscount = activeOffer.productOffer.discount;
+                const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                if (discountedPrice > appliedDiscount) {
+                    offerPrice -= discountedPrice;
+                    appliedDiscount = discountedPrice;
+                }
+            }
+
+            // Check if there is an active category offer
+            if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === productData.category.toString()) {
+                const categoryDiscount = activeOffer.categoryOffer.discount;
+                const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                if (discountedPrice > appliedDiscount) {
+                    offerPrice -= discountedPrice;
+                    appliedDiscount = discountedPrice;
+                }
+            }
+
+            // Check if product discount is greater than applied discount
+            if (productData.discount > appliedDiscount) {
+                const discountedPrice = (offerPrice * productData.discount) / 100;
+
+                if (discountedPrice > appliedDiscount) {
+                    offerPrice -= discountedPrice;
+                    appliedDiscount = discountedPrice;
+                }
+            }
+
+            // Assign the calculated offer price to the product
+            productData.offerPrice = parseInt(Math.round(offerPrice));
+
+            // Render the view with product data and user information
+            res.render("user/page-viewProduct", { products: productData, userInfo: userInfo, cartTotalCount: cartTotalCount, wishlistCount: wishlistCount });
+        } else {
+            // Redirect to userHome if product is not active
+            res.redirect("/userHome");
+        }
+    } catch (error) {
+        console.log(error);
+        // Handle error appropriately
+        res.status(500).send("Internal Server Error");
     }
 }
+
+
 const searchProduct = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -343,7 +377,7 @@ const searchProduct = async (req, res) => {
         }
 
         const searchResults = await Products.aggregate([{ $match: filter }]);
-      
+
         const productData = await Products.aggregate([
             {
                 $lookup: {
@@ -429,6 +463,6 @@ module.exports = {
     userLogout,
     productViews,
     generateRandomOtp,
-     searchProduct,
-   // pageNotFound
+    searchProduct,
+    // pageNotFound
 }

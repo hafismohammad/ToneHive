@@ -447,7 +447,7 @@
                                                                         <th>Total</th>
                                                                         <th>Status</th>
                                                                         <th>Payment Method</th>
-                                                                        <th>Action</th>
+                                                                       
                                                                         <th>View Details</th>
                                                                         <!-- <th>View Details</th> -->
                                                                     </tr>
@@ -465,13 +465,13 @@
                                                                                 <% }else{%>
                                                                                     <td><%= userOrders[i].totalPrice %></td>
                                                                                     <% } %>
-                                                                                <td><%= userOrders[i].orderStatus %></td>
+                                                                                    <td class="text-center">
+                                                                                        <span class="badge rounded-pill  alert-success">
+                                                                                            <%= userOrders[i].orderStatus %>
+                                                                                        </span>
+                                                                                    </td>
                                                                                 <td class="text-center"><%= userOrders[i].paymentMethod %></td>
-                                                                                <% if (userOrders[i].orderStatus !== "cancelled") { %>
-                                                                                    <td><a onclick="cancelOrder('<%= userOrders[i]._id %>')">Cancel</a></td>
-                                                                                <% } else { %>
-                                                                                    <td class="text-danger">cancelled</td>
-                                                                                <% } %>
+                                                                               
                                                                                 <td>
                                                                                     <a href="/vewProductDetails/<%= userOrders[i]._id %>"> <button  class="btn btn-primary btn-sm">View Details</button></a>
                                                                                    
@@ -949,7 +949,7 @@
 </html>
 
 
-
+<!-- 
 <script>
     function cancelOrder(orderId) {
         console.log(orderId);
@@ -966,9 +966,10 @@
                 fetch(`/cancelOrder/${orderId}`, { method: "PATCH" })
                     .then(res => {
                         if (res.ok) {
+                            console.log('res');
                             Swal.fire({
                                 title: `Done`,
-                                text: "You clicked the button!",
+                                text: "You clicked the button !",
                                 icon: "success",
                                 button: false
                             });
@@ -995,7 +996,7 @@
             }
         });
     }
-</script>
+</script> -->
 
 
 <script>

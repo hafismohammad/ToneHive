@@ -698,12 +698,10 @@
 
 
 <script>
-    function cancelOrder(orderId,prodId) {
+    function cancelOrder(orderId,productId) {
         console.log(orderId);
-        console.log(prodId);
         Swal.fire({
             title: "Are you sure?",
-
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: `Yes`,
@@ -711,39 +709,71 @@
             allowOutsideClick: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`/cancelOrder/${orderId}/${prodId}`, { method: "PATCH" })
-                    .then(res => {
-                        if (res.ok) {
-                            Swal.fire({
-                                title: `Done`,
-                                text: "You clicked the button!",
-                                icon: "success",
-                                button: false
-                            });
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000)
-
-                        } else {
-                            swal({
-                                title: "somthing went wrong!",
-                                text: "You clicked the button!",
-                                icon: "error",
-                            });
+                Swal.fire({
+                    title: 'Enter cancellation reason',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                    cancelButtonText: 'Cancel',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (reason) => {
+                        console.log(reason);
+                        if (!reason) {
+                            return; // Cancelled reason input
                         }
-                    })
-
-
+                        if (reason.length > 20) {
+                            swal("The reason should be up to 20 characters long.");
+                            return;
+                        }
+                                        
+                        return fetch(`/cancelOrder/${orderId}/${productId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ reason: reason }) // Send reason to server
+                        })
+                        
+                        .then(response => {
+                            if (!response.ok) {
+                                console.log('dfs');
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(`Request failed: ${error}`)
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: `Done`,
+                            text: "You clicked the button!",
+                            icon: "success",
+                            button: false
+                        });
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000)
+                    }
+                });
             } else {
                 swal({
-                    title: "canceled !",
+                    title: "Cancelled",
                     text: "You clicked the button!",
-                    icon: "cancel",
+                    icon: "info",
                 });
             }
         });
     }
 </script>
+
+
 
     <script>
         function returnOrder(orderId,prodId) {

@@ -7,46 +7,51 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 const Products = require('../models/productModel');
 const couponModel = require("../models/couponModel")
+const offerModel = require("../models/offerModel")
 
-const {KEY_ID,KEY_SECRET} = process.env
+const { KEY_ID, KEY_SECRET } = process.env
 
 const Razorpay = require('razorpay');
 
 var razorpay = new Razorpay({
-    key_id:KEY_ID,
-    key_secret:KEY_SECRET
+    key_id: KEY_ID,
+    key_secret: KEY_SECRET
 })
 
 const createOrder = async (req, res) => {
     try {
         const amount = parseInt(req.body.totalPrice);
-        
 
 
-       const order = await razorpay.orders.create({
-        amount: amount * 100,
-        currency: "INR",
-        receipt: req.session.user
-       })
- 
-       res.json({orderId:order})
- 
+
+        const order = await razorpay.orders.create({
+            amount: amount * 100,
+            currency: "INR",
+            receipt: req.session.user
+        })
+
+        res.json({ orderId: order })
+
     } catch (error) {
-     console.log(error);
+        console.log(error);
     }
 }
 
 const checkoutLoad = async (req, res) => {
     try {
         const message = req.query.message;
-        const success = req.query.success
-   
-        if (!req.session.user || !req.session.user._id) {
+        const success = req.query.success;
 
+        if (!req.session.user || !req.session.user._id) {
             throw new Error('User ID not found in session');
         }
-        const userId = req.session.user._id
-        const userInfo = await User.findOne(userId)
+
+        const userId = req.session.user._id;
+
+        // Fetch user information
+        const userInfo = await User.findOne(userId);
+
+        // Fetch user addresses
         const userAddress = await User.aggregate([
             { $match: { _id: userId } },
             { $unwind: "$address" },
@@ -64,19 +69,11 @@ const checkoutLoad = async (req, res) => {
             }
         ]);
 
-
+        // Fetch cart items
         const cartItems = await Cart.aggregate([
-            {
-                $match: { userId: userId }
-            },
-            {
-                $unwind: '$items'
-            },
-            {
-                $project: {
-                    items: 1
-                }
-            },
+            { $match: { userId: userId } },
+            { $unwind: '$items' },
+            { $project: { items: 1 } },
             {
                 $lookup: {
                     from: 'products',
@@ -84,52 +81,113 @@ const checkoutLoad = async (req, res) => {
                     foreignField: '_id',
                     as: 'productDetails'
                 }
-            },
-
+            }
         ]);
+
+        // Fetch wishlist items
+        //  const wishlist = await wishlistModel.find({ user: userId });
+
+
+        // Fetch active offer
+        const activeOffer = await offerModel.findOne({ status: true });
+
+        // Calculate offer price for each product in the cart
         let totalCartAmount = 0;
         const populatedCartItems = cartItems.map(cartItem => {
-            const product = cartItem.productDetails[0];    
-            product.discountedPrice = product.price - (product.price * (product.discount / 100));
-            const subtotal = product.discountedPrice * cartItem.items.quantity;
-            totalCartAmount += subtotal;
-          
-           
-            return {
-                ...cartItem,
-                productDetails: product,
-                subtotal: subtotal
-            };
-        });
+            const product = cartItem.productDetails[0];
+            let offerPrice = parseInt(product.price); // Default to product price
+
+            // Check if product is defined and has a price
+            if (product && product.price) {
+                let appliedDiscount = 0; // Track the highest applied discount
+
+                // Check if there is an active product offer
+                if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                    const productDiscount = activeOffer.productOffer.discount;
+                    const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+                // Check if there is an active category offer
+                if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
+                    const categoryDiscount = activeOffer.categoryOffer.discount;
+                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Check if there is an active category offer
+                if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
+                    const categoryDiscount = activeOffer.categoryOffer.discount;
+                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+                // Check if product discount is greater than applied discount
+                if (product.discount > appliedDiscount) {
+                    const discountedPrice = (offerPrice * product.discount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                // Calculate subtotal after applying discounts and round the amounts
+                const subtotal = Math.round(offerPrice * cartItem.items.quantity);
+                totalCartAmount += subtotal;
+
+                return {
+                    ...cartItem,
+                    productDetails: product,
+                    subtotal: subtotal
+                };
+
+            } else {
+                // Handle the case where product or product price is undefined
+                console.error('Product or product price is undefined:', product);
+                // For example, you can skip processing this product or set a default offer price
+                return null; // Skip this product
+            }
+        }).filter(Boolean); // Remove null values from the array
+
+        // Fetch total cart price from the database
         const useCart = await Cart.findOne({ userId: userId });
-        // Assuming `useCart` represents the user's cart retrieved from the database
         const totalCartPrice = useCart.totalPrice;
 
+        // Fetch coupons
+        const coupons = await couponModel.find();
 
-
-
-        const coupons = await couponModel.find()
-
-        let cartTotalCount = 0;
-        const cartItemss = await Cart.find({ userId: userId });
+        // Calculate cart total count
         const cartCount = cartItems.length;
 
-        res.render("user/page-checkout",
-            {
-                userId: userId,
-                userAddress: userAddress,
-                cartItems: populatedCartItems,
-                totalCartPrice:totalCartAmount,
-                userInfo: userInfo,
-                coupons: coupons,
-                cartCount: cartCount,
-                message: message,
-                success: success
-            })
+        // Render the checkout page with data
+        res.render("user/page-checkout", {
+            userId: userId,
+            userAddress: userAddress,
+            cartItems: populatedCartItems,
+            totalCartPrice: totalCartAmount,
+            userInfo: userInfo,
+            coupons: coupons,
+            cartCount: cartCount,
+            message: message,
+            success: success
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        res.status(500).send("Internal server error");
     }
-}
+};
+
 
 const addAddress = async (req, res) => {
     try {
@@ -281,11 +339,11 @@ const placeOrderPost = async (req, res) => {
         for (const product of cartProducts) {
             await Products.updateOne({ _id: product.productId }, { $inc: { quantity: -product.quantity } });
         }
-    
+
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
-   
-       
-    
+
+
+
         const date = new Date();
         const momentDate = moment(date);
         const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
@@ -301,8 +359,8 @@ const placeOrderPost = async (req, res) => {
                 discountedPrice = (totalCartPrice * (100 - couponDiscount)) / 100;
             }
         }
-console.log('heeeeere',coupon.coupon );
-                   
+        console.log('heeeeere', coupon.coupon);
+
         await Order.create({
             address: addressData.address[0],
             userId: userId,
@@ -311,12 +369,12 @@ console.log('heeeeere',coupon.coupon );
             totalPrice: discountedPrice, // Use the discounted price
             orderStatus: status,
             createdAt: formattedDate,
-            coupon: coupon ? coupon.coupon : null 
+            coupon: coupon ? coupon.coupon : null
         });
 
         await Cart.deleteOne({ userId: userId });
 
-        res.json({success:true});
+        res.json({ success: true });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to place the order.' });
@@ -325,12 +383,12 @@ console.log('heeeeere',coupon.coupon );
 
 
 
-const orderPlace  = async (req, res) => {
+const orderPlace = async (req, res) => {
     try {
         const userId = req.session.user._id
         const lastOrder = await Order.findOne({ userId: userId }).sort({ createdAt: -1 });
-      
-        res.render('user/page-orderSuccess',{lastOrder})
+
+        res.render('user/page-orderSuccess', { lastOrder })
     } catch (error) {
         console.log(error);
     }
@@ -347,14 +405,14 @@ const paymentSuccess = (req, res) => {
 
         if (hash === signature) {
             console.log('success');
-            res.status(200).json({ success: true, message: 'Payment successful' }); 
+            res.status(200).json({ success: true, message: 'Payment successful' });
         } else {
             console.log('error');
-            res.status(400).json({ success: false, message: 'Invalid payment details' }); 
+            res.status(400).json({ success: false, message: 'Invalid payment details' });
         }
     } catch (error) {
         console.log(error);
-        res.status(500).json({ success: false, message: 'Internal server error' }); 
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
 
