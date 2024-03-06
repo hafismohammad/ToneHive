@@ -12,6 +12,7 @@ const offerModel = require("../models/offerModel")
 const { KEY_ID, KEY_SECRET } = process.env
 
 const Razorpay = require('razorpay');
+const { log } = require('node:console');
 
 var razorpay = new Razorpay({
     key_id: KEY_ID,
@@ -122,16 +123,6 @@ const checkoutLoad = async (req, res) => {
                     }
                 }
 
-                // Check if there is an active category offer
-                if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
-                    const categoryDiscount = activeOffer.categoryOffer.discount;
-                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
-
-                    if (discountedPrice > appliedDiscount) {
-                        offerPrice -= discountedPrice;
-                        appliedDiscount = discountedPrice;
-                    }
-                }
                 // Check if product discount is greater than applied discount
                 if (product.discount > appliedDiscount) {
                     const discountedPrice = (offerPrice * product.discount) / 100;
@@ -161,8 +152,20 @@ const checkoutLoad = async (req, res) => {
         }).filter(Boolean); // Remove null values from the array
 
         // Fetch total cart price from the database
+        let totalCartPrice = 0; // Initialize totalCartPrice
+
+        // Fetch total cart price from the database
         const useCart = await Cart.findOne({ userId: userId });
-        const totalCartPrice = useCart.totalPrice;
+
+        // Check if useCart exists and has the totalPrice property
+        if (useCart && useCart.totalPrice !== undefined) {
+            // Access the totalPrice property
+            totalCartPrice = useCart.totalPrice;
+        } else {
+            // Handle the case when useCart or totalPrice is null or undefined
+            console.error("useCart or totalPrice is null or undefined");
+            // For example, you can set a default value for totalCartPrice
+        }
 
         // Fetch coupons
         const coupons = await couponModel.find();
@@ -175,7 +178,7 @@ const checkoutLoad = async (req, res) => {
             userId: userId,
             userAddress: userAddress,
             cartItems: populatedCartItems,
-            totalCartPrice: totalCartAmount,
+            totalCartPrice: totalCartAmount, // Pass totalCartAmount instead of totalCartPrice
             userInfo: userInfo,
             coupons: coupons,
             cartCount: cartCount,
@@ -187,6 +190,7 @@ const checkoutLoad = async (req, res) => {
         res.status(500).send("Internal server error");
     }
 };
+
 
 
 const addAddress = async (req, res) => {
@@ -298,14 +302,17 @@ const edittedAddress = async (req, res) => {
 //         res.status(500).json({ message: "Internal server error" });
 //     }
 // };
+
 const placeOrderPost = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
 
+        // Fetch user address
         const addressData = await User.findOne({ _id: userId, 'address._id': address }, { 'address.$': 1, _id: 0 });
 
+        // Fetch cart items
         const cartItems = await Cart.aggregate([
             { $match: { userId: userId } },
             { $unwind: '$items' },
@@ -313,65 +320,94 @@ const placeOrderPost = async (req, res) => {
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
         ]);
 
+        // Initialize total cart price
         let totalCartPrice = 0;
-        const populatedCartItems = cartItems.map(cartItem => {
-            const product = cartItem.productDetails[0];
-            const subtotal = product.price * cartItem.items.quantity;
-            totalCartPrice += subtotal;
-            return { ...cartItem, productDetails: product, subtotal: subtotal };
-        });
 
-        const cartProducts = await Cart.aggregate([
-            { $match: { userId: userId } },
-            { $unwind: '$items' },
-            { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } },
-            {
-                $project: {
-                    productId: "$items.productId",
-                    quantity: "$items.quantity",
-                    price: "$items.price",
-                    _id: 0
+        // Calculate offer price for each product in the cart
+        for (const cartItem of cartItems) {
+            const product = cartItem.productDetails[0];
+            let offerPrice = product.price; // Initialize offer price with product price
+            let appliedDiscount = 0; // Track the highest applied discount
+
+            // Check if there is an active offer
+            const activeOffer = await offerModel.findOne({ status: true });
+
+            // Apply offer discount based on the offer type (product or category)
+            if (activeOffer) {
+                if (activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                    const productDiscount = activeOffer.productOffer.discount;
+                    const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
+                }
+
+                if (activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
+                    const categoryDiscount = activeOffer.categoryOffer.discount;
+                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                    if (discountedPrice > appliedDiscount) {
+                        offerPrice -= discountedPrice;
+                        appliedDiscount = discountedPrice;
+                    }
                 }
             }
-        ]);
+
+            if (product.discount > appliedDiscount) {
+                const productDiscountedPrice = Math.round((offerPrice * product.discount) / 100);
+            
+                if (productDiscountedPrice > appliedDiscount) {
+                    offerPrice -= productDiscountedPrice;
+                    appliedDiscount = productDiscountedPrice;
+                }
+            }
+            
+
+            // Calculate subtotal for the product
+            const subtotal = offerPrice * cartItem.items.quantity;
+            totalCartPrice += subtotal;
+
+            // Update the product details with offer price and subtotal
+            cartItem.productDetails[0].offerPrice = offerPrice;
+            cartItem.subtotal = subtotal;
+
+            cartItem.productDetails[0].productPrice = product.price;
+            cartItem.productDetails[0].productName = product.name;
+            cartItem.productDetails[0].buyerName = req.session.user.name;
+            
+        }
 
         // Decrease product quantity
-        for (const product of cartProducts) {
-            await Products.updateOne({ _id: product.productId }, { $inc: { quantity: -product.quantity } });
+        for (const cartItem of cartItems) {
+            await Products.updateOne({ _id: cartItem.productDetails[0]._id }, { $inc: { quantity: -cartItem.items.quantity } });
         }
+       
 
+        // Define order status
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
 
-
-
-        const date = new Date();
-        const momentDate = moment(date);
-        const formattedDate = momentDate.format('YYYY-MM-DD HH:mm:ss');
-
-        const coupon = await Cart.findOne({ userId: userId }, { coupon: 1, _id: 0 });
-        let discountedPrice = totalCartPrice; // Initialize discounted price with total cart price
-        if (coupon && coupon.coupon) {
-            const couponCode = coupon.coupon;
-            const couponInfo = await couponModel.findOne({ code: couponCode }, { discount: 1, _id: 0 });
-            if (couponInfo && couponInfo.discount) {
-                const couponDiscount = couponInfo.discount;
-                // Calculate the discounted price
-                discountedPrice = (totalCartPrice * (100 - couponDiscount)) / 100;
-            }
-        }
-        console.log('heeeeere', coupon.coupon);
-
+       
         await Order.create({
             address: addressData.address[0],
             userId: userId,
             paymentMethod: paymentMethod,
-            products: cartProducts,
-            totalPrice: discountedPrice, // Use the discounted price
+            products: cartItems.map(item => ({ 
+                productId: item.productDetails[0]._id, 
+                quantity: item.items.quantity, 
+                price: item.productDetails[0].price,
+                productPrice: item.productDetails[0].offerPrice,
+                productName: item.productDetails[0].productName,
+                buyerName: item.productDetails[0].buyerName
+            })),
+            totalPrice: totalCartPrice,
             orderStatus: status,
-            createdAt: formattedDate,
-            coupon: coupon ? coupon.coupon : null
+            createdAt: new Date(),
+            coupon: null 
         });
 
+        // Clear the cart after placing the order
         await Cart.deleteOne({ userId: userId });
 
         res.json({ success: true });
@@ -379,7 +415,8 @@ const placeOrderPost = async (req, res) => {
         console.log(error);
         res.status(500).json({ error: 'Failed to place the order.' });
     }
-}
+};
+
 
 
 

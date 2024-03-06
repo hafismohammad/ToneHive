@@ -3,6 +3,8 @@ const wishlistModel = require("../models/wishlistModel")
 const Products = require('../models/productModel');
 const Cart = require("../models/cartModel");
 const offerModel = require("../models/offerModel")
+
+
 const wishlistLoad = async (req, res) => {
     try {
         const userId = req.session.user._id;
