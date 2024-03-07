@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const Products = require('../models/productModel');
 const couponModel = require("../models/couponModel")
 const offerModel = require("../models/offerModel")
+const { v4: uuidv4 } = require('uuid');
 
 const { KEY_ID, KEY_SECRET } = process.env
 
@@ -152,7 +153,7 @@ const checkoutLoad = async (req, res) => {
         }).filter(Boolean); // Remove null values from the array
 
         // Fetch total cart price from the database
-        let totalCartPrice = 0; // Initialize totalCartPrice
+        let totalCartPrice = 0; 
 
         // Fetch total cart price from the database
         const useCart = await Cart.findOne({ userId: userId });
@@ -160,7 +161,8 @@ const checkoutLoad = async (req, res) => {
         // Check if useCart exists and has the totalPrice property
         if (useCart && useCart.totalPrice !== undefined) {
             // Access the totalPrice property
-            totalCartPrice = useCart.totalPrice;
+            totalCartPrice = useCart.totalPrice 
+          
         } else {
             // Handle the case when useCart or totalPrice is null or undefined
             console.error("useCart or totalPrice is null or undefined");
@@ -176,9 +178,11 @@ const checkoutLoad = async (req, res) => {
         // Render the checkout page with data
         res.render("user/page-checkout", {
             userId: userId,
+            useCart:useCart,
             userAddress: userAddress,
             cartItems: populatedCartItems,
-            totalCartPrice: totalCartAmount, // Pass totalCartAmount instead of totalCartPrice
+            totalCartPrice: totalCartAmount,
+            totalPrice:totalCartPrice, 
             userInfo: userInfo,
             coupons: coupons,
             cartCount: cartCount,
@@ -288,27 +292,20 @@ const edittedAddress = async (req, res) => {
     }
 };
 
+function generateOrderId() {
+    // Generate a random 6-digit number
+    const generatedId = Math.floor(100000 + Math.random() * 900000); // Random number between 100000 and 999999
 
-// const deleteAddress = async (req, res) => {
-//     try {
-//         const id = req.params.id;
-//         console.log(id);
-//        await AddreddModel.deleteMany({_id:id})
+    return generatedId.toString();
 
-
-//         res.status(200).json({ message: "Address deleted successfully" });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ message: "Internal server error" });
-//     }
-// };
+}
 
 const placeOrderPost = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
-
+        const userInfo = await User.findOne({_id:userId})
         // Fetch user address
         const addressData = await User.findOne({ _id: userId, 'address._id': address }, { 'address.$': 1, _id: 0 });
 
@@ -320,6 +317,7 @@ const placeOrderPost = async (req, res) => {
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
         ]);
 
+        const cartCoupon = await Cart.findOne({userId:userId})
         // Initialize total cart price
         let totalCartPrice = 0;
 
@@ -332,65 +330,90 @@ const placeOrderPost = async (req, res) => {
             // Check if there is an active offer
             const activeOffer = await offerModel.findOne({ status: true });
 
-            // Apply offer discount based on the offer type (product or category)
+            // Apply offer discount based on active offer
             if (activeOffer) {
+                // Apply discount if product-specific offer exists and matches the current product
+                // Apply discount if product-specific offer exists and matches the current product
                 if (activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
                     const productDiscount = activeOffer.productOffer.discount;
-                    const discountedPrice = (offerPrice * productDiscount) / 100;
+                    const discountedPrice = Math.round((offerPrice * productDiscount) / 100); // Round the discounted price
 
                     if (discountedPrice > appliedDiscount) {
                         offerPrice -= discountedPrice;
                         appliedDiscount = discountedPrice;
+                  
                     }
                 }
 
+                // Apply discount if category-specific offer exists and matches the current product category
                 if (activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
                     const categoryDiscount = activeOffer.categoryOffer.discount;
-                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
+                    const discountedPrice = Math.round((offerPrice * categoryDiscount) / 100); // Round the discounted price
 
                     if (discountedPrice > appliedDiscount) {
                         offerPrice -= discountedPrice;
                         appliedDiscount = discountedPrice;
                     }
                 }
+
             }
 
+            // Apply product discount
             if (product.discount > appliedDiscount) {
                 const productDiscountedPrice = Math.round((offerPrice * product.discount) / 100);
-            
+
                 if (productDiscountedPrice > appliedDiscount) {
                     offerPrice -= productDiscountedPrice;
                     appliedDiscount = productDiscountedPrice;
                 }
             }
-            
 
             // Calculate subtotal for the product
-            const subtotal = offerPrice * cartItem.items.quantity;
-            totalCartPrice += subtotal;
+            const subtotal = Math.round(offerPrice * cartItem.items.quantity);
+totalCartPrice += subtotal;
+
 
             // Update the product details with offer price and subtotal
             cartItem.productDetails[0].offerPrice = offerPrice;
             cartItem.subtotal = subtotal;
 
-            cartItem.productDetails[0].productPrice = product.price;
+            cartItem.productDetails[0].productPrice = product.offerPrice;
+            console.log(product.offerPrice);
             cartItem.productDetails[0].productName = product.name;
-            cartItem.productDetails[0].buyerName = req.session.user.name;
-            
+            cartItem.productDetails[0].buyerName = userInfo;
         }
+        const cartPrice = await Cart.findOne({ userId: userId });
+
+        if (cartPrice.coupon !== null) {
+            // Iterate through each item in the cart and update the product price
+            cartPrice.items.forEach(item => {
+                // Check if product details exist
+                if (item.productDetails) {
+                    // Update the product price with the total price from the cart
+                    item.productDetails.productPrice = cartPrice.totalPrice;
+                }
+            });
+        }
+        
+        // console.log('Total Price:', cartPrice.totalPrice);
+        
 
         // Decrease product quantity
         for (const cartItem of cartItems) {
             await Products.updateOne({ _id: cartItem.productDetails[0]._id }, { $inc: { quantity: -cartItem.items.quantity } });
         }
-       
+
 
         // Define order status
         const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
 
-       
+        const generatedId = generateOrderId();
+
+    
+
         await Order.create({
             address: addressData.address[0],
+            orderId: generatedId,
             userId: userId,
             paymentMethod: paymentMethod,
             products: cartItems.map(item => ({ 
@@ -401,12 +424,13 @@ const placeOrderPost = async (req, res) => {
                 productName: item.productDetails[0].productName,
                 buyerName: item.productDetails[0].buyerName
             })),
-            totalPrice: totalCartPrice,
+            totalPrice: cartCoupon ?  cartCoupon.totalPrice : totalCartPrice,
+            couponPrice: cartCoupon ? cartCoupon.totalPrice : 0,
             orderStatus: status,
             createdAt: new Date(),
-            coupon: null 
+            coupon: cartCoupon ? cartCoupon.coupon : null 
         });
-
+        
         // Clear the cart after placing the order
         await Cart.deleteOne({ userId: userId });
 
@@ -460,7 +484,7 @@ module.exports = {
     addAddress,
     editAddressLoad,
     edittedAddress,
-    // deleteAddress,
+    generateOrderId,
     placeOrderPost,
     orderPlace,
     createOrder,

@@ -34,6 +34,8 @@ const addCouponLoad = (req, res) => {
 
 const voucher = require('voucher-code-generator');
 const { render } = require("ejs");
+const Order = require("../models/orderModel");
+const offerModel = require("../models/offerModel");
 
 const postCoupon = async (req, res) => {
     try {
@@ -62,19 +64,21 @@ const applyCoupon = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const { totalCartPrice, couponCode } = req.body;
-        console.log(totalCartPrice)
+        // console.log(totalCartPrice)
         const coupon = await couponModel.findOne({ code: couponCode });
 
         if (coupon && coupon.isActive === 'Active') {
             console.log(coupon.usedBy.includes(userId))
             if (!coupon.usedBy.includes(userId)) {
                 let cart = await Cart.findOne({ userId: userId });
-                console.log(cart);
+                
                 if (cart) {
                     const discountAmount = (totalCartPrice * coupon.discount) / 100;
                     const discountedPrice = totalCartPrice - discountAmount;
                     cart.totalPrice = discountedPrice;
+                    cart.discountAmount = discountAmount
                     cart.coupon = couponCode;
+                   
                     await cart.save();
 
                     coupon.usedBy.push(userId);
@@ -97,6 +101,41 @@ const applyCoupon = async (req, res) => {
 }
 
 
+const removeCoupon = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const cartTotalPrice = req.params.tPrice;
+
+        // Find the user's cart
+        const userCart = await Cart.findOne({ userId: userId });
+
+        if (!userCart) {
+            return res.status(404).json({ error: 'User cart not found.' });
+        }
+
+        // Calculate old price including discount
+        const oldPrice = userCart.totalPrice + userCart.discountAmount;
+
+        // Remove coupon code and update total price
+        await Cart.findOneAndUpdate(
+            { userId: userId },
+            { $set: { totalPrice: oldPrice }, $unset: { discountAmount: 1, coupon: 1 } }
+        );
+
+        // Find and remove the coupon used by the user
+        await Coupon.findOneAndUpdate(
+            { code: userCart.coupon },
+            { $pull: { usedBy: userId } }
+        );
+
+        // Send a success response back to the client
+        return res.status(200).json({ message: 'Coupon removed successfully.', oldPrice: oldPrice });
+    } catch (error) {
+        console.error(error);
+        // Handle any unexpected errors and send an error response
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
 
 
 const deleteCoupon = async (req, res) => {
@@ -150,6 +189,7 @@ const editCouponPost = async (req, res) => {
 };
 
 
+
 module.exports = {
     couponsLoad,
     addCouponLoad,
@@ -158,5 +198,6 @@ module.exports = {
     applyCoupon,
     deleteCoupon,
     editCouponLoad,
-    editCouponPost
+    editCouponPost,
+    removeCoupon
 };

@@ -220,7 +220,7 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>#ID</th>
+                                    <th>Order Id</th>
                                     <th class="text-center" scope="col">NAME</th>
                                     <th class="text-center" scope="col">EMAIL</th>
                                     <th class="text-center" scope="col">PAYMENT METHOD</th>
@@ -237,7 +237,7 @@
                               
                                     <% for (let i = orderDetails.length - 1; i >= 0; i--) { %>
                                 <tr>
-                                    <td>0901</td>
+                                    <td><%= orderDetails[i].orderId %></td>
                                     <!-- Accessing user details from userId field -->
                                     <td class="text-center"><b><%= orderDetails[i].userId.name %></b></td>
                                     <td class="text-center"><%= orderDetails[i].userId.email %></td>

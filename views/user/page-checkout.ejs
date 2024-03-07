@@ -469,18 +469,26 @@
                                         </div>
                                         <div class="panel-collapse collapse coupon_form " id="coupon">
                                             <div class="panel-body">
-                                                <p class="mb-30 font-sm">If you have a coupon code, please apply it
-                                                    below.</p>
+                                                
 
                                                 
+                                                   
                                                     <div class="form-group">
-                                                        <input id="couponCode" name="couponCode" type="text"
-                                                            placeholder="Enter Coupon Code...">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button class="btn btn-md" type="submit"
-                                                            onclick="applyCoupon('<%= userId %>','<%= totalCartPrice %>');">Apply
-                                                            Coupon</button>
+                                                        <% if(useCart.coupon != null) {%>
+                                                            <p class="mb-30 font-sm">Remove Coupon</p>
+                                                            <button onclick="removeCoupon('<%= userId %>','<%= totalPrice %>')" class="btn btn-danger ml-5">Remove Coupon</button>
+                                                      
+                                                            <% } else {%>
+                                                                <p class="mb-30 font-sm">If you have a coupon code, please apply it
+                                                                    below.</p>
+                                                                <div class="form-group">
+                                                                    <input id="couponCode" name="couponCode" type="text"
+                                                                        placeholder="Enter Coupon Code...">
+                                                                </div>
+                                                                <button class="btn btn-md" type="submit"
+                                                                onclick="applyCoupon('<%= userId %>','<%= totalCartPrice %>');">Apply
+                                                                Coupon</button>
+                                                     <% } %>
                                                     </div>
 
                                             </div>
@@ -711,7 +719,11 @@
                                                                     <td colspan="2" class="product-subtotal"><span
                                                                             id="totalAmount"
                                                                             class="font-xl text-brand fw-900">
-                                                                            <%= totalCartPrice %>
+                                                                            <% if(useCart.coupon) {%>
+                                                                                <%= totalPrice %>
+                                                                                <% }else{ %>
+                                                                                <%= totalCartPrice %>
+                                                                            <% } %>
                                                                         </span></td>
                                                                 </tr>
 
@@ -1392,22 +1404,20 @@
                     }).showToast();
                     setTimeout(()=>{
                         window.location.reload()
-                    },5000)
+                    },1000)
                 }
-            //     if (res.status) {
-            //     console.log('Coupon applied successfully');
-            //     document.getElementById('couponApplyFail').classList.add('d-none');
-            //     document.getElementById('couponApplySuccess').classList.remove('d-none');
-            //     document.getElementById('couponApplySuccess').innerHTML = res.message;
-            //     document.getElementById('discount').innerHTML = '-' + res.discount;
-            //     document.getElementById('totalAmount').innerHTML = '₹' + res.cart.totalAmount;
-            // } else {
-            //     console.log('Failed to apply coupon:', res.message);
-            //     document.getElementById('couponApplySuccess').classList.add('d-none');
-            //     document.getElementById('couponApplyFail').classList.remove('d-none');
-            //     document.getElementById('couponApplyFail').innerHTML = res.message;
-            // } 
+         
             }
+        })
+    }
+</script>
+
+<script>
+    function removeCoupon(userId, totalPrice) {
+   
+        fetch(`/removeCoupon/${userId}/${totalPrice}`,{method:'PATCH'})
+        .then(res => {
+            window.location.reload();
         })
     }
 </script>

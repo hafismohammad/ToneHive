@@ -274,8 +274,7 @@
                                             <th>Order Date</th>
                                             <th>Product</th>
                                             <th>Quantity</th>
-                                            <th>Payment Method</th>
-                                            <th>Order Status</th>
+                                            <th>Payment Method</th>                                          
                                             <th>Total Amount</th>
                                             <th>Discount</th>
                                             <th>Coupon</th>
@@ -285,12 +284,12 @@
                                         <% for (let i = 0; i < orders.length; i++) { %>
                                             <tr>
                                                 <td><%= i + 1 %></td>
-                                                <td><%= orders[i]._id %></td>
+                                                <td> <%= orders[i].orderId %></td>
                                                 <td><%= orders[i].userId.name %></td>
                                                 <td><%= orders[i].createdAt.toLocaleDateString() %></td>
                                                 <td>
                                                     <% for (let j = 0; j < orders[i].products.length; j++) { %>
-                                                        <%= orders[i].products[j].productId.name %><br>
+                                                        <%= orders[i].products[0].productName %><br>
                                                     <% } %>
                                                 </td>
                                                 <td>
@@ -299,7 +298,6 @@
                                                     <% } %>
                                                 </td>
                                                 <td><%= orders[i].paymentMethod %></td> 
-                                                <td><%= orders[i].orderStatus %></td> 
                                                 <td><%= orders[i].totalPrice %></td>
                                                 <td>
                                                 <% for (let j = 0; j < orders[i].products.length; j++) { %>

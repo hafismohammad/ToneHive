@@ -28,10 +28,13 @@
             </svg>
         </div>
         <div class="text-center">
-            <h1>Order Placed SuccessFully !</h1>
-            <a href="/userHome" class="btn btn-outline-success">continue Shopping</a>
-            <a href="/vewProductDetails/<%= lastOrder._id  %>" class="btn btn-outline-success">View Orders</a>
+            <h1>Order Placed Successfully!</h1>
+            <a href="/userHome" class="btn btn-outline-success">Continue Shopping</a>
+            <% if (lastOrder) { %>
+                <a href="/vewProductDetails/<%= lastOrder._id  %>" class="btn btn-outline-success">View Orders</a>
+            <% } %>
         </div>
+        
     </div>
 </div>
 

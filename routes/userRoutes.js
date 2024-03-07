@@ -98,6 +98,8 @@ router.get("/vewProductDetails/:id",userAuth.isLogout,userAuth.isLogout,userProf
 
 router.post("/applyCoupon", couponsControllers.applyCoupon)
 
+router.patch("/removeCoupon/:userId/:tPrice", couponsControllers.removeCoupon)
+
 router.get("/view-Wishlist",userAuth.isLogout,userAuth.isLogout,wishlistControllers.wishlistLoad)
 
 router.get("/addWishlist/:id",userAuth.isLogout,wishlistControllers.addWishlist)

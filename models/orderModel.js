@@ -15,6 +15,9 @@ const orderSchema = new mongoose.Schema({
         pincode: { type: Number } ,
         mobile: { type: String  }
     },
+    orderId: {
+        type: Number 
+    },
     paymentMethod: {
         type: String,
         required: true
@@ -66,9 +69,13 @@ const orderSchema = new mongoose.Schema({
     },
     coupon:{
         type: String,
+        default:null
        
     },
-    
+     couponPrice:{
+        type:Number,
+        default:null
+    },
     orderStatus: {
         type: String,
         enum: [

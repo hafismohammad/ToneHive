@@ -441,7 +441,7 @@
 
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>#</th>
+                                                                        <th>order Id</th>
                                                                         <th>Date</th>
                                                                         <th>Address</th>
                                                                         <th>Total</th>
@@ -456,7 +456,7 @@
                                                                     <% if (userOrders && userOrders.length > 0) { %>
                                                                         <% for (let i = userOrders.length - 1; i >= 0; i--) { %>
                                                                             <tr>
-                                                                                <td><%= i + 1 %></td>
+                                                                                <td><%= userOrders[i].orderId %></td>
 
                                                                                 <td><%= userOrders[i].createdAt.toLocaleDateString() %></td>
                                                                                 <td><%= userOrders[i].address.house %></td>
