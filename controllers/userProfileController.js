@@ -11,6 +11,10 @@ const Wallet = require('../models/walletModel')
 const userProfile = async (req, res) => {
     try {
         let userId = req.session.user._id;
+        const pages = req.query.page || 1
+        const size = 5
+        const pageSkip = (pages - 1) * size
+
         const userInfo = await User.findOne(userId)
 
         const userData = await User.findById(userId);
@@ -36,26 +40,11 @@ const userProfile = async (req, res) => {
             }
         ]);
 
-        //   const userOrders = await Order.findOne({userId:userId},{'address':1})
-        // console.log(userOrders1);
-        // const userOrders = await Order.aggregate([
-        //     {
-        //         $match: { userId: userId }
-        //     },
-        //     {
-        //         $lookup: {
-        //             from: 'users',
-        //             localField: 'address',
-        //             foreignField: '_id',
-        //             as: 'lookedUpAddress'
-        //         }
-        //     },
-        //     {
-        //         $unwind: '$products'
-        //     },
-
-        // ]);
-        const userOrders = await Order.find({ userId: userId })
+       
+        const orderCount = await Order.find({ userId: userId }).count()
+        const numOfPages = Math.ceil(orderCount/size)
+        const userOrders = await Order.find({ userId: userId }).skip(pageSkip).limit(size)
+        const currentPage = parseInt(pages,10)
 
 
         const cartItems = await Cart.find({ userId: userId });
@@ -82,7 +71,8 @@ const userProfile = async (req, res) => {
             message: message,
             userInfo: userInfo,
             cartTotalCount: cartTotalCount,
-            wallet: wallet
+            wallet: wallet,
+            numOfPages,currentPage
 
         });
     } catch (error) {

@@ -3,9 +3,15 @@ const User = require("../models/userModel")
 
 const customerLoad = async (req, res) => {
     try {
-        const userData = await User.find();
-        console.log(userData);
-        res.render("admin/page-customers", { user: userData })
+        const pages = req.query.page || 1
+        const size = 5
+        const pageSkip = (pages-1)*size
+        const orderCount = await User.find().count()
+        const numOfPages = Math.ceil(orderCount/size)
+        const userData = await User.find().skip(pageSkip).limit(size)
+
+        const currentPage = parseInt(pages,10)
+        res.render("admin/page-customers", { user: userData,numOfPages,currentPage })
     } catch (error) {
         console.log(error);
     }

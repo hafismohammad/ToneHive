@@ -5,10 +5,15 @@ const Products = require("../models/productModel");
 
 const orderList = async (req, res) => {
     try {
-   
-        const orderDetails = await Order.find().populate('userId');
-    
-        res.render("admin/page-orderList", { orderDetails: orderDetails });
+        const pages = req.query.page || 1
+        const size = 5
+        const pageSkip = (pages-1)*size
+        const orderCount =  await Order.find().populate('userId').count()
+        const numOfPages = Math.ceil(orderCount/size)
+        const orderDetails = await Order.find().populate('userId').skip(pageSkip).limit(size)
+
+        const currentPage = parseInt(pages,10)
+        res.render("admin/page-orderList", { orderDetails: orderDetails ,numOfPages,currentPage});
     } catch (error) {
         console.log(error);
     }
@@ -99,12 +104,12 @@ const salesReports = async (req, res) => {
 }
 
 
-
 module.exports = {
     orderList,
     adminOrderStatus,
     orderProductView,
     acceptReturn,
-    salesReports
+    salesReports,
+   
 
 }

@@ -5,9 +5,15 @@ const Cart = require('../models/cartModel')
 // couponsControllers.js
 const couponsLoad = async (req, res) => {
     try {
+        const pages = req.query.page || 1
+        const size = 5
+        const pageSkip = (pages-1)*size
         const message = req.query.message
-        const couponData = await couponModel.find()
-        res.render("admin/page-coupons", { couponData: couponData, message: message });
+        const orderCount = await couponModel.find().count()
+        const numOfPages = Math.ceil(orderCount/size)
+        const couponData = await couponModel.find().skip(pageSkip).limit(size)
+        const currentPage = parseInt(pages,10)
+        res.render("admin/page-coupons", { couponData: couponData, message: message,numOfPages,currentPage });
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal Server Error");
@@ -106,29 +112,23 @@ const removeCoupon = async (req, res) => {
         const userId = req.params.userId;
         const cartTotalPrice = req.params.tPrice;
 
-        // Find the user's cart
         const userCart = await Cart.findOne({ userId: userId });
 
         if (!userCart) {
             return res.status(404).json({ error: 'User cart not found.' });
         }
-
-        // Calculate old price including discount
         const oldPrice = userCart.totalPrice + userCart.discountAmount;
 
-        // Remove coupon code and update total price
         await Cart.findOneAndUpdate(
             { userId: userId },
             { $set: { totalPrice: oldPrice }, $unset: { discountAmount: 1, coupon: 1 } }
         );
 
-        // Find and remove the coupon used by the user
-        await Coupon.findOneAndUpdate(
+        await couponModel.findOneAndUpdate(
             { code: userCart.coupon },
             { $pull: { usedBy: userId } }
         );
 
-        // Send a success response back to the client
         return res.status(200).json({ message: 'Coupon removed successfully.', oldPrice: oldPrice });
     } catch (error) {
         console.error(error);

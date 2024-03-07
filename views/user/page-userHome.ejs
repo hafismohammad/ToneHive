@@ -472,7 +472,7 @@
                                                     <% } %>
                                                 </div>
                                                 
-                                                <h2><a href="shop-product-right.html"><%= products[i].name %></a></h2>
+                                                <h2><a href="/productView/?id=<%= products[i]._id %>"><%= products[i].name %></a></h2>
                                                 <div class="rating-result" title="90%">
                                                     <% if(products[i].productOffer){ %>
                                                         <span><%= products[i].productOffer.discount %>%</span>

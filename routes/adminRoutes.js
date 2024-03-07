@@ -39,8 +39,6 @@ router.get("/editCategory", adminAuth.isLogout, categoryControllers.editCategory
 
 router.post("/editCategory", categoryControllers.editedCategory)
 
-
-
 router.get("/list-Category/:catid", adminAuth.isLogout, categoryControllers.listedCategory)
 
 router.get("/unlist-Category/:catid", adminAuth.isLogout, categoryControllers.unlistedCategory)
@@ -51,10 +49,6 @@ router.get("/products", adminAuth.isLogout, productControllers.productsLoad)
 router.get("/addproduct/", adminAuth.isLogout, productControllers.addProductLoad)
 
 router.post('/addproduct/', productControllers.upload.array("image", 4), productControllers.addProducts);
-
-// router.get("/list-Product/:prodid",productControllers.listProducts);
-
-// router.get("/unlist-Product/:prodid",productControllers.unlistProduts)
 
 router.patch('/list-product/:prodid', productControllers.listOrUnlistProducts);
 
@@ -68,34 +62,34 @@ router.get("/orderDetails", adminAuth.isLogout, orderControllers.orderList)
 
 router.post("/orderStatus", orderControllers.adminOrderStatus)
 
-router.patch("/acceptReturn/:orderId/:productId", orderControllers.acceptReturn);
+router.patch("/acceptReturn/:orderId/:productId", orderControllers.acceptReturn);   
 
 router.get("/viewProductsDetails/:id", adminAuth.isLogout, orderControllers.orderProductView)
 
-router.get("/coupons", couponsControllers.couponsLoad)
+router.get("/coupons",adminAuth.isLogout, couponsControllers.couponsLoad)
 
-router.get("/addCoupon", couponsControllers.addCouponLoad)
+router.get("/addCoupon", adminAuth.isLogout,couponsControllers.addCouponLoad)
 
 router.post("/addCoupon", couponsControllers.postCoupon);
 
 router.delete("/deleteCoupon/:id", couponsControllers.deleteCoupon)
 
-router.get("/editCoupon/:id", couponsControllers.editCouponLoad)
+router.get("/editCoupon/:id",adminAuth.isLogout, couponsControllers.editCouponLoad)
 
 router.post("/editCoupon/:id", couponsControllers.editCouponPost)
 
-router.get("/productOffer", offerControllers.productOfferLoad)
+router.get("/productOffer",adminAuth.isLogout, offerControllers.productOfferLoad)
 
-router.get("/AddOffer", offerControllers.AddOffer)
+router.get("/AddOffer",adminAuth.isLogout, offerControllers.AddOffer)
 
 router.post("/PostOffer", offerControllers.postOffer)
 
 router.patch("/offerStatus/:id", offerControllers.listUnlistStatus)
 
-router.get('/editOffer/:id', offerControllers.editOffer)
+router.get('/editOffer/:id',adminAuth.isLogout, offerControllers.editOffer)
 
 router.post("/editOffer/:id", offerControllers.editOfferPost)
 
-router.get("/salesReport", orderControllers.salesReports)
+router.get("/salesReport",adminAuth.isLogout, orderControllers.salesReports)
 
 module.exports = router

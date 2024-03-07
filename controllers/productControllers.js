@@ -23,23 +23,46 @@ const upload = multer({
 const productsLoad = async (req, res) => {
     try {
         const Pdata = req.query.success;
-        const productData = await Products.aggregate([{
-            $lookup: {
-                from: "categories",
-                localField: "category",
-                foreignField: "_id",
-                as: "category",
+        const pages = req.query.page || 1
+        const size = 5
+        const pageSkip = (pages - 1) * size
+
+        // Perform aggregation to get product data with category lookup
+        const productData = await Products.aggregate([
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category"
+                }
+            },
+            {
+                $skip: pageSkip
+            },
+            {
+                $limit: size
             }
-        }])
+        ]);
 
+        // Calculate total number of pages
+        const orderCount = await Products.aggregate([
+            {
+                $count: "totalOrders"
+            }
+        ]);
+        const numOfPages = Math.ceil(orderCount[0].totalOrders / size);
 
+        const currentPage = parseInt(pages, 10);
 
-        res.render("admin/page-productList", { data: Pdata, productData: productData })
+        res.render("admin/page-productList", { data: Pdata, productData: productData, numOfPages: numOfPages, currentPage: currentPage });
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: 'Failed to load products.' });
     }
 }
+
 
 
 const addProductLoad = async (req, res) => {
