@@ -510,12 +510,12 @@
                                 </tr>
                             <% }); %>
                             <tr>
-                                <% if (orderedItems.coupon === 0) { %>
+                                <% if (orderedItems.coupon === null) { %>
                                     <td colspan="4" class="text-end">Total Price:</td>
                                     <td class="text-center">₹ <%= orderedItems.totalPrice   %></td>
                                 <% } else { %>
                                     <td colspan="4" class="text-end">Discount Price</td>
-                                    <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
+                                    <td class="text-center">₹ <%= orderedItems.couponPrice %></td>
                                 <% } %>
                             </tr>
                         <% } %>

@@ -10,7 +10,7 @@ const orderList = async (req, res) => {
         const pageSkip = (pages-1)*size
         const orderCount =  await Order.find().populate('userId').count()
         const numOfPages = Math.ceil(orderCount/size)
-        const orderDetails = await Order.find().populate('userId').skip(pageSkip).limit(size)
+        const orderDetails = await Order.find().populate('userId').skip(pageSkip).limit(size).sort({ createdAt: -1 })  
 
         const currentPage = parseInt(pages,10)
         res.render("admin/page-orderList", { orderDetails: orderDetails ,numOfPages,currentPage});

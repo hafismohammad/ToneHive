@@ -608,8 +608,12 @@
                                                 
                                                 
                                                 <div class="product-price">
-                                                    <span>₹ <%= productsPrice[i].offerPrice - (products[i].price * products[i].discount) / 100; %></span>
-                                                    <span class="old-price">₹ <%= productsPrice[i].price %></span>
+                                                    <% if(products[i].offerPrice === null) {%>
+                                                    <span>₹ <%= products[i].price  %></span>
+                                                    <% }else {%>
+                                                        <%= products[i].offerPrice %>
+                                                        <% } %>
+                                                    <span class="old-price">₹ <%= products[i].price %></span>
 
                                                     
                                                 </div>

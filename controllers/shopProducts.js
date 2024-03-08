@@ -54,7 +54,8 @@ const shopProducts = async (req, res) => {
                let appliedDiscount = 0; // Track the highest applied discount
 
                // Check if there is an active product offer
-               if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+               if (activeOffer && activeOffer.productOffer && product && product._id &&
+                activeOffer.productOffer.product.toString() === product._id.toString()) {
                    const productDiscount = activeOffer.productOffer.discount;
                    const discountedPrice = (offerPrice * productDiscount) / 100;
 
@@ -65,7 +66,10 @@ const shopProducts = async (req, res) => {
                }
 
                // Check if there is an active category offer
-               if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category[0]._id.toString()) {
+               if (activeOffer && activeOffer.categoryOffer && product && product.category &&
+                product.category[0] && product.category[0]._id &&
+                activeOffer.categoryOffer.category.toString() === product.category[0]._id.toString()) {
+            
                    const categoryDiscount = activeOffer.categoryOffer.discount;
                    const discountedPrice = (offerPrice * categoryDiscount) / 100;
 
@@ -227,7 +231,7 @@ const priceRange = async (req, res) => {
             } else {
                 throw new Error('Invalid sortOrder. Must be LH or HL.');
             }
-           
+          // console.log(productData);
             const aggregatedProductData = await Products.aggregate([
                 {
                     $lookup: {
@@ -308,9 +312,10 @@ const priceRange = async (req, res) => {
                     offerPrice = product.price;
                 }
 
-                product.offerPrice = parseInt(Math.round(offerPrice));
+                product.offerPrice = parseInt(Math.round(offerPrice))
+              
             }
-        
+            console.log(productData);
             res.render("user/page-shop", { userName, category, productData: aggregatedProductData, products: productData, activeProducts, cartTotalCount, wishlistCount, productsPrice: products });
         }
     } catch (error) {

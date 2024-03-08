@@ -43,9 +43,9 @@ const userProfile = async (req, res) => {
        
         const orderCount = await Order.find({ userId: userId }).count()
         const numOfPages = Math.ceil(orderCount/size)
-        const userOrders = await Order.find({ userId: userId }).skip(pageSkip).limit(size)
+        const userOrders = await Order.find({ userId: userId }).skip(pageSkip).limit(size).sort({ createdAt: -1 }) 
         const currentPage = parseInt(pages,10)
-
+console.log(userOrders);
 
         const cartItems = await Cart.find({ userId: userId });
         let cartTotalCount = 0;
@@ -321,7 +321,7 @@ const viewOrderDetails = async (req, res) => {
         let cartTotalCount = 0;
         cartItems.forEach(cart => {
             cartTotalCount += cart.items.length;
-        });
+        })
 
         const date = new Date();
         const momentDate = moment(date);

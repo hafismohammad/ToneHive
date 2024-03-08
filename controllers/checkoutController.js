@@ -305,7 +305,7 @@ const placeOrderPost = async (req, res) => {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
         const userAddressId = new mongoose.Types.ObjectId(address);
-        const userInfo = await User.findOne({_id:userId})
+        const userInfo = await User.findOne({_id:userId,})
         // Fetch user address
         const addressData = await User.findOne({ _id: userId, 'address._id': address }, { 'address.$': 1, _id: 0 });
 
@@ -317,7 +317,7 @@ const placeOrderPost = async (req, res) => {
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
         ]);
 
-        const cartCoupon = await Cart.findOne({userId:userId})
+        const cartCoupon = await Cart.findOne({userId:userId, })
         // Initialize total cart price
         let totalCartPrice = 0;
 
@@ -380,10 +380,10 @@ totalCartPrice += subtotal;
             cartItem.productDetails[0].productPrice = product.offerPrice;
             console.log(product.offerPrice);
             cartItem.productDetails[0].productName = product.name;
-            cartItem.productDetails[0].buyerName = userInfo;
+            cartItem.productDetails[0].buyerName = userInfo.name;
         }
         const cartPrice = await Cart.findOne({ userId: userId });
-
+      
         if (cartPrice.coupon !== null) {
             // Iterate through each item in the cart and update the product price
             cartPrice.items.forEach(item => {
@@ -424,7 +424,7 @@ totalCartPrice += subtotal;
                 productName: item.productDetails[0].productName,
                 buyerName: item.productDetails[0].buyerName
             })),
-            totalPrice: cartCoupon ?  cartCoupon.totalPrice : totalCartPrice,
+            totalPrice:  totalCartPrice,
             couponPrice: cartCoupon ? cartCoupon.totalPrice : 0,
             orderStatus: status,
             createdAt: new Date(),

@@ -60,7 +60,10 @@ const addToCart = async (req, res) => {
             const subtotal = cartItem.price * cartItem.quantity;
             totalCartPrice += subtotal;
         });
-    
+   
+       
+   
+
 
         // Set totalPrice in the cart
         useCart.totalPrice = totalCartPrice;
