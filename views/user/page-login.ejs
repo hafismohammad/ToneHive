@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="../public/style.css">
 </head>
 <body>
+    
     <form id="logForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/">
+        <div class="text-center">
+            <a ><img width="100px" src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
+        </div>
         <h2 class="d-flex justify-content-center py-5">Login</h2>
         <% if (locals.message) { %>
             <div id="successMessage" class="col-6">
@@ -24,6 +28,7 @@
                 <p class="mt-15 err text-danger"><%= locals.error %></p>
             </div>
             <% } %>
+           
         <div class="mb-3">
             <input type="email" class="form-control" name="email" id="email" placeholder="Email address" aria-describedby="emailHelp">
         </div>

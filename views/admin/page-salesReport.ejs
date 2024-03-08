@@ -250,18 +250,52 @@
                         </ul>
                     </div>
                 </header>
-                <section class="content-main " >
-                    <div class="content-header">
-                        <div>
-                            <h2 class="content-title card-title">Sales Report</h2>
-
-                        </div>
-                        <div>
-                            <a href="#" onclick="downloadPdf()" class="btn btn-primary btn-sm rounded">Download PDF </a>
-                            <a href="#" id="downloadBtnforXl" class="btn btn-primary btn-sm rounded">Download Excel </a>
-                        </div>
+                <section class="content-main ">
+                    <div>
+                        <h2 class="content-title card-title">Sales Report</h2>
 
                     </div>
+                    <div class="content-header">
+                        <form id="date-wise-report">
+                            <div class="left-section">
+                                <div>
+                                    <input type="date" value="2024-03-02" class="form-control mr-10" id="starting-date">
+                                    <p>Starting Date</p>
+                                </div>
+                                <div>
+                                    <input type="date" value="2024-03-02" class="form-control mr-10" id="ending-date">
+                                    <p>Ending Date</p>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-success btn-sm ml-3">Get Report</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        
+                        
+                        
+                        <div class="right-section">
+                            <a href="#" onclick="downloadPdf()" class="btn btn-primary btn-sm rounded mr-10">Download
+                                PDF</a>
+                            <a href="#" id="downloadBtnforXl" class="btn btn-primary btn-sm rounded">Download Excel</a>
+                        </div>
+                    </div>
+
+                    <style>
+                        .content-header {
+                            display: flex;
+                            justify-content: space-between;
+                        }
+
+                        .left-section {
+                            display: flex;
+                        }
+
+                        .right-section {
+                            display: flex;
+                        }
+                    </style>
                     <div class="container" id="myTable">
                         <div class="row justify-content-center">
                             <div class="">
@@ -275,77 +309,97 @@
                                             <th>Order Date</th>
                                             <th>Product</th>
                                             <th>Quantity</th>
-                                            <th>Payment Method</th>                                          
+                                            <th>Payment Method</th>
                                             <th>Total Amount</th>
                                             <th>Discount</th>
                                             <th>Coupon</th>
                                         </tr>
                                     </thead>
                                     <!-- Table Body -->
-                                    <tbody>
-                                        <% for (let i = 0; i < orders.length; i++) { %>
+                                    <tbody  id="defaultReport">
+                                        <% for (let i=0; i < orders.length; i++) { %>
                                             <tr>
-                                                <td><%= i + 1 %></td>
-                                                <td><%= orders[i].orderId %></td>
-                                                <td><%= orders[i].userId.name %></td>
-                                                <td><%= orders[i].createdAt.toLocaleDateString() %></td>
                                                 <td>
-                                                    <% for (let j = 0; j < orders[i].products.length; j++) { %>
+                                                    <%= i + 1 %>
+                                                </td>
+                                                <td>
+                                                    <%= orders[i].orderId %>
+                                                </td>
+                                                <td>
+                                                    <% for (let j=0; j < orders[i].products.length; j++) { %>
                                                         <%= orders[i].products[0].productName %><br>
-                                                    <% } %>
+                                                            <% } %>
                                                 </td>
                                                 <td>
-                                                    <% for (let j = 0; j < orders[i].products.length; j++) { %>
+                                                    <%= orders[i].createdAt.toLocaleDateString() %>
+                                                </td>
+                                                <td>
+                                                    <% for (let j=0; j < orders[i].products.length; j++) { %>
+                                                        <%= orders[i].products[0].productName %><br>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <% for (let j=0; j < orders[i].products.length; j++) { %>
                                                         <%= orders[i].products[j].quantity %><br><br>
-                                                    <% } %>
+                                                            <% } %>
                                                 </td>
-                                                <td><%= orders[i].paymentMethod %></td> 
-                                                <td><%= orders[i].totalPrice %></td>
                                                 <td>
-                                                    <% for (let j = 0; j < orders[i].products.length; j++) { %>
+                                                    <%= orders[i].paymentMethod %>
+                                                </td>
+                                                <td>
+                                                    <%= orders[i].totalPrice %>
+                                                </td>
+                                                <td>
+                                                    <% for (let j=0; j < orders[i].products.length; j++) { %>
                                                         <%= orders[i].products[j].productId.discount %><br><br>
-                                                    <% } %>
+                                                            <% } %>
                                                 </td>
                                                 <% if(orders[i].coupon){ %>
-                                                    <td><%= orders[i].coupon %></td>
-                                                <% } else { %>
-                                                    <td>none</td>
-                                                <% } %>
+                                                    <td>
+                                                        <%= orders[i].coupon %>
+                                                    </td>
+                                                    <% } else { %>
+                                                        <td>none</td>
+                                                        <% } %>
                                             </tr>
-                                        <% } %>
+                                            <% } %>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    
-                    
-                    <!-- Revenue and Total Sales Table -->
-                    <td class="mb-30">
-                        <table style="float: right; width: 200px; font-size: 16px;">
-                            <thead>
-                                <tr>
-                                    <th style="font-weight: bold; font-size: 18px;">Overall Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <% let totalRevenue = 0; %>
-                                    <% for (let i = 0; i < orders.length; i++) { %>
-                                        <% totalRevenue += orders[i].totalPrice; %>
-                                    <% } %>
-                                    <td style="font-size: 18px;"><%= totalRevenue %></td>
-                                </tr>
-                                <tr>
-                                    <th style="font-weight: bold; font-size: 18px;">Total Sales</th>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 18px;"><%= orders.length %></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    
-                </div>
+
+
+                        <!-- Revenue and Total Sales Table -->
+                        <td class="mb-30">
+                            <table style="float: right; width: 200px; font-size: 16px;">
+                                <thead>
+                                    <tr>
+                                        <th style="font-weight: bold; font-size: 18px;">Overall Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <% let totalRevenue=0; %>
+                                            <% for (let i=0; i < orders.length; i++) { %>
+                                                <% totalRevenue +=orders[i].totalPrice; %>
+                                                    <% } %>
+                                                        <td style="font-size: 18px;">
+                                                            <%= totalRevenue %>
+                                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-weight: bold; font-size: 18px;">Total Sales</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 18px;">
+                                            <%= orders.length %>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                    </div>
 
                 </section> <!-- content-main end// -->
                 <footer class="main-footer font-xs">
@@ -355,7 +409,7 @@
                                 document.write(new Date().getFullYear())
                             </script> ©, Evara - HTML Ecommerce Template .
                         </div>
-                       
+
                     </div>
                 </footer>
             </main>
@@ -394,26 +448,95 @@
         const element = document.getElementById('myTable')
         console.log(element);
         html2pdf().from(element).save();
-        
+
     }
 </script>
 
 <script>
 
-    document.getElementById('downloadBtnforXl').addEventListener('click', function() {
-      var table = document.getElementById('myTable');
-      var wb = XLSX.utils.table_to_book(table);
-      var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-  
-      function s2ab(s) {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-        return buf;
-      }
-  
-      var blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
-      saveAs(blob, 'table.xlsx');
+    document.getElementById('downloadBtnforXl').addEventListener('click', function () {
+        var table = document.getElementById('myTable');
+        var wb = XLSX.utils.table_to_book(table);
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+
+        var blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+        saveAs(blob, 'table.xlsx');
     });
 
 </script>
+
+<script>
+    document.getElementById('date-wise-report').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+    
+        const startingDate = document.getElementById('starting-date').value;
+        const endingDate = document.getElementById('ending-date').value;
+        fetch('/admin/sales-report', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ startingDate, endingDate })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let sales = data.sales;
+            console.log("hi");
+            console.log(sales);
+            // $('#defaultReport').empty();
+            document.getElementById('defaultReport').innerHTML = ''
+            sales.forEach((sale, index) => {
+                // Construct the HTML for each row dynamically
+                let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${sale.orderId}</td>
+                    <td>${sale.userId.name}</td>
+                    <td>${sale.createdAt}</td> <!-- Use the formatted createdAt value -->
+                    <td>`;
+                // Loop through products
+                sale.products.forEach(product => {
+                    row += `${product.productName}<br>`;
+                });
+                row += `</td>
+                    <td>`;
+                // Loop through product quantities
+                sale.products.forEach(product => {
+                    row += `${product.quantity}<br>`;
+                });
+                row += `</td>
+                    <td>${sale.paymentMethod}</td>
+                    <td>${sale.totalPrice}</td>
+                    <td>`;
+                // Loop through discounts
+                sale.products.forEach(product => {
+                    row += `${product.productId.discount}<br>`;
+                });
+                row += `</td>
+                    <td>${sale.coupon ? sale.coupon : 'none'}</td>
+                </tr>`;
+                // Append the row to the table
+                $('#defaultReport').append(row);
+            });
+
+            document.getElementById('salesReportStore').value = JSON.stringify(sales);
+           
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+    </script>
+    

@@ -94,14 +94,35 @@ const acceptReturn = async (req, res) => {
 
 const salesReports = async (req, res) => {
     try {
-       
-        const orders = await Order.find().populate('userId products.productId').sort({createdAt:-1})
+                                         // only render delivered orders
+        const orders = await Order.find({ orderStatus: 'delivered' }).populate('userId products.productId').sort({createdAt:-1})
 
         res.render('admin/page-salesReport', { orders: orders });
     } catch (error) {
         console.log(error);
     }
 }
+
+const { format } = require('date-fns');
+
+const orderReortDateWise = async (req, res) => {
+    try {
+        let { startingDate, endingDate } = req.body;
+        startingDate = new Date(startingDate);
+        endingDate = new Date(endingDate);
+       console.log(startingDate, endingDate);
+        const salesReport = await Order.find({ createdAt: { $gte: startingDate, $lte: endingDate }, orderStatus: 'delivered' }).populate('userId')
+        // for (let i = 0; i < salesReport.length; i++) {
+        //     salesReport[i].createdAt = dateFormat(salesReport[i].createdAt);
+        //     salesReport[i].createdAt = format(salesReport[i].createdAt, 'yyyy-MM-dd HH:mm:ss');
+        // }
+        console.log(salesReport);
+        res.status(200).json({ sales: salesReport }); 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while processing the request' });
+    }
+};
 
 
 module.exports = {
@@ -110,6 +131,6 @@ module.exports = {
     orderProductView,
     acceptReturn,
     salesReports,
-   
+    orderReortDateWise
 
 }

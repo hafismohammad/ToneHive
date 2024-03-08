@@ -92,4 +92,6 @@ router.post("/editOffer/:id", offerControllers.editOfferPost)
 
 router.get("/salesReport",adminAuth.isLogout, orderControllers.salesReports)
 
+router.post("/sales-report",adminAuth.isLogout, orderControllers.orderReortDateWise)
+
 module.exports = router
