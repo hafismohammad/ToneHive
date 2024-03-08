@@ -250,19 +250,19 @@
                         </ul>
                     </div>
                 </header>
-                <section class="content-main">
+                <section class="content-main " >
                     <div class="content-header">
                         <div>
                             <h2 class="content-title card-title">Sales Report</h2>
 
                         </div>
                         <div>
-                            <a href="#" class="btn btn-primary btn-sm rounded">Download PDF </a>
-                            <a href="#" class="btn btn-primary btn-sm rounded">Download Excel </a>
+                            <a href="#" onclick="downloadPdf()" class="btn btn-primary btn-sm rounded">Download PDF </a>
+                            <a href="#" id="downloadBtnforXl" class="btn btn-primary btn-sm rounded">Download Excel </a>
                         </div>
 
                     </div>
-                    <div class="container">
+                    <div class="container" id="myTable">
                         <div class="row justify-content-center">
                             <div class="">
                                 <table class="table table-hover" id="couponTable">
@@ -317,7 +317,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    
                     
                     <!-- Revenue and Total Sales Table -->
                     <td class="mb-30">
@@ -345,7 +345,7 @@
                         </table>
                     </td>
                     
-                
+                </div>
 
                 </section> <!-- content-main end// -->
                 <footer class="main-footer font-xs">
@@ -377,6 +377,10 @@
             <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 
 </body>
 
@@ -384,3 +388,32 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
 
 </html>
+
+<script>
+    function downloadPdf() {
+        const element = document.getElementById('myTable')
+        console.log(element);
+        html2pdf().from(element).save();
+        
+    }
+</script>
+
+<script>
+
+    document.getElementById('downloadBtnforXl').addEventListener('click', function() {
+      var table = document.getElementById('myTable');
+      var wb = XLSX.utils.table_to_book(table);
+      var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+  
+      function s2ab(s) {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
+      }
+  
+      var blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+      saveAs(blob, 'table.xlsx');
+    });
+
+</script>

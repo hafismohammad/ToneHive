@@ -15,75 +15,81 @@ const shopProducts = async (req, res) => {
 
             const category = await Category.find({ isList: false });
 
-            const productData = await Products.find().populate("category")
+            const productData = await Products.find({product_status:true}).populate("category");
             const activeProducts = productData
-            .map((item) => {
-                const category = item.category[0]
-                if (category && category.isList) {
-
-                    const category = item.category[0]
-                    if (item.product_status) {
-                        return item
+                .map((item) => {
+                    const category = item.category[0];
+                    if (category && category.isList) {
+                        if (item.product_status) {
+                            return item;
+                        }
                     }
-                } else {
                     return null;
-                }
-            }).filter(Boolean)
+                })
+                .filter(Boolean);
 
-            const cartItems = await Cart.find({userId:userId});
-            let cartTotalCount = 0; 
-            cartItems.forEach(cart => {
-                cartTotalCount += cart.items.length; 
+            const cartItems = await Cart.find({ userId: userId });
+            let cartTotalCount = 0;
+            cartItems.forEach((cart) => {
+                cartTotalCount += cart.items.length;
             });
-           
+
             const wishlistInfo = await wishlistModel.find({ user: user });
 
             let wishlistCount = 0;
-            wishlistInfo.forEach(wishlist => {
+            wishlistInfo.forEach((wishlist) => {
                 wishlistCount += wishlist.products.length;
             });
-            for(const product of productData){
-                product.offerPrice = parseInt(Math.round(
-                    parseInt(product.price) - (parseInt(product.price)* product.discount) / 100
-                ))
-            }
-  
-            const activeOffer = await offerModel.find({ status: true });
 
-         
-            const products = await Products.find({ product_status: true });
+           // Fetch active offer
+           const activeOffer = await offerModel.findOne({ status: true });
 
-            for (const product of products) {
-                const ProductOffer = activeOffer.find((offer) => {
-                    return offer.productOffer.product.equals(product._id);
-                });
-            
-                let categoryOffer;
-                if (product.category[0] && product.category[0]._id) { // Add a check for category existence and _id property
-                    categoryOffer = activeOffer.find((offer) => {
-                        return offer.categoryOffer.category.equals(product.category[0]._id);
-                    });
-                }
-            
-                let offerPrice;
-            
-                if (ProductOffer && categoryOffer) {
-                    if (ProductOffer.productOffer.discount > categoryOffer.categoryOffer.discount) {
-                        offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
-                    } else {
-                        offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
-                    }
-                } else if (ProductOffer) {
-                    offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
-                } else if (categoryOffer) {
-                    offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
-                } else {
-                    offerPrice = product.price;
-                }
-            
-                product.offerPrice = parseInt(Math.round(offerPrice));
-            }
-            res.render("user/page-shop",{ userName, category, products:productData, activeProducts, cartTotalCount, wishlistCount,productsPrice:products  });
+           // Fetch products
+           const products = await Products.find({ product_status: true }).populate("category");
+
+      
+           // Calculate offer price for each product
+           for (const product of productData) {
+               let offerPrice = parseInt(product.price); // Default to product price
+               let appliedDiscount = 0; // Track the highest applied discount
+
+               // Check if there is an active product offer
+               if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                   const productDiscount = activeOffer.productOffer.discount;
+                   const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                   if (discountedPrice > appliedDiscount) {
+                       offerPrice -= discountedPrice;
+                       appliedDiscount = discountedPrice;
+                   }
+               }
+
+               // Check if there is an active category offer
+               if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category[0]._id.toString()) {
+                   const categoryDiscount = activeOffer.categoryOffer.discount;
+                   const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                   if (discountedPrice > appliedDiscount) {
+                       offerPrice -= discountedPrice;
+                       appliedDiscount = discountedPrice;
+                   }
+               }
+
+               // Check if product discount is greater than applied discount
+               if (product.discount > appliedDiscount) {
+                   const discountedPrice = (offerPrice * product.discount) / 100;
+
+                   if (discountedPrice > appliedDiscount) {
+                       offerPrice -= discountedPrice;
+                      
+                   }
+               }
+
+               // Assign the calculated offer price to the product
+               product.offerPrice = parseInt(Math.round(offerPrice));
+           }
+
+            res.render("user/page-shop", { userName, category, products: productData, activeProducts, cartTotalCount, wishlistCount, productsPrice: productData });
         } else {
             console.log('User not found');
             // Handle the case where the user is not logged in
@@ -94,7 +100,8 @@ const shopProducts = async (req, res) => {
         console.log(error);
         res.status(500).send("Internal Server Error");
     }
-}
+};
+
 
 const sortProductCategory = async (req, res) => {
     try {
