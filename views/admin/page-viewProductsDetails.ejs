@@ -354,9 +354,12 @@
                                     <% } %>
                                     <td class="text-center">₹ <%=element.productPrice  %></td>
                                     <td>
+                                        <% if (element.orderStatus !== 'delivered' && element.orderStatus !== 'return pending' && element.orderStatus !== 'cancelled' && element.orderStatus !== 'returned') { %>
+                                            <button onclick="cancelOrder('<%= orderedItems._id %>', '<%= element._id %>')" class="btn btn-danger">Cancel</button>
+                                            <% } %>
                                         <% if(element.orderStatus === 'return pending') {%>
                                         <button onclick="acceptReturn('<%= orderedItems._id %>', '<%= element._id %>')" class="btn btn-outline-primary">Accept Return</button>
-                                            <% } %>
+                                         <% } %>
                                     </td>
                                 </tr>
                                 <% }); %>
@@ -427,3 +430,78 @@
     }
 </script>
     
+<script>
+    function cancelOrder(orderId,productId) {
+        console.log(orderId);
+        Swal.fire({
+            title: "Are you sure?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes`,
+            cancelButtonText: 'Cancel',
+            allowOutsideClick: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Enter cancellation reason',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                    cancelButtonText: 'Cancel',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (reason) => {
+                        console.log(reason);
+                        if (!reason) {
+                            return; // Cancelled reason input
+                        }
+                        if (reason.length > 20) {
+                            swal("The reason should be up to 20 characters long.");
+                            return;
+                        }
+                                        
+                        return fetch(`/cancelOrder/${orderId}/${productId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ reason: reason }) // Send reason to server
+                        })
+                        
+                        .then(response => {
+                            if (!response.ok) {
+                                console.log('dfs');
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(`Request failed: ${error}`)
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: `Done`,
+                            text: "You clicked the button!",
+                            icon: "success",
+                            button: false
+                        });
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000)
+                    }
+                });
+            } else {
+                swal({
+                    title: "Cancelled",
+                    text: "You clicked the button!",
+                    icon: "info",
+                });
+            }
+        });
+    }
+</script>

@@ -105,7 +105,7 @@ const  resendOtp = async (req, res) => {
 
         // Generate a new random OTP
         const newOtp = generateRandomOtp();
-
+console.log(newOtp);
         // Update session with the new OTP and reset expiration time
         req.session.otp = newOtp;
         req.session.otpExpirationTime = Date.now() + 20 * 1000;

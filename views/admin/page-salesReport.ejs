@@ -326,16 +326,16 @@
                                                     <%= orders[i].orderId %>
                                                 </td>
                                                 <td>
-                                                    <% for (let j=0; j < orders[i].products.length; j++) { %>
-                                                        <%= orders[i].products[0].productName %><br>
-                                                            <% } %>
+                                                  
+                                                        <%= orders[i].userId.name %><br>
+                                                           
                                                 </td>
                                                 <td>
                                                     <%= orders[i].createdAt.toLocaleDateString() %>
                                                 </td>
                                                 <td>
                                                     <% for (let j=0; j < orders[i].products.length; j++) { %>
-                                                        <%= orders[i].products[0].productName %><br>
+                                                        <%= orders[i].products[j].productId.name  %><br><br>
                                                             <% } %>
                                                 </td>
                                                 <td>
@@ -503,7 +503,7 @@
                     <td>${index + 1}</td>
                     <td>${sale.orderId}</td>
                     <td>${sale.userId.name}</td>
-                    <td>${sale.createdAt}</td> <!-- Use the formatted createdAt value -->
+                    <td>${new Date(sale.createdAt).toLocaleDateString()}</td>  <!-- Use the formatted createdAt value -->
                     <td>`;
                 // Loop through products
                 sale.products.forEach(product => {

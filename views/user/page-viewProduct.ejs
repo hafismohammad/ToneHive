@@ -262,9 +262,13 @@
                                 <div>
                                     <ul>
                                         <li class="dropdown nav-item">
+                                            <% if(userInfo) {%>
                                             <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                                 id="dropdownAccount" aria-expanded="false">
                                                <button class="btn  btn-primary ">hey.. <%= userInfo.name %></button>
+                                               <% }else{%>
+                                               <a href="/login"><button class="btn  btn-primary ">Login</button></a> 
+                                                <% } %>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="dropdownAccount">
@@ -595,11 +599,14 @@
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div> -->
                                             <div class=""> <!-- Adjust the column size based on your layout -->
-                                             
+                                             <% if(userInfo) {%>
                                                 <button  onclick="addtoCartBtn('<%= products._id %>')" id="addToCartBtn" type="submit" class="btn btn-primary mr-15"><i class="fi-rs-cart"></i>Add to cart</button>
                                                 <button onclick="addToWishlist('<%= products._id %>')" id="Wishlist" type="submit" class="btn btn-danger"><i class="fi-rs-heart"></i> Add to wishlist</button>
-
-
+                                                    <% }else {%>
+                                                        <a href="/login"><button  onclick="addtoCartBtn('<%= products._id %>')" id="addToCartBtn" type="submit" class="btn btn-primary mr-15"><i class="fi-rs-cart"></i>Add to cart</button></a>
+                                                      <a href="/login">  <button onclick="addToWishlist('<%= products._id %>')" id="Wishlist" type="submit" class="btn btn-danger"><i class="fi-rs-heart"></i> Add to wishlist</button></a>
+                                                        <% } %>
+                                            </div>          
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">

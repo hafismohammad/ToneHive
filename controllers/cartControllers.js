@@ -204,7 +204,7 @@ const updateCartQuantity = async (req, res) => {
             return res.status(400).json({ error: 'Requested quantity exceeds available stock' });
         }
 
-     
+        const totalPrice = product.price * requestedQuantity;
         // Update the cart item quantity and total price
         await Cart.updateOne(
             { userId: useCart.userId, 'items.productId': targetProductId },
@@ -215,7 +215,7 @@ const updateCartQuantity = async (req, res) => {
         );
 
 
-        res.json({ success: true });
+        res.json({ success: true,requestedQuantity:requestedQuantity, totalPrice:totalPrice });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });

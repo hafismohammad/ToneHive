@@ -4,6 +4,7 @@ const descriptionid = document.getElementById("description");
 const priceid = document.getElementById("price")
 const quantityid = document.getElementById("quantity");
 const discountid = document.getElementById("discount");
+const imgid = document.getElementById('image')
 
 
 const error1 = document.getElementById("error1")
@@ -11,6 +12,8 @@ const error2 = document.getElementById("error2")
 const error3 = document.getElementById("error3")
 const error4 = document.getElementById("error4")
 const error5 = document.getElementById("error5")
+const error6 = document.getElementById("error6")
+
 
 const editFormid = document.getElementById("editForm")
 
@@ -150,6 +153,48 @@ function discountVal(e) {
         return true
     }
 }
+function imageVal(e) {
+    const fileInput = imgid.files[0]; // Get the selected file
+    const fileSize = fileInput ? fileInput.size : 0; // Check if fileInput exists and get its size
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.webp)$/i; // Define the allowed file extensions
+
+    if (!fileInput) {
+        // No file selected
+        error6.style.display = "block";
+        error6.innerHTML = "Please select an image";
+
+        setTimeout(() => {
+            error6.style.display = "none";
+            error6.innerHTML = "";
+        }, 3000);
+        return false;
+    } else if (!allowedExtensions.exec(fileInput.name)) {
+        // Invalid file type
+        error6.style.display = "block";
+        error6.innerHTML = "Please select a valid image file (jpg, jpeg, png, gif, webp)";
+
+        setTimeout(() => {
+            error6.style.display = "none";
+            error6.innerHTML = "";
+        }, 3000);
+        return false;
+    } else if (fileSize > 5242880) {
+        // File size exceeds 5MB
+        error6.style.display = "block";
+        error6.innerHTML = "Please select an image file smaller than 5MB";
+
+        setTimeout(() => {
+            error6.style.display = "none";
+            error6.innerHTML = "";
+        }, 3000);
+        return false;
+    } else {
+        // Valid image
+        error6.style.display = "none";
+        error6.innerHTML = "";
+        return true;
+    }
+}
 
 
 nameid.addEventListener("blur", nameVal)
@@ -157,20 +202,19 @@ descriptionid.addEventListener("blur", descriptionVal)
 priceid.addEventListener("blur", priceVal)
 discountid.addEventListener("blur", discountVal)
 quantityid.addEventListener("blur", quantityVal)
-
+imgid.addEventListener("change", imageVal);
 
 editFormid.addEventListener("submit", function (e) {
+    // Run the validation functions and store the results
+    const validName = nameVal();
+    const validDescription = descriptionVal();
+    const validPrice = priceVal();
+    const validDiscount = discountVal();
+    const validQuantity = quantityVal();
+    const validImg = imageVal();
 
-        // Run the category validation function and store the result
-      const validname=   nameVal();
-       const validdescription =  descriptionVal();
-       const validprince=   priceVal();
-       const validdiscount =  discountVal();
-       const valitdquantity  = quantityVal();
-
-        // Check if category validation failed
-        if (!validprince || !validname ||!validdescription || !validdiscount || !valitdquantity){
-             e.preventDefault(); // Prevent form submission if validation fails
-        }
-    });
-    
+    // Check if any validation failed
+    if (!validName || !validDescription || !validPrice || !validDiscount || !validQuantity || !validImg) {
+        e.preventDefault(); // Prevent form submission if any validation fails
+    }
+});

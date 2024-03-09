@@ -7,11 +7,11 @@ const offerModel = require('../models/offerModel')
 
 const shopProducts = async (req, res) => {
     try {
-        const userId = req.session.user;
+        const userId = req.session.user ? req.session.user : undefined
+  
 
-        if (userId) {
             const user = await User.findById(userId);
-            const userName = user.name;
+            const userName = user?.name;
 
             const category = await Category.find({ isList: false });
 
@@ -92,14 +92,10 @@ const shopProducts = async (req, res) => {
                // Assign the calculated offer price to the product
                product.offerPrice = parseInt(Math.round(offerPrice));
            }
-
-            res.render("user/page-shop", { userName, category, products: productData, activeProducts, cartTotalCount, wishlistCount, productsPrice: productData });
-        } else {
-            console.log('User not found');
-            // Handle the case where the user is not logged in
-            // You might want to redirect them to a login page or handle it in another way
-            res.redirect('/login'); // Example: Redirect to login page
-        }
+           
+       
+            res.render("user/page-shop", {userId, userName, category, products: productData, activeProducts, cartTotalCount, wishlistCount, productsPrice: productData });
+   
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal Server Error");
@@ -112,9 +108,9 @@ const sortProductCategory = async (req, res) => {
         const categoryId = req.query.id
         const userId = req.session.user
          
-        if (userId) {
+       
             const user = await User.findById(userId);
-            const userName = user.name;
+            const userName = user?.name;
             const category = await Category.find({ isList: false });
             const productsItems = await Products.find({ category: categoryId }).populate("category")
          
@@ -203,7 +199,7 @@ const sortProductCategory = async (req, res) => {
 
             res.render("user/page-shop", { userName, category, productData,products:productsItems, activeProducts, cartTotalCount, wishlistCount, productsPrice: products });
 
-        }
+      
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });

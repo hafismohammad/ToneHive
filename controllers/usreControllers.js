@@ -29,6 +29,93 @@ const securePassword = async (password) => {
 //     }
 // }
 
+const gustUser = async (req, res) => {
+    try {
+    
+
+        
+        // Define the category variable here
+        const category = await Category.find({ isList: false });
+        const productData = await Products.aggregate([
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category",
+                }
+            },
+            {
+                $match: {
+                    "category.isList": false,
+                    "product_status": true
+                }
+            }
+        ]);
+          // Fetch active offer
+          const activeOffer = await offerModel.findOne({ status: true });
+
+          // Fetch products
+          const products = await Products.find({ product_status: true }).populate("category");
+
+     
+          // Calculate offer price for each product
+          for (const product of productData) {
+              let offerPrice = parseInt(product.price); // Default to product price
+              let appliedDiscount = 0; // Track the highest applied discount
+
+              // Check if there is an active product offer
+              if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                  const productDiscount = activeOffer.productOffer.discount;
+                  const discountedPrice = (offerPrice * productDiscount) / 100;
+
+                  if (discountedPrice > appliedDiscount) {
+                      offerPrice -= discountedPrice;
+                      appliedDiscount = discountedPrice;
+                  }
+              }
+
+              // Check if there is an active category offer
+              if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category[0]._id.toString()) {
+                  const categoryDiscount = activeOffer.categoryOffer.discount;
+                  const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                  if (discountedPrice > appliedDiscount) {
+                      offerPrice -= discountedPrice;
+                      appliedDiscount = discountedPrice;
+                  }
+              }
+
+              // Check if product discount is greater than applied discount
+              if (product.discount > appliedDiscount) {
+                  const discountedPrice = (offerPrice * product.discount) / 100;
+
+                  if (discountedPrice > appliedDiscount) {
+                      offerPrice -= discountedPrice;
+                     
+                  }
+              }
+
+              // Assign the calculated offer price to the product
+              product.offerPrice = parseInt(Math.round(offerPrice));
+          }
+
+        // Pass the category variable along with other data when rendering the EJS template
+        res.render("user/page-userHome", {  
+            userName:req.session.user,
+            category,
+            products: productData,
+            productsPrice: products
+            // wishlistCount,
+            // cartTotalCount
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+
 const homeLoad = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -154,13 +241,13 @@ const logedUser = async (req, res) => {
                     res.redirect("/userHome");
                     return; // Add return statement to exit the function after redirecting
                 } else {
-                    return res.redirect("/?error=User is blocked");
+                    return res.redirect("/login?error=User is blocked");
                 }
             } else {
-                return res.redirect("/?error=Incorrect password");
+                return res.redirect("/login?error=Incorrect password");
             }
         } else {
-            return res.redirect("/?error=User not found");
+            return res.redirect("/login?error=User not found");
         }
     } catch (error) {
         console.error(error);
@@ -220,6 +307,7 @@ const registeredUser = async (req, res) => {
 
         }
         req.session.userData = userIn
+        
 
         const otp = generateRandomOtp();
         console.log(otp);
@@ -252,6 +340,40 @@ const registeredUser = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.redirect('/register')
+    }
+}
+
+const resendOtpNew = (req, res) => {
+    try {
+
+        const otp = generateRandomOtp();
+        console.log(otp);
+        const email = req.session.email
+
+        const mailOptions = {
+            from: 'hafismhdthaleekara764@gmail.com',
+            to: email,
+            subject: 'OTP Verification In Register Side',
+            text: `Your OTP is: ${otp}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending OTP email", error.message);
+            } else {
+                console.log("Register Side OTP mail sent", info.response);
+            }
+        });
+
+
+         console.log("This is resended otp: ",otp);
+        // Store OTP in session
+        req.session.otp = otp;
+        
+        req.session.otpExpirationTime = Date.now() + 20 * 1000
+        res.redirect("/otpRegister")
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -357,13 +479,10 @@ const searchProduct = async (req, res) => {
     try {
         const userId = req.session.user;
         const user = await User.findById(userId);
-        const userName = user.name;
+        const userName = user?.name;
         const searchQuery = req.query.search;
 
-        if (!userId) {
-            return res.redirect('/login');
-        }
-
+       
         const category = await Category.find({ isList: false });
 
         let filter = { product_status: true };
@@ -401,37 +520,49 @@ const searchProduct = async (req, res) => {
         const wishlistInfo = await wishlistModel.find({ user });
         const wishlistCount = wishlistInfo.reduce((totalCount, wishlist) => totalCount + wishlist.products.length, 0);
 
+        // Fetch active offer
+        const activeOffer = await offerModel.findOne({ status: true });
+
+        // Fetch products
+        const products = await Products.find({ product_status: true }).populate("category");
+
+        // Calculate offer price for each product
         for (const product of productData) {
-            product.offerPrice = parseInt(Math.round(
-                parseInt(product.price) - (parseInt(product.price) * product.discount) / 100
-            ));
-        }
+            let offerPrice = parseInt(product.price); // Default to product price
+            let appliedDiscount = 0; // Track the highest applied discount
 
-        const activeOffer = await offerModel.find({ status: true });
+            // Check if there is an active product offer
+            if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+                const productDiscount = activeOffer.productOffer.discount;
+                const discountedPrice = (offerPrice * productDiscount) / 100;
 
-        const products = await Products.find({ product_status: true });
-        for (const product of products) {
-            const ProductOffer = activeOffer.find((offer) => offer.productOffer.product.equals(product._id));
-
-            let categoryOffer;
-            if (product.category[0] && product.category[0]._id) {
-                categoryOffer = activeOffer.find((offer) => offer.categoryOffer.category.equals(product.category[0]._id));
+                if (discountedPrice > appliedDiscount) {
+                    offerPrice -= discountedPrice;
+                    appliedDiscount = discountedPrice;
+                }
             }
 
-            let offerPrice;
-            if (ProductOffer && categoryOffer) {
-                offerPrice = Math.min(
-                    product.price - (product.price * ProductOffer.productOffer.discount) / 100,
-                    product.price - (product.price * categoryOffer.categoryOffer.discount) / 100
-                );
-            } else if (ProductOffer) {
-                offerPrice = product.price - (product.price * ProductOffer.productOffer.discount) / 100;
-            } else if (categoryOffer) {
-                offerPrice = product.price - (product.price * categoryOffer.categoryOffer.discount) / 100;
-            } else {
-                offerPrice = product.price;
+            // Check if there is an active category offer
+            if (activeOffer && activeOffer.categoryOffer && product.category && product.category[0] && activeOffer.categoryOffer.category.toString() === product.category[0]._id.toString()) {
+                const categoryDiscount = activeOffer.categoryOffer.discount;
+                const discountedPrice = (offerPrice * categoryDiscount) / 100;
+
+                if (discountedPrice > appliedDiscount) {
+                    offerPrice -= discountedPrice;
+                    appliedDiscount = discountedPrice;
+                }
             }
 
+            // Check if product discount is greater than applied discount
+            if (product.discount > appliedDiscount) {
+                const discountedPrice = (offerPrice * product.discount) / 100;
+
+                if (discountedPrice > appliedDiscount) {
+                    offerPrice -= discountedPrice;
+                }
+            }
+
+            // Assign the calculated offer price to the product
             product.offerPrice = parseInt(Math.round(offerPrice));
         }
 
@@ -454,6 +585,7 @@ const searchProduct = async (req, res) => {
 
 
 
+
 module.exports = {
     loginLoad,
     logedUser,
@@ -464,5 +596,8 @@ module.exports = {
     productViews,
     generateRandomOtp,
     searchProduct,
+    gustUser,
+    resendOtpNew
     // pageNotFound
+    
 }

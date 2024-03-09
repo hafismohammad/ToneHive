@@ -16,9 +16,11 @@ const walletControllers = require("../controllers/walletControllers")
 
 //router.get("/*",userControllers.pageNotFound)
 
-router.get("/",userAuth.isLogin,userControllers.loginLoad)
+router.get("/", userControllers.gustUser)
 
-router.post("/", userControllers.logedUser)
+router.get("/login",userAuth.isLogin,userControllers.loginLoad)
+
+router.post("/login", userControllers.logedUser)
 
 router.get("/register", userAuth.isLogin,userControllers.registerLoad)
 
@@ -41,9 +43,9 @@ router.get("/verify-otp",userAuth.isLogout,otpControllers.verifyOTPLoad)
 
 router.post("/verify-otp",userAuth.otpTimeOut, otpControllers.verifiedUser)
 
-router.get("/resend-otp",userAuth.isLogout,otpControllers.resendOtp)
+ router.get("/resend-otp1",userControllers.resendOtpNew)
 
-router.get("/productView/",userAuth.isLogout,userControllers.productViews)
+router.get("/productView/",userControllers.productViews)
 
 router.get("/userProfile",userAuth.isLogout,userProfileController.userProfile)
 
@@ -106,9 +108,9 @@ router.get("/addWishlist/:id",userAuth.isLogout,wishlistControllers.addWishlist)
 
 router.delete("/removeWishlist/:id",wishlistControllers.removeWishlist)
 
-router.get("/shopProducts",userAuth.isLogout, shopProductsControllers.shopProducts)
+router.get("/shopProducts", shopProductsControllers.shopProducts)
 
-router.get("/search",userAuth.isLogout, userControllers.searchProduct)
+router.get("/search", userControllers.searchProduct)
 
 router.get("/productCategorySort",userAuth.isLogout, shopProductsControllers.sortProductCategory);
 

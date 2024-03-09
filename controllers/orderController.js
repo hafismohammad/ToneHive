@@ -96,7 +96,7 @@ const salesReports = async (req, res) => {
     try {
                                          // only render delivered orders
         const orders = await Order.find({ orderStatus: 'delivered' }).populate('userId products.productId').sort({createdAt:-1})
-
+// console.log(orders);
         res.render('admin/page-salesReport', { orders: orders });
     } catch (error) {
         console.log(error);
@@ -116,7 +116,7 @@ const orderReortDateWise = async (req, res) => {
         //     salesReport[i].createdAt = dateFormat(salesReport[i].createdAt);
         //     salesReport[i].createdAt = format(salesReport[i].createdAt, 'yyyy-MM-dd HH:mm:ss');
         // }
-        console.log(salesReport);
+      
         res.status(200).json({ sales: salesReport }); 
     } catch (error) {
         console.log(error);

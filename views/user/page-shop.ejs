@@ -240,9 +240,13 @@
 <div>
     <ul>
         <li class="dropdown nav-item">
-            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
+            <% if(locals.userId) {%>
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" 
                 id="dropdownAccount" aria-expanded="false">
                <button class="btn  btn-primary ">hey.. <%= userName %> </button>
+               <% }else {%>
+                <a href="/login"><button class="btn  btn-primary ">Login</button>
+                   <% } %>
             </a>
             <div class="dropdown-menu dropdown-menu-end"
                 aria-labelledby="dropdownAccount">
@@ -611,7 +615,7 @@
                                                     <% if(products[i].offerPrice === null) {%>
                                                     <span>₹ <%= products[i].price  %></span>
                                                     <% }else {%>
-                                                        <%= products[i].offerPrice %>
+                                                        ₹  <%= products[i].offerPrice %>
                                                         <% } %>
                                                     <span class="old-price">₹ <%= products[i].price %></span>
 
