@@ -219,7 +219,7 @@ const updateCartQuantity = async (req, res) => {
         );
 
 
-        res.json({ success: true,requestedQuantity:requestedQuantity, totalPrice:totalPrice });
+        res.json({ success: true,requestedQuantity:requestedQuantity, totalPrice:totalPrice,product:product });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });

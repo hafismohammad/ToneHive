@@ -358,48 +358,65 @@
                                         <th scope="col">Remove</th>
                                     </tr>
 
-                                    <tbody>
-                                        <% if (cartItems.length === 0) { %>
-                                            <tr>
-                                                <td colspan="6" class="text-center fw-bold fs-4">Your cart is empty</td>
-                                            </tr>
+                                <tbody>
+                                    <% if (cartItems.length===0) { %>
+                                        <tr>
+                                            <td colspan="6" class="text-center fw-bold fs-4">Your cart is empty</td>
+                                        </tr>
                                         <% } else { %>
-                                            <% cartItems.forEach(cartItem => { %>
+                                            <% cartItems.forEach(cartItem=> { %>
                                                 <tr>
                                                     <td class="image product-thumbnail">
-                                                        <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>" alt="<%= cartItem.productDetails.name %>">
+                                                        <img src="/public/uploads/<%= cartItem.productDetails.image[0] %>"
+                                                            alt="<%= cartItem.productDetails.name %>">
                                                     </td>
                                                     <td class="product-des product-name">
-                                                        <h5 class="product-name"><a href="shop-product-right.html"><%= cartItem.productDetails.name %></a></h5>
-                                                        <p class="font-xs"><%= cartItem.productDetails.description %></p>
+                                                        <h5 class="product-name"><a href="shop-product-right.html">
+                                                                <%= cartItem.productDetails.name %>
+                                                            </a></h5>
+                                                        <p class="font-xs">
+                                                            <%= cartItem.productDetails.description %>
+                                                        </p>
                                                     </td>
                                                     <td class="price" data-title="Price">
                                                         <!-- Calculate and display offer price -->
-                                                        <span>₹ <%= cartItem.productDetails.offerPrice  %> </span>
+                                                        <span id="productPrice<%= cartItem.productDetails._id %>">₹ <%=
+                                                                cartItem.productDetails.offerPrice %> </span>
                                                     </td>
                                                     <td class="text-center align-middle" data-title="Quantity">
                                                         <div class="d-flex align-items-center justify-content-center">
-                                                            <button class="cart-item-count mr-10" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', -1)" <%= cartItem.items && cartItem.items.quantity === 1 ? 'disabled' : '' %>>-</button>
-                                                            <span class="qty-val"><%= cartItem.items ? cartItem.items.quantity : 0 %></span>
-                                                            <button class="cart-item-count ml-10" onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', 1)">+</button>
+                                                            <button class="cart-item-count mr-10"
+                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', -1)"
+                                                                <%=cartItem.items && cartItem.items.quantity===1
+                                                                ? 'disabled' : '' %>>-</button>
+                                                            <span id="qty-val<%=  cartItem.productDetails._id  %>"
+                                                                class="qty-val">
+                                                                <%= cartItem.items ? cartItem.items.quantity : 0 %>
+                                                            </span>
+                                                            <button class="cart-item-count ml-10"
+                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', 1)">+</button>
                                                         </div>
                                                     </td>
                                                     <td class="text-right" data-title="Subtotal">
-                                                        <span>₹ <%= cartItem.subtotal %> </span>
+                                                        <span id="subtotal<%=  cartItem.productDetails._id  %>">₹ <%=
+                                                                cartItem.subtotal %> </span>
                                                     </td>
                                                     <td class="action" data-title="Remove">
-                                                        <a class="text-muted" onclick="productRemove('<%= cartItem.productDetails._id %>')"><i class="fi-rs-trash"></i></a>
+                                                        <a class="text-muted"
+                                                            onclick="productRemove('<%= cartItem.productDetails._id %>')"><i
+                                                                class="fi-rs-trash"></i></a>
                                                     </td>
                                                 </tr>
-                                            <% }) %>
-                                            <tr>
-                                                <td colspan="6" class="text-end">
-                                                    <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear Cart</a>
-                                                </td>
-                                            </tr>
-                                        <% } %>
-                                    </tbody>
-                                    
+                                                <% }) %>
+                                                    <tr>
+                                                        <td colspan="6" class="text-end">
+                                                            <a href="#" class="text-muted"> <i
+                                                                    class="fi-rs-cross-small"></i> Clear Cart</a>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                </tbody>
+
 
 
 
@@ -414,92 +431,46 @@
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50">
                             <div class="col-lg-6 col-md-12">
-                                <!-- <div class="heading_s1 mb-3">
-                                    <h4>Calculate Shipping</h4>
-                                </div> -->
-                                <!-- <p class="mt-15 mb-30">Flat rate: <span class="font-xl text-brand fw-900">5%</span></p> -->
-                                <!-- <form class="field_form shipping_calculator">
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-12">
-                                            <div class="custom_select">
-                                                
-                                              
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-row row">
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="State / Country" name="name" type="text">
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <input required="required" placeholder="PostCode / ZIP" name="name" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-12">
-                                            <button class="btn  btn-sm"><i class="fi-rs-shuffle mr-10"></i>Update</button>
-                                        </div>
-                                    </div>
-                                </form> -->
-                                <!-- <div class="mb-30 mt-50">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Apply Coupon</h4>
-                                    </div>
-                                    <div class="total-amount">
-                                        <div class="left">
-                                            <div class="coupon">
-                                                <form action="#" target="_blank">
-                                                    <div class="form-row row justify-content-center">
-                                                        <div class="form-group col-lg-6">
-                                                            <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon">
-                                                        </div>
-                                                        <div class="form-group col-lg-6">
-                                                            <button class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-                            </div>
-                            <% if(totalCartPrice != 0){%>
 
-                            <div class="col-lg-6 col-md-12">
-                                <div class="border p-md-4 p-30 border-radius cart-totals">
-                                    <div class="heading_s1 mb-3">
-                                        <h4>Cart Totals</h4>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="cart_total_label">Cart Subtotal</td>
-                                                    <td class="cart_total_amount"><span
-                                                            class="font-lg fw-900 text-brand">₹ <%= totalCartPrice %>
-                                                                </span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Shipping</td>
-                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free
-                                                        Shipping</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span
-                                                                class="font-xl fw-900 text-brand">₹ <%= totalCartPrice
-                                                                    %></span></strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                  
-                                    <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
-                                        CheckOut</a>
-                                        <% } %>
-                                </div>
                             </div>
+                            <% if(totalCartPrice !=0){%>
+
+                                <div class="col-lg-6 col-md-12">
+                                    <div class="border p-md-4 p-30 border-radius cart-totals">
+                                        <div class="heading_s1 mb-3">
+                                            <h4>Cart Totals</h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="cart_total_label">Cart Subtotal</td>
+                                                        <td class="cart_total_amount">
+                                                            <span id="cartTotal1" class="font-lg fw-900 text-brand">₹
+                                                                <%= totalCartPrice %></span>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="cart_total_label">Shipping</td>
+                                                        <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free
+                                                            Shipping</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="cart_total_label">Total</td>
+                                                        <td class="cart_total_amount"><strong><span id="cartTotal2"
+                                                                    class="font-xl fw-900 text-brand">₹ <%=
+                                                                        totalCartPrice %></span></strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
+                                            CheckOut</a>
+                                        <% } %>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -659,8 +630,8 @@
 </html>
 
 <script>
-    function changeQuantity(cartItemId, productId,quantity, delta) {
-        
+    function changeQuantity(cartItemId, productId, quantity, delta) {
+
         quantity = parseInt(quantity);
 
         fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
@@ -676,9 +647,39 @@
                 return response.json();
             })
             .then(data => {
-              // data.requestedQuantity;
-               window.location.reload();
+
+                window.location.reload()
+                // Update quantity value in HTML
+                // const qtyVal = document.getElementById(`qty-val${productId}`);
+                // qtyVal.innerText = data.requestedQuantity;
+
+                // // Update product price value in HTML
+                // const productPriceElement = document.getElementById(`productPrice${productId}`);
+                // const productPriceText = productPriceElement.innerText;
+                // console.log(data.totalPrice);
+
+                // const cartTotal1 = document.getElementById(`cartTotal1`);
+                // cartTotal1.innerText = data.totalPrice
+
+                // // Extract numeric part of product price and parse as float
+                // const productPrice = parseFloat(productPriceText.replace('₹', ''));
+
+                // // Check if productPrice is a valid number
+                // if (!isNaN(productPrice)) {
+                //     // Calculate subtotal
+                //     const subtotal = parseFloat(qtyVal.innerText) * productPrice;
+                //     // Format subtotal value in HTML
+                //     const formattedSubtotal = subtotal % 1 === 0 ? subtotal.toFixed(0) : subtotal.toFixed(2);
+                //     // Update subtotal value in HTML
+                //     const subtotalElement = document.getElementById(`subtotal${productId}`);
+                //     subtotalElement.innerText = `₹ ${formattedSubtotal}`;
+
+
+                // } else {
+                //     console.error("Product price is not a valid number");
+                // }
             })
+
             .catch(error => {
                 // Display a generic error message using SweetAlert
                 Swal.fire({

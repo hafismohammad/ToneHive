@@ -206,7 +206,14 @@ const userLogout = (req, res) => {
 
 
 
-
+// const pageNotFound = (req, res) => {
+//     try {
+        
+//      res.render('admin/page-404')
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 
 module.exports = {
@@ -214,6 +221,7 @@ module.exports = {
     adminLogin,
     adminPost,
     userLogout,
-    getChartDetails
+    getChartDetails,
+  //  pageNotFound
    
 }

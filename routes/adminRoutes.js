@@ -94,4 +94,6 @@ router.get("/salesReport",adminAuth.isLogout, orderControllers.salesReports)
 
 router.post("/sales-report",adminAuth.isLogout, orderControllers.orderReortDateWise)
 
+// router.get("/admin*", adminControllers.pageNotFound)
+
 module.exports = router

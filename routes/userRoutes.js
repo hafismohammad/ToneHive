@@ -14,8 +14,6 @@ const wishlistControllers = require("../controllers/wishlistControllers")
 const shopProductsControllers = require("../controllers/shopProducts")
 const walletControllers = require("../controllers/walletControllers")
 
-//router.get("/*",userControllers.pageNotFound)
-
 router.get("/", userControllers.gustUser)
 
 router.get("/login",userAuth.isLogin,userControllers.loginLoad)
@@ -125,5 +123,6 @@ router.post('/paymentSuccess', checkoutControllers.paymentSuccess)
 router.post("/wallet", userProfileController.walletPost)
 
 
+router.get("/*",userControllers.pageNotFound)
 
 module.exports = router 

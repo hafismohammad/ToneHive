@@ -80,20 +80,8 @@ app.use( (req, res,next) => {
 
 // User routes
 app.use(nocache())
-app.use("/", userRoute);   
 app.use('/admin', adminRute)  
-//app.use("/adminhome", adminRute)                             
+app.use("/", userRoute);   
 
-// app.use(function(req, res, next) {
-//   res.status(404).render("user/page-404");
-// });
-
-// app.use(function(req, res, next) {
-//   res.status(404).render("user/page-404");
-// });
-
-// app.use('/admin', function(req, res, next) {
-//   res.status(404).render("admin/page-Admin404.ejs");
-// });
 
 app.listen(PORT, () => console.log(`Server is running on the port ${PORT} just click here http://localhost:3000`))

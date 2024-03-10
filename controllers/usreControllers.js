@@ -21,13 +21,7 @@ const securePassword = async (password) => {
     }
 }
 
-// const pageNotFound = (req, res) => {
-//     try {
-//         res.r
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+
 
 const gustUser = async (req, res) => {
     try {
@@ -583,7 +577,14 @@ const searchProduct = async (req, res) => {
 };
 
 
-
+const pageNotFound = (req, res) => {
+    try {
+        
+     res.render('user/page-404',{user:req.session.user})
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 module.exports = {
@@ -597,7 +598,7 @@ module.exports = {
     generateRandomOtp,
     searchProduct,
     gustUser,
-    resendOtpNew
-    // pageNotFound
+    resendOtpNew,
+    pageNotFound
     
 }
