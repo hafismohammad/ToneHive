@@ -146,10 +146,10 @@ const otpRegisterPost = async(req, res) => {
                     await newUser.save(); 
                     // Redirect the user to the homepage with a success message
                     req.flash("message", "Registered Successfully");
-                     res.redirect("/");
+                     res.redirect("/login");
                 } else {
                     req.flash("error", "Invalid OTP");
-            res.redirect("/",);
+            res.redirect("/login",);
         }
     } catch (error) {
         console.log(error);

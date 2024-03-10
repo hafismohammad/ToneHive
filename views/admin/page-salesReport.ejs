@@ -179,77 +179,7 @@
                 </nav>
             </aside>
             <main class="main-wrap">
-                <header class="main-header navbar">
-                    <div class="col-search">
-                        <form class="searchform">
-                            <div class="input-group">
-                                <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                                <button class="btn btn-light bg" type="button"> <i
-                                        class="material-icons md-search"></i></button>
-                            </div>
-                            <datalist id="search_terms">
-                                <option value="Products">
-                                <option value="New orders">
-                                <option value="Apple iphone">
-                                <option value="Ahmed Hassan">
-                            </datalist>
-                        </form>
-                    </div>
-                    <div class="col-nav">
-                        <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
-                                class="material-icons md-apps"></i> </button>
-                        <ul class="nav">
-                            <li class="nav-item">
-                                <a class="nav-link btn-icon" href="#">
-                                    <i class="material-icons md-notifications animation-shake"></i>
-                                    <span class="badge rounded-pill">3</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link btn-icon darkmode" href="#"> <i
-                                        class="material-icons md-nights_stay"></i> </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="requestfullscreen nav-link btn-icon"><i
-                                        class="material-icons md-cast"></i></a>
-                            </li>
-                            <li class="dropdown nav-item">
-                                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage"
-                                    aria-expanded="false"><i class="material-icons md-public"></i></a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                                    <a class="dropdown-item text-brand" href="#"><img
-                                            src="assets/imgs/theme/flag-us.png" alt="English">English</a>
-                                    <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png"
-                                            alt="Français">Français</a>
-                                    <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png"
-                                            alt="Français">日本語</a>
-                                    <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png"
-                                            alt="Français">中国人</a>
-                                </div>
-                            </li>
-                            <li class="dropdown nav-item">
-                                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
-                                    aria-expanded="false"> <img class="img-xs rounded-circle"
-                                        src="assets/imgs/people/avatar2.jpg" alt="User"></a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                    <a class="dropdown-item" href="#"><i
-                                            class="material-icons md-perm_identity"></i>Edit Profile</a>
-                                    <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
-                                        Settings</a>
-                                    <a class="dropdown-item" href="#"><i
-                                            class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                                    <a class="dropdown-item" href="#"><i
-                                            class="material-icons md-receipt"></i>Billing</a>
-                                    <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
-                                        center</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-danger" href="#"><i
-                                            class="material-icons md-exit_to_app"></i>Logout</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </header>
+                <%- include('../layouts/admin/header.ejs') %>
                 <section class="content-main ">
                     <div>
                         <h2 class="content-title card-title">Sales Report</h2>
@@ -271,10 +201,10 @@
                                 </div>
                             </div>
                         </form>
-                        
-                        
-                        
-                        
+
+
+
+
                         <div class="right-section">
                             <a href="#" onclick="downloadPdf()" class="btn btn-primary btn-sm rounded mr-10">Download
                                 PDF</a>
@@ -316,7 +246,7 @@
                                         </tr>
                                     </thead>
                                     <!-- Table Body -->
-                                    <tbody  id="defaultReport">
+                                    <tbody id="defaultReport">
                                         <% for (let i=0; i < orders.length; i++) { %>
                                             <tr>
                                                 <td>
@@ -326,16 +256,16 @@
                                                     <%= orders[i].orderId %>
                                                 </td>
                                                 <td>
-                                                  
-                                                        <%= orders[i].userId.name %><br>
-                                                           
+
+                                                    <%= orders[i].userId.name %><br>
+
                                                 </td>
                                                 <td>
                                                     <%= orders[i].createdAt.toLocaleDateString() %>
                                                 </td>
                                                 <td>
                                                     <% for (let j=0; j < orders[i].products.length; j++) { %>
-                                                        <%= orders[i].products[j].productId.name  %><br><br>
+                                                        <%= orders[i].products[j].productId.name %><br><br>
                                                             <% } %>
                                                 </td>
                                                 <td>
@@ -347,7 +277,7 @@
                                                     <%= orders[i].paymentMethod %>
                                                 </td>
                                                 <td>
-                                                    <%= orders[i].totalPrice %>
+                                                    ₹  <%= orders[i].totalPrice %>
                                                 </td>
                                                 <td>
                                                     <% for (let j=0; j < orders[i].products.length; j++) { %>
@@ -383,18 +313,20 @@
                                             <% for (let i=0; i < orders.length; i++) { %>
                                                 <% totalRevenue +=orders[i].totalPrice; %>
                                                     <% } %>
-                                                        <td style="font-size: 18px;">
-                                                            <%= totalRevenue %>
+                                                        <td id="totalRevenue" style="font-size: 18px;">
+                                                            ₹  <%= totalRevenue %>
                                                         </td>
+
                                     </tr>
                                     <tr>
                                         <th style="font-weight: bold; font-size: 18px;">Total Sales</th>
                                     </tr>
                                     <tr>
-                                        <td style="font-size: 18px;">
+                                        <td id="totalSalesCount" style="font-size: 18px;">
                                             <%= orders.length %>
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </td>
@@ -473,9 +405,9 @@
 </script>
 
 <script>
-    document.getElementById('date-wise-report').addEventListener('submit', function(event) {
-        event.preventDefault(); 
-    
+    document.getElementById('date-wise-report').addEventListener('submit', function (event) {
+        event.preventDefault();
+
         const startingDate = document.getElementById('starting-date').value;
         const endingDate = document.getElementById('ending-date').value;
         fetch('/admin/sales-report', {
@@ -485,58 +417,67 @@
             },
             body: JSON.stringify({ startingDate, endingDate })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            let sales = data.sales;
-            console.log("hi");
-            console.log(sales);
-            $('#defaultReport').empty();
-            // document.getElementById('defaultReport').innerHTML = ''
-            sales.forEach((sale, index) => {
-                // Construct the HTML for each row dynamically
-                let row = `<tr>
-                    <td>${index + 1}</td>
-                    <td>${sale.orderId}</td>
-                    <td>${sale.userId.name}</td>
-                    <td>${new Date(sale.createdAt).toLocaleDateString()}</td>  <!-- Use the formatted createdAt value -->
-                    <td>`;
-                // Loop through products
-                sale.products.forEach(product => {
-                    row += `${product.productName}<br>`;
-                });
-                row += `</td>
-                    <td>`;
-                // Loop through product quantities
-                sale.products.forEach(product => {
-                    row += `${product.quantity}<br>`;
-                });
-                row += `</td>
-                    <td>${sale.paymentMethod}</td>
-                    <td>${sale.totalPrice}</td>
-                    <td>`;
-                // Loop through discounts
-                sale.products.forEach(product => {
-                    row += `${product.productId.discount}<br>`;
-                });
-                row += `</td>
-                    <td>${sale.coupon ? sale.coupon : 'none'}</td>
-                </tr>`;
-                // Append the row to the table
-                $('#defaultReport').append(row);
-            });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                let sales = data.sales;
+                console.log("hi");
+                console.log(sales);
+                $('#defaultReport').empty();
+                let totalRevenue = 0;
+                sales.forEach((sale, index) => {
+                    // Construct the HTML for each row dynamically
+                    let row = `<tr>
+            <td>${index + 1}</td>
+            <td>${sale.orderId}</td>
+            <td>${sale.userId.name}</td>
+            <td>${new Date(sale.createdAt).toLocaleDateString()}</td>  <!-- Use the formatted createdAt value -->
+            <td>`;
+                    // Loop through products
+                    sale.products.forEach(product => {
+                        row += `${product.productName}<br>`;
+                    });
+                    row += `</td>
+            <td>`;
+                    // Loop through product quantities
+                    sale.products.forEach(product => {
+                        row += `${product.quantity}<br>`;
+                    });
+                    row += `</td>
+            <td>${sale.paymentMethod}</td>
+            <td>${sale.totalPrice}</td>
+            <td>`;
+                    // Loop through discounts
+                    sale.products.forEach(product => {
+                        row += `${product.productId.discount}<br>`;
+                    });
+                    row += `</td>
+            <td>${sale.coupon ? sale.coupon : 'none'}</td>
+        </tr>`;
+                    // Append the row to the table
+                    $('#defaultReport').append(row);
 
-            document.getElementById('salesReportStore').value = JSON.stringify(sales);
-           
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('There was a problem with the fetch operation:', error);
-        });
+                    // Update total revenue
+                    totalRevenue += sale.totalPrice;
+                });
+
+                // Update total revenue in the HTML
+                $('#totalRevenue').text(totalRevenue);
+
+                // Update total sales count in the HTML
+                $('#totalSalesCount').text(sales.length);
+
+                document.getElementById('salesReportStore').value = JSON.stringify(sales);
+            })
+
+
+            .catch(error => {
+                // Handle errors
+                console.error('There was a problem with the fetch operation:', error);
+            });
     });
-    </script>
-    
+</script>

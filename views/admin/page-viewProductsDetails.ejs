@@ -365,7 +365,13 @@
                                 <% }); %>
                                 <tr>
                                     <td colspan="4" class="text-end">Total Price:</td>
-                                    <td class="text-center">₹ <%= orderedItems.totalPrice %></td>
+                                    <% if (orderedItems.coupon === null) { %>
+                                       
+                                        <td class="text-center">₹ <%= orderedItems.totalPrice   %></td>
+                                    <% } else { %>
+                                        
+                                        <td class="text-center">₹ <%= orderedItems.couponPrice %></td>
+                                    <% } %>
                                 </tr>
                                 <% } %>
                             </tbody>

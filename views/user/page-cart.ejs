@@ -223,12 +223,13 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
-                                <select class="select-active">
+                            <form action="/search">
+                                <!-- <select class="select-active">
                                     <option>All Categories</option>
-
-                                </select>
-                                <input type="text" placeholder="Search for items...">
+                                  
+                                </select> -->
+                                <input name="search" type="text" placeholder="Search for items...">
+                                <button type="submit">Search</button>
                             </form>
                         </div>
                         <div class="header-action-right">
@@ -298,9 +299,9 @@
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categori-button-active" href="#">
+                            <!-- <a class="categori-button-active" href="#">
                                 <span class="fi-rs-apps"></span> Browse Categories
-                            </a>
+                            </a> -->
 
                         </div>
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
@@ -309,14 +310,14 @@
                                     <li>
                                         <a href="/userHome">Home </a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">About</a>
-                                    </li>
+                                    </li> -->
                                     <li>
-                                        <a href="#">Shop </a>
+                                        <a href="/shopProducts">Shop </a>
                                     </li>
 
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">Blog </a>
                                     </li>
                                     <li>
@@ -324,7 +325,7 @@
                                     </li>
                                     <li>
                                         <a href="#">Contact</a>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </nav>
                         </div>
@@ -463,6 +464,7 @@
                                     </div>
                                 </div> -->
                             </div>
+                            <% if(totalCartPrice != 0){%>
 
                             <div class="col-lg-6 col-md-12">
                                 <div class="border p-md-4 p-30 border-radius cart-totals">
@@ -492,7 +494,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <% if(totalCartPrice != 0){%>
+                                  
                                     <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
                                         CheckOut</a>
                                         <% } %>

@@ -225,12 +225,13 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
-                                <select class="select-active">
+                            <form action="/search">
+                                <!-- <select class="select-active">
                                     <option>All Categories</option>
-
-                                </select>
-                                <input type="text" placeholder="Search for items...">
+                                  
+                                </select> -->
+                                <input name="search" type="text" placeholder="Search for items...">
+                                <button type="submit">Search</button>
                             </form>
                         </div>
                         <div class="header-action-right">
@@ -298,26 +299,26 @@
                         <a href="#"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categori-wrap d-none d-lg-block">
+                        <!-- <div class="main-categori-wrap d-none d-lg-block">
                             <a class="categori-button-active" href="#">
                                 <span class="fi-rs-apps"></span> Browse Categories
                             </a>
 
-                        </div>
+                        </div> -->
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
                                     <li>
-                                        <a href="#">Home </a>
+                                        <a href="/userHome">Home </a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">About</a>
-                                    </li>
+                                    </li> -->
                                     <li>
-                                        <a href="#">Shop </a>
+                                        <a href="shopProducts">Shop </a>
                                     </li>
 
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">Blog </a>
                                     </li>
                                     <li>
@@ -325,7 +326,7 @@
                                     </li>
                                     <li>
                                         <a href="#">Contact</a>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </nav>
                         </div>
@@ -353,6 +354,18 @@
                 </div>
             </div>
         </div>
+        <% if (success) { %>
+            <script>
+                setTimeout(function() {
+                    document.getElementById('successMessage').style.display = 'block';
+                    history.replaceState({}, document.title, window.location.pathname); // Remove query parameters from URL
+                }, 3000); 
+            </script>
+            <div id="successMessage" class="text-center alert alert-success" style="display: none;"><%= success %></div>
+        <% } %>
+        
+        
+        
 
         <% if (locals.message) { %>
             <script>
@@ -748,7 +761,7 @@
                                                                 <div class="col-md-12">
                                                                     <button type="submit"
                                                                         class="btn btn-fill-out submit" name="submit"
-                                                                        value="Submit">Save</button>
+                                                                        value="Submit">Save</button> 
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -766,20 +779,32 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <% wallet.walletData.forEach(element => { %>
+                                                        <% if (wallet && wallet.walletData) { %>
+                                                            <% wallet.walletData.forEach(element => { %>
+                                                                <tr>
+                                                                    <td><%= new Date(element.date).toLocaleDateString() %></td>
+                                                                    <td><%= element.paymentMethod %></td>
+                                                                    <td><%= element.amount %></td>
+                                                                </tr>
+                                                            <% }); %>
+                                                        <% } else { %>
                                                             <tr>
-                                                                <td><%= new Date(element.date).toLocaleDateString() %></td>
-                                                                <td><%= element.paymentMethod %></td>
-                                                                <td><%= element.amount %></td>
+                                                                <td colspan="3">No wallet data available</td>
                                                             </tr>
-                                                        <% }); %>
+                                                        <% } %>
                                                     </tbody>
+                                                    
                                                 </table>
                                                 
                                                 <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; font-size: 24px; text-align: center;" class="d-flex justify-content-center">
                                                     <div>
-                                                        Wallet Balance: <%= wallet.balance %>
+                                                        <% if (wallet && typeof wallet.balance !== 'undefined') { %>
+                                                            Wallet Balance: <%= wallet.balance %>
+                                                        <% } else { %>
+                                                           No Balance 
+                                                        <% } %>
                                                     </div>
+                                                    
                                                 </div><br><br>
                                                 <!-- <div class="d-flex justify-content-center">
                                                     <input class="text-center" type="text" placeholder="Enter Amount">

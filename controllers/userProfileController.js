@@ -45,7 +45,7 @@ const userProfile = async (req, res) => {
         const numOfPages = Math.ceil(orderCount/size)
         const userOrders = await Order.find({ userId: userId }).skip(pageSkip).limit(size).sort({ createdAt: -1 }) 
         const currentPage = parseInt(pages,10)
-console.log(userOrders);
+// console.log(userOrders);
 
         const cartItems = await Cart.find({ userId: userId });
         let cartTotalCount = 0;
@@ -72,7 +72,8 @@ console.log(userOrders);
             userInfo: userInfo,
             cartTotalCount: cartTotalCount,
             wallet: wallet,
-            numOfPages,currentPage
+            numOfPages,currentPage,
+            success: req.query.success
 
         });
     } catch (error) {
@@ -289,8 +290,8 @@ const changePassword = async (req, res) => {
             }
         });
 
-        console.log("User account details and password changed successfully");
-        res.status(200).send("User account details and password changed successfully");
+        res.redirect("/userProfile?success=User+account+details+and+password+changed+successfully");
+
 
     } catch (error) {
         console.log(error);

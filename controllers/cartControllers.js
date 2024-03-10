@@ -87,84 +87,88 @@ const cartLoad = async (req, res) => {
         const userId = req.session.user._id;
 
         const userInfo = await User.findOne({ _id: userId });
-
-        const cartItems = await Cart.aggregate([
-            {
-                $match: { userId: userId }
-            },
-            {
-                $unwind: '$items'
-            },
-            {
-                $project: {
-                    items: 1
-                }
-            },
-            {
-                $lookup: {
-                    from: 'products',
-                    localField: 'items.productId',
-                    foreignField: '_id',
-                    as: 'productDetails'
-                }
+ if(userInfo){
+    const cartItems = await Cart.aggregate([
+        {
+            $match: { userId: userId }
+        },
+        {
+            $unwind: '$items'
+        },
+        {
+            $project: {
+                items: 1
             }
-        ]);
-
-        const activeOffer = await offerModel.findOne({ status: true });
-
-        // Calculate offer price for each product in the cart
-        const populatedCartItems = cartItems.map(cartItem => {
-            const product = cartItem.productDetails[0]; // Get the product data from the cart item
-            let offerPrice = parseInt(product.price); // Default to product price
-            let appliedDiscount = 0; // Track the highest applied discount
-
-            // Check if there is an active product offer
-            if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
-                const productDiscount = activeOffer.productOffer.discount;
-                const discountedPrice = (offerPrice * productDiscount) / 100;
-
-                if (discountedPrice > appliedDiscount) {
-                    offerPrice -= discountedPrice;
-                    appliedDiscount = discountedPrice;
-                }
+        },
+        {
+            $lookup: {
+                from: 'products',
+                localField: 'items.productId',
+                foreignField: '_id',
+                as: 'productDetails'
             }
+        }
+    ]);
 
-            // Check if there is an active category offer
-            if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
-                const categoryDiscount = activeOffer.categoryOffer.discount;
-                const discountedPrice = (offerPrice * categoryDiscount) / 100;
+    const activeOffer = await offerModel.findOne({ status: true });
 
-                if (discountedPrice > appliedDiscount) {
-                    offerPrice -= discountedPrice;
-                    appliedDiscount = discountedPrice;
-                }
+    // Calculate offer price for each product in the cart
+    const populatedCartItems = cartItems.map(cartItem => {
+        const product = cartItem.productDetails[0]; // Get the product data from the cart item
+        let offerPrice = parseInt(product.price); // Default to product price
+        let appliedDiscount = 0; // Track the highest applied discount
+
+        // Check if there is an active product offer
+        if (activeOffer && activeOffer.productOffer && activeOffer.productOffer.product.toString() === product._id.toString()) {
+            const productDiscount = activeOffer.productOffer.discount;
+            const discountedPrice = (offerPrice * productDiscount) / 100;
+
+            if (discountedPrice > appliedDiscount) {
+                offerPrice -= discountedPrice;
+                appliedDiscount = discountedPrice;
             }
+        }
 
-            // Check if product discount is greater than applied discount
-            if (product.discount > appliedDiscount) {
-                const discountedPrice = (offerPrice * product.discount) / 100;
+        // Check if there is an active category offer
+        if (activeOffer && activeOffer.categoryOffer && activeOffer.categoryOffer.category.toString() === product.category.toString()) {
+            const categoryDiscount = activeOffer.categoryOffer.discount;
+            const discountedPrice = (offerPrice * categoryDiscount) / 100;
 
-                if (discountedPrice > appliedDiscount) {
-                    offerPrice -= discountedPrice;
-                }
+            if (discountedPrice > appliedDiscount) {
+                offerPrice -= discountedPrice;
+                appliedDiscount = discountedPrice;
             }
+        }
 
-            product.offerPrice = parseInt(Math.round(offerPrice));
+        // Check if product discount is greater than applied discount
+        if (product.discount > appliedDiscount) {
+            const discountedPrice = (offerPrice * product.discount) / 100;
 
-            // Calculate subtotal for the cart item
-            const subtotal = product.offerPrice * cartItem.items.quantity;
+            if (discountedPrice > appliedDiscount) {
+                offerPrice -= discountedPrice;
+            }
+        }
 
-            return {
-                ...cartItem,
-                productDetails: product,
-                subtotal: subtotal
-            };
-        });
+        product.offerPrice = parseInt(Math.round(offerPrice));
 
-        // Calculate total cart price
-        const totalCartPrice = populatedCartItems.reduce((total, cartItem) => total + cartItem.subtotal, 0);
+        // Calculate subtotal for the cart item
+        const subtotal = product.offerPrice * cartItem.items.quantity;
 
-        return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartItems.length });
+        return {
+            ...cartItem,
+            productDetails: product,
+            subtotal: subtotal
+        };
+    });
+
+    // Calculate total cart price
+    const totalCartPrice = populatedCartItems.reduce((total, cartItem) => total + cartItem.subtotal, 0);
+    return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartItems.length });
+
+ }else{
+
+ }
+       
     } catch (error) {
         console.error(error);
         return res.status(500).send("Internal server error");

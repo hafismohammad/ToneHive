@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="../public/style.css">
 </head>
             <form id="regForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/register">
-             
+             <div class="text-center">
+            <a ><img width="100px" src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
+        </div>
            <% if(locals.error) { %>
             <div id="error" class=" text-center">
                 <p class="text-danger"><%= error %></p>
@@ -52,7 +54,7 @@
                 </div>
 
                 <div class="text-center">
-                    <p>Already have an account ? <a href="/">Login</a></p>
+                    <p>Already have an account ? <a href="/login">Login</a></p>
                     </button>
                   </div>
             </form>
