@@ -83,5 +83,17 @@ app.use(nocache())
 app.use('/admin', adminRute)  
 app.use("/", userRoute);   
 
+// Middleware for handling 404 errors
+app.use((req, res, next) => {
+  res.status(404).render('user/page-404', { user: req.session.user });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  // Log the error
+  console.error(err.stack);
+  // Render a generic error page
+  res.status(500).send('Something broke!');
+})
 
 app.listen(PORT, () => console.log(`Server is running on the port ${PORT} just click here http://localhost:3000`))

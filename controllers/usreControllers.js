@@ -577,14 +577,14 @@ const searchProduct = async (req, res) => {
 };
 
 
-const pageNotFound = (req, res) => {
-    try {
+// const pageNotFound = (req, res) => {
+//     try {
         
-     res.render('user/page-404',{user:req.session.user})
-    } catch (error) {
-        console.log(error);
-    }
-}
+//      res.render('user/page-404',{user:req.session.user})
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 
 module.exports = {
@@ -599,6 +599,6 @@ module.exports = {
     searchProduct,
     gustUser,
     resendOtpNew,
-    pageNotFound
+   // pageNotFound
     
 }

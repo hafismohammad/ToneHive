@@ -92,7 +92,7 @@
                             <div class="text">
                                 <h6 class="mb-1 card-title">Products</h6> <span><%= products.length %></span>
                                 <span class="text-sm">
-                                    In <%= category.length %> Categories
+                                    In <%= categories.length %> Categories
                                 </span>
                             </div>
                         </article>
@@ -111,9 +111,44 @@
                    
                 </div>
               
+          
+           
+                <div class="col-xl-4 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="icontext">
+                            <div class="p-3">
+                                <h3 class="mb-4 card-title">Best Selling Categories</h3>
+                                <% for(let i = 0; i < topSellingCategories.length; i++) { %>
+                                    <div class="category-item mb-2"><%= topSellingCategories[i].name %></div>
+                                <% } %>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                
+                
+        </div>     
+           
+         <div>
+            <h1>Best Selling Products</h1>
+            <div class="row">
+                <% productsData.forEach(product => { %>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="card">
+                            <img src="/public/uploads/<%= product.image[0] %>" alt="<%= product.name %>" class="card-img-top" width="150" height="150">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= product.name %></h5>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
             </div>
+         </div>
+       
         
-            <!-- Ensure that chartData is properly passed to the view -->
+        
+        
+        
            
             
          

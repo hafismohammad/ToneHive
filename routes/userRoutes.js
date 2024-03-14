@@ -123,6 +123,6 @@ router.post('/paymentSuccess', checkoutControllers.paymentSuccess)
 router.post("/wallet", userProfileController.walletPost)
 
 
-router.get("/*",userControllers.pageNotFound)
+// router.get("/*",userControllers.pageNotFound)
 
 module.exports = router 

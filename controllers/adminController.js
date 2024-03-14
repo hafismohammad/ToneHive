@@ -12,12 +12,12 @@ const Order = require("../models/orderModel");
 //admin login 
 const adminLogin = (req, res) => {
     try {
-        
-        if(req.session.admin){
+
+        if (req.session.admin) {
             res.redirect("admin/dashboard")
-        }else{
+        } else {
             const error = req.query.error
-            res.render("admin/page-adminLogin",{error:error})
+            res.render("admin/page-adminLogin", { error: error })
         }
     } catch (error) {
         console.log(error);
@@ -26,164 +26,94 @@ const adminLogin = (req, res) => {
 const adminPost = async (req, res) => {
     try {
         const { email, password } = req.body;
-        
+
         const adminData = await Admins.findOne({ email: email });
-      
+
         if (adminData) {
-           
+
             if (adminData.password === password) {
                 req.session.admin = adminData;
                 res.redirect("/admin/dashboard");
             } else {
-            
+
                 res.redirect('/admin?error=Incorrect password');
             }
         } else {
-    
+
             res.redirect('/admin?error=Email not found');
         }
     } catch (error) {
         console.log(error);
-  
+
         res.redirect('/admin?error=An error occurred');
     }
 }
-const getChartDetails = async () => {
-    try {
-        const orders = await Order.aggregate([
-            {
-                $match: { orderStatus: 'delivered' }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    orderDate: "$createdAt"
-                }
-            }
-        ]);
-
-        let monthlyData = Array(12).fill(0); // Initialize monthly data array with zeros for each month
-        let dailyData = Array(7).fill(0); // Initialize daily data array with zeros for each day of the week
-
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-        // Convert to monthly order array
-        orders.forEach((order) => {
-            const date = new Date(order.orderDate);
-            const month = date.getMonth(); // Get the month index
-
-            // Count the number of orders in each month
-            monthlyData[month] += 1;
-        });
-
-        // Convert to daily order array
-        orders.forEach((order) => {
-            const date = new Date(order.orderDate);
-            const dayOfWeek = date.getDay(); // Get the day of the week index
-
-            // Count the number of orders on each day of the week
-            dailyData[dayOfWeek] += 1;
-        });
-
-        // Return the monthlyData and dailyData
-        return { monthlyData, dailyData };
-    } catch (error) {
-        // Handle errors
-        console.error("Error in getChartDetails:", error);
-        throw error;
-    }
-};
-
-const getDashboardDetails = async () => {
-    try {
-        let response = {};
-        let revenueTotal, revenueMonthly, totalProducts;
-
-        revenueTotal = await Order.aggregate([
-            {
-                $match: { orderStatus: 'delivered' }
-            },
-            {
-                $group: {
-                    _id: null,
-                    revenue: { $sum: '$totalAmount' }
-                }
-            }
-        ]);
-
-        response.revenueTotal = revenueTotal[0]?.revenue;
-
-        revenueMonthly = await Order.aggregate([
-            {
-                $match: {
-                    orderStatus: 'delivered',
-                    orderDate: {
-                        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-                    }
-                }
-            },
-            {
-                $group: {
-                    _id: null,
-                    revenue: { $sum: '$totalAmount' }
-                }
-            }
-        ]);
-
-        response.revenueMonthly = revenueMonthly[0]?.revenue;
-
-        totalProducts = await Products.aggregate([
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: { $toInt: "$product_quantity" } } // Sum the converted product_quantity values
-                }
-            }
-        ]);
-
-        response.totalProducts = totalProducts[0]?.total;
-
-        response.totalOrders = await Order.find({ orderStatus: 'confirmed' }).count();
-
-        response.numberOfCategories = await Category.find({}).count();
-
-        return response;
-    } catch (error) {
-        console.error("Error in getDashboardDetails:", error);
-        throw error;
-    }
-};
 
 const dashboardLoad = async (req, res) => {
     try {
-        // Call the getChartDetails function to retrieve chart data
-        const { monthlyData, dailyData } = await getChartDetails();
-
-        // Call the getDashboardDetails function to retrieve other dashboard details
-        const dashboardDetails = await getDashboardDetails();
-
-        // Retrieve other necessary data
+        // Fetch all orders
         const salesDetails = await Order.find();
-        const products = await Products.find();
-        const category = await Category.find();
 
-        // Render the dashboard template with the retrieved data
+        // Fetch all products and categories
+        const products = await Products.find();
+        const categories = await Category.find();
+
+        // Aggregate to find the top selling products
+        const topSellingProducts = await Order.aggregate([
+            { $unwind: "$products" }, // Split orders into individual products
+            { $group: { _id: "$products.productId", totalQuantity: { $sum: "$products.quantity" } } }, // Group by productId and sum quantities
+            { $sort: { totalQuantity: -1 } }, // Sort by total quantity descending
+            { $limit: 10 } // Limit to top 10 products
+        ]);
+
+        // Extract product IDs of top selling products
+        const productIds = topSellingProducts.map(product => product._id);
+
+        // Fetch details of top selling products
+        const productsData = await Products.find({ _id: { $in: productIds } }, { name: 1, image: 1 });
+
+        // Aggregate to find the top selling categories
+        const topSellingCategories = await Order.aggregate([
+            { $unwind: "$products" }, // Split orders into individual products
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "products.productId",
+                    foreignField: "_id",
+                    as: "product"
+                }
+            }, // Lookup products collection to get product details
+            { $unwind: "$product" }, // Unwind the product array
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "product.category",
+                    foreignField: "_id",
+                    as: "category"
+                }
+            }, // Lookup categories collection to get category details
+            { $unwind: "$category" }, // Unwind the category array
+            { $group: { _id: "$category._id", totalQuantity: { $sum: "$products.quantity" } } }, // Group by categoryId and sum quantities
+            { $sort: { totalQuantity: -1 } }, // Sort by total quantity descending
+            { $limit: 10 } // Limit to top 10 categories
+        ]);
+
+        // Fetch details of the top selling categories
+        const topSellingCategoriesData = await Category.find({ _id: { $in: topSellingCategories.map(cat => cat._id) } });
+console.log(topSellingCategoriesData);
         res.render("admin/page-adminDashboard", {
             salesDetails: salesDetails,
             products: products,
-            category: category,
-            monthlyData: monthlyData,
-            dailyData: dailyData,
-            orderStatus: dashboardDetails.orderStatus,
-            chartData: dashboardDetails.chartData,
-            dashboardDetails: dashboardDetails.dashboardData
+            categories: categories, // Pass categories to the rendering context
+            productsData: productsData,
+            topSellingCategories: topSellingCategoriesData
         });
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
 };
+
 
 
 
@@ -208,7 +138,7 @@ const userLogout = (req, res) => {
 
 // const pageNotFound = (req, res) => {
 //     try {
-        
+
 //      res.render('admin/page-404')
 //     } catch (error) {
 //         console.log(error);
@@ -221,7 +151,7 @@ module.exports = {
     adminLogin,
     adminPost,
     userLogout,
-    getChartDetails,
-  //  pageNotFound
-   
+
+    //  pageNotFound
+
 }
