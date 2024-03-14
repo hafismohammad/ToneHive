@@ -31,7 +31,7 @@ const adminOrderStatus = async (req, res) => {
 
      
         order.products.forEach(async (product) => {
-        if (product.orderStatus !== 'cancelled') {
+        if (product.orderStatus !== 'cancelled') {      
                 await Order.updateOne(
                     { _id: orderId, 'products._id': product._id },
                     { $set: { 'products.$.orderStatus': status } }
@@ -57,7 +57,7 @@ const orderProductView = async (req, res) => {
             return res.status(404).send('Order not found');
         }
         orderedItems.offerPrice = orderedItems.products[0].productId.price - ((orderedItems.products[0].productId.price * orderedItems.products[0].productId.discount) / 100)
-        console.log(orderedItems);
+      //  console.log(orderedItems);
         
         res.render('admin/page-viewProductsDetails', { orderedItems: orderedItems });
     } catch (error) {
@@ -116,7 +116,7 @@ const orderReortDateWise = async (req, res) => {
         //     salesReport[i].createdAt = dateFormat(salesReport[i].createdAt);
         //     salesReport[i].createdAt = format(salesReport[i].createdAt, 'yyyy-MM-dd HH:mm:ss');
         // }
-      
+      console.log(salesReport);
         res.status(200).json({ sales: salesReport }); 
     } catch (error) {
         console.log(error);

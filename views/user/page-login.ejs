@@ -14,21 +14,21 @@
     
     <form id="logForm" class="border p-5" style="max-width:600px; margin:auto; margin-top: 200px; margin-bottom: 50px;" method="post" action="/login">
         <div class="text-center">
-            <a ><img width="100px" src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
+            <a><img width="100px" src="/public/assets/imgs/theme/Tonehive (1).png" alt=""></a>
         </div>
         <h2 class="d-flex justify-content-center py-5">Login</h2>
         <% if (locals.message) { %>
-            <div id="successMessage" class="col-6">
-                <p class="alert alert-success"><%= locals.message %></p>
-            </div>
+        <div id="successMessage" class="col-6">
+            <p class="alert alert-success"><%= locals.message %></p>
+        </div>
         <% } %>
-        
+    
         <% if(locals.error){ %>
-            <div id="error" class="text-center">
-                <p class="mt-15 err text-danger"><%= locals.error %></p>
-            </div>
-            <% } %>
-           
+        <div id="error" class="text-center">
+            <p class="mt-15 err text-danger"><%= locals.error %></p>
+        </div>
+        <% } %>
+    
         <div class="mb-3">
             <input type="email" class="form-control" name="email" id="email" placeholder="Email address" aria-describedby="emailHelp">
         </div>
@@ -36,17 +36,32 @@
     
         <div class="mb-3">
             <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+            <input type="checkbox" id="showPassword"> Show Password
         </div>
         <p><div id="error2" style="display: none;" class="mt-15 err text-danger"></div></p>
     
-        <a href="/RecoverForgottPassword"><h1 style="font-size: 1rem;">Forgot Password</h1></a> 
+        <a href="/RecoverForgottPassword">
+            <h1 style="font-size: 1rem;">Forgot Password</h1>
+        </a>
         <div class="mt-3 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary btn-block btn-secondary">LOGIN</button>
         </div>
         <div class="text-center">
-            <p>You dont have an account yet? <a href="/register">Sign up</a></p>
+            <p>You don't have an account yet? <a href="/register">Sign up</a></p>
         </div>
     </form>
+    
+    <script>
+        document.getElementById("showPassword").addEventListener("change", function () {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        });
+    </script>
+    
     
 </div>
 

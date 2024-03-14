@@ -104,39 +104,17 @@
                 <div class="col-xl-8 col-lg-12">
                     <div class="card mb-4">
                         <article class="card-body">
-                            <h5 class="card-title">Sale statistics Monthly</h5>
+                            <h5 class="card-title">Sale statistics</h5>
                             <canvas id="myChart" height="120px"></canvas>
                         </article>
                     </div>
+                   
                 </div>
-                <div class="col-xl-4 col-lg-12">
-                    <div class="card mb-4">
-                        <article class="card-body">
-                            <input type="hidden" id="orderStatus" value="<%= JSON.stringify(orderStatus) %>">
-                            <h5 class="card-title">Order Statuses</h5>
-                            <canvas id="myChart2" height="217"></canvas>
-                        </article>
-                    </div>
-                </div>
-                <div class="col-xl-8 col-lg-12">
-                    <div class="card mb-4">
-                        <article class="card-body">
-                            <h5 class="card-title">Sale statistics Daily</h5>
-                            <canvas id="myChart3" height="120px"></canvas>
-                        </article>
-                    </div>
-                </div>
+              
             </div>
         
             <!-- Ensure that chartData is properly passed to the view -->
-            <% if (chartData) { %>
-                <!-- Use console.log to verify that chartData.monthlyData is properly populated -->
-                <%= console.log(chartData.monthlyData, 'kkkkkkkkkkkkkk'); %>
-                <div style="display: none;" id="chart-container">
-                    <!-- Ensure that chartData.monthlyData and chartData.dailyData are properly passed as data attributes -->
-                    <canvas id="myChartData" data-monthly="<%= chartData.monthlyData %>" data-daily="<%= chartData.dailyData %>"></canvas>
-                </div>
-            <% } %>
+           
             
          
         </section> <!-- content-main end// -->
@@ -178,7 +156,20 @@
 
 
 
-   
+   <!-- <script>
+   window.onload = function(){
+    fetch('/admin/dashboard',{
+        method:'GET',
+    })
+    .then(response => {
+        response.json()
+    }).then
+    if(data){
+        dataOnload(data)
+    }
+   }
+ 
+   </script> -->
 
 
 

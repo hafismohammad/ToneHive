@@ -316,7 +316,7 @@ const placeOrderPost = async (req, res) => {
             { $project: { items: 1 } },
             { $lookup: { from: 'products', localField: 'items.productId', foreignField: '_id', as: 'productDetails' } }
         ]);
-
+         
         const cartCoupon = await Cart.findOne({userId:userId, })
         // Initialize total cart price
         let totalCartPrice = 0;
@@ -372,7 +372,9 @@ const placeOrderPost = async (req, res) => {
             const subtotal = Math.round(offerPrice * cartItem.items.quantity);
 totalCartPrice += subtotal;
 
-
+ if (paymentMethod === 'COD' && totalCartPrice < 1000) {
+            return res.status(400).json({ error: 'COD is not allowed for orders less than 1000 rupees.' });
+        }
             // Update the product details with offer price and subtotal
             cartItem.productDetails[0].offerPrice = offerPrice;
             cartItem.subtotal = subtotal;

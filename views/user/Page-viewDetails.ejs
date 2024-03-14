@@ -230,10 +230,7 @@
                     <div class="header-right">
                         <div class="search-style-2">
                             <form action="#">
-                                <select class="select-active">
-                                    <option>All Categories</option>
-
-                                </select>
+                                
                                 <input type="text" placeholder="Search for items...">
                             </form>
                         </div>
@@ -304,9 +301,7 @@
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categori-button-active" href="#">
-                                <span class="fi-rs-apps"></span> Browse Categories
-                            </a>
+                           
 
                         </div>
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
@@ -315,14 +310,14 @@
                                     <li>
                                         <a href="/userHome">Home </a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">About</a>
-                                    </li>
+                                    </li> -->
                                     <li>
-                                        <a href="#">Shop </a>
+                                        <a href="/shopProduct">Shop </a>
                                     </li>
 
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">Blog </a>
                                     </li>
                                     <li>
@@ -330,7 +325,7 @@
                                     </li>
                                     <li>
                                         <a href="#">Contact</a>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </nav>
                         </div>
@@ -346,56 +341,64 @@
         </div>
     </header>
 
-      <div class="row mb-50 mt-20 order-info-wrap" style="background-color: rgb(228, 224, 224); height: 120px;
-                   align-items: center;">
-                    <div class="col-md-4" style=" text-align: center;">
-                        <article class="icontext align-items-start">
-                            
-                            <span class="icon icon-sm rounded-circle bg-primary-light">
-                                <i class="text-primary material-icons md-person"></i>
-                            </span>
-                            <div class="text">
-                                <h6 class="mb-1">Customer</h6>
-                                <p class="mb-1">
-                                    <%= orderedItems.address.name %>
-                                </p>
-                                <a href="/admin/userProfile/">View profile</a>
-                            </div>
-                        </article>
-                    </div> <!-- col// -->
-                    <div class="col-md-4" style=" text-align: center;">
-                        <article class="icontext align-items-start">
-                            <span class="icon icon-sm rounded-circle bg-primary-light" style="margin-top: 13px;">
-                                <i class="text-primary material-icons md-local_shipping"></i>
-                            </span>
-                            <div class="text">
-                                <h6 class="mb-1">Order info</h6>
-                                <p class="mb-1">
-                                    Shipping: Fargo express <br> Pay method: <%= orderedItems.paymentMethod %> <br>
-                                        Status: new
-                                </p>
-                                <!-- <a href="#">Download info</a> -->
-                            </div>
-                        </article>
-                    </div> <!-- col// -->
-                    <div class="col-md-4" style=" text-align: center;">
-                        <article class="icontext align-items-start">
-                            <span class="icon icon-sm rounded-circle bg-primary-light">
-                                <i class="text-primary material-icons md-place"></i>
-                            </span>
-                            <div class="text">
-                                <h6 class="mb-1">Deliver to</h6>
-                                <p class="mb-1">
-                                    City: <%= orderedItems.address.city %>
-                                </p>
-                                <p class="mb-1">
-                                    Address : <%= orderedItems.address.house %>
-                                </p>
-                                <!-- <a href="#">View profile</a> -->
-                            </div>
-                        </article>
-                    </div> <!-- col// -->
-                </div>
+    <div class="container">
+        <div class="row mb-50 mt-20 order-info-wrap" style="background-color: rgb(228, 224, 224); height: 120px; align-items: center;">
+            <div class="col-md-4" style="text-align: center;">
+                <article class="icontext align-items-start">
+                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                        <i class="text-primary material-icons md-person"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Customer</h6>
+                        <p class="mb-1">
+                            <%= orderedItems.address.name %>
+                        </p>
+                        <a href="/admin/userProfile/">View profile</a>
+                    </div>
+                </article>
+            </div> <!-- col// -->
+            <div class="col-md-4" style="text-align: center;">
+                <article class="icontext align-items-start">
+                    <span class="icon icon-sm rounded-circle bg-primary-light" style="margin-top: 13px;">
+                        <i class="text-primary material-icons md-local_shipping"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Order info</h6>
+                        <p class="mb-1">
+                            Shipping: Fargo express <br> Pay method: <%= orderedItems.paymentMethod %> <br>
+                            Status: new
+                        </p>
+                        <!-- <a href="#">Download info</a> -->
+                    </div>
+                </article>
+            </div> <!-- col// -->
+            <div class="col-md-4" style="text-align: center;">
+                <article class="icontext align-items-start">
+                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                        <i class="text-primary material-icons md-place"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Deliver to</h6>
+                        <p class="mb-1">
+                            City: <%= orderedItems.address.city %>
+                        </p>
+                        <p class="mb-1">
+                            Address : <%= orderedItems.address.house %>
+                        </p>
+                        <!-- <a href="#">View profile</a> -->
+                    </div>
+                </article>
+                <!-- col// -->
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button id="invoice" class="btn">Download Invoice</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="mt-30 container mb-30">
         <div class="col-lg-12">
             <div class="table-responsive">
@@ -412,6 +415,8 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <input id="orderedItems" type="hidden" value='<%= JSON.stringify(orderedItems) %>'>
+
                         <% if (locals.orderedItems) { %>
                             <% let totalPrice = 0; %>
                             <% orderedItems.products.forEach(element => { %>
@@ -688,6 +693,8 @@
     <script src="/public/assets/js/maind134.js?v=3.4"></script>
     <script src="/public/assets/js/shopd134.js?v=3.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
 </body>
 
 
@@ -823,3 +830,99 @@
         }
     </script>
         
+
+        <script>
+            $(document).ready(function () {
+                $('#invoice').click((e) => {
+        
+                    let orderedItems = JSON.parse(document.getElementById('orderedItems').value);
+
+        
+                    console.log(orderedItems);
+        
+                    e.preventDefault();
+        
+                    Swal.fire({
+                        title: 'Do you want to download Invoice?',
+                        showCancelButton: true,
+                        confirmButtonText: 'OK',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            let filteredProducts = orderedItems.products.filter((product) => {
+                                return product.orderStatus !== "cancelled";
+                            });
+                            let products = filteredProducts.map((product) => ({
+                                quantity: product.quantity,
+                                description: product.productName,
+                                tax: 0,
+                                price: product.productPrice
+                            }));
+                            console.log(products,'productsproducts')
+        
+                            if (filteredProducts[0].couponAmount > 0) {
+                                products.push({
+                                    quantity: 1,
+                                    description: "Coupon Deduction",
+                                    tax: 0,
+                                    price: -orderedItems.couponAmount,
+                                })
+                            }
+        
+                            const data = {
+                                "apiKey": "free",
+                                "mode": "development",
+                                "documentTitle": "INVOICE Tone Hive",
+                                "currency": "INR",
+                                "taxNotation": "GST",
+                                "marginTop": 25,
+                                "marginRight": 25,
+                                "marginLeft": 25,
+                                "marginBottom": 25,
+                                "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png",
+                                "sender": {
+                                    "company": "Tone Hive",
+                                    "address": "Maradu,Kundanoor",
+                                    "zip": "1234 AB",
+                                    "city": "Kochi",
+                                    "country": "India"
+                                },
+                                "client": {
+                                    "company": orderedItems.address.name,
+                                    "address": orderedItems.address.house,
+                                    "zip": "5678 CD",
+                                    "city": orderedItems.address.city,
+                                    "country": orderedItems.address.country
+                                },
+                                "invoiceNumber": "2021.0001",
+                                "invoiceDate": "12-03-2024",
+                                "products": products,
+                                "bottomNotice": "Thank you for your business."
+                            };
+                            console.log(data)
+        
+                            easyinvoice.createInvoice(data, function (result) {
+                                easyinvoice.download('Tone Hive -invoice.pdf', result.pdf);
+                                console.log("success")
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+        
+        <input id="orderedItems" type="hidden" value="<%= JSON.stringify(orderedItems) %>">
+        
+        <div class="container">
+            <div class="row mb-50 mt-20 order-info-wrap" style="background-color: rgb(228, 224, 224); height: 120px; align-items: center;">
+                <!-- Your order info elements here -->
+            </div>
+        
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <button id="invoice" class="btn">Download Invoice</button>
+                </div>
+            </div>
+        </div>
+        
+              

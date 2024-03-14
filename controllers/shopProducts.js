@@ -112,7 +112,7 @@ const sortProductCategory = async (req, res) => {
             const user = await User.findById(userId);
             const userName = user?.name;
             const category = await Category.find({ isList: false });
-            const productsItems = await Products.find({ category: categoryId }).populate("category")
+            const productsItems = await Products.find({ category: categoryId,product_status: true  }).populate("category")
          
             const productData = await Products.aggregate([
                 {

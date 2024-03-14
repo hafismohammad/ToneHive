@@ -470,27 +470,30 @@
                                         </div>
                                         <div class="panel-collapse collapse coupon_form " id="coupon">
                                             <div class="panel-body">
-                                                
 
-                                                
-                                                   
-                                                    <div class="form-group">
-                                                        <% if(useCart.coupon != null) {%>
-                                                            <p class="mb-30 font-sm">Remove Coupon</p>
-                                                            <button onclick="removeCoupon('<%= userId %>','<%= totalPrice %>')" class="btn btn-danger ml-5">Remove Coupon</button>
-                                                      
-                                                            <% } else {%>
-                                                                <p class="mb-30 font-sm">If you have a coupon code, please apply it
-                                                                    below.</p>
-                                                                <div class="form-group">
-                                                                    <input id="couponCode" name="couponCode" type="text"
-                                                                        placeholder="Enter Coupon Code...">
-                                                                </div>
-                                                                <button class="btn btn-md" type="submit"
+
+
+
+                                                <div class="form-group">
+                                                    <% if(useCart.coupon !=null) {%>
+                                                        <p class="mb-30 font-sm">Remove Coupon</p>
+                                                        <button
+                                                            onclick="removeCoupon('<%= userId %>','<%= totalPrice %>')"
+                                                            class="btn btn-danger ml-5">Remove Coupon</button>
+
+                                                        <% } else {%>
+                                                            <p class="mb-30 font-sm">If you have a coupon code, please
+                                                                apply it
+                                                                below.</p>
+                                                            <div class="form-group">
+                                                                <input id="couponCode" name="couponCode" type="text"
+                                                                    placeholder="Enter Coupon Code...">
+                                                            </div>
+                                                            <button class="btn btn-md" type="submit"
                                                                 onclick="applyCoupon('<%= userId %>','<%= totalCartPrice %>');">Apply
                                                                 Coupon</button>
-                                                     <% } %>
-                                                    </div>
+                                                            <% } %>
+                                                </div>
 
                                             </div>
                                         </div>
@@ -699,7 +702,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td>
-                                                                    ₹ <%= cartItem.subtotal  %>
+                                                                    ₹ <%= cartItem.subtotal %>
                                                                 </td>
                                                             </tr>
                                                             <% }) %>
@@ -722,9 +725,9 @@
                                                                             class="font-xl text-brand fw-900">
                                                                             <% if(useCart.coupon) {%>
                                                                                 <%= totalPrice %>
-                                                                                <% }else{ %>
-                                                                                <%= totalCartPrice %>
-                                                                            <% } %>
+                                                                                    <% }else{ %>
+                                                                                        <%= totalCartPrice %>
+                                                                                            <% } %>
                                                                         </span></td>
                                                                 </tr>
 
@@ -1034,7 +1037,7 @@
                         "order_id": data.orderId.id,
                         "handler": function (response) {
                             console.log(response);
-                          
+
                             verify(response, data.orderId.id)
                         },
                         "prefill": {
@@ -1069,18 +1072,18 @@
                             .then(response => response.json())
                             .then((data) => {
                                 if (data.success) {
-                                
+
                                     fetch('/placeOrder', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
                                         },
                                         body: JSON.stringify(
-                                        {address: selectedAddress,paymentMethod:selectedPaymentMethod}
+                                            { address: selectedAddress, paymentMethod: selectedPaymentMethod }
                                         ),
-                                       
+
                                     })
-                                              
+
                                         .then(response => response.json())
                                         .then(data => {
                                             console.log(data);
@@ -1114,10 +1117,19 @@
 
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    window.location.href = '/orderSuccess'
+                    if (data.error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'COD is not allowed for orders less than 1000 rupees.',
+                        });
+                    } else {
+
+                        window.location.href = '/orderSuccess'
+                    }
                 })
                 .catch((error) => {
+                    console.log('dddd');
                     console.error('Error:', error);
                 });
         }
@@ -1144,18 +1156,18 @@
 
 <script>
     function applyCoupon(userId, totalCartPrice) {
-        console.log('userId, totalCartPricevddssfsdf',userId, totalCartPrice);
+        console.log('userId, totalCartPricevddssfsdf', userId, totalCartPrice);
         const couponCode = document.getElementById('couponCode').value;
 
         $.ajax({
             url: '/applyCoupon',
             type: 'post',
             data: { usedBy: userId, totalCartPrice: totalCartPrice, couponCode: couponCode },
-            success:function(res){
+            success: function (res) {
                 console.log(res)
-                if(res.message){
+                if (res.message) {
                     Toastify({
-                        text:  res.message ,
+                        text: res.message,
                         duration: 5000, // Display duration in milliseconds
                         gravity: "top",
                         position: "center", // Display position: top, bottom, or middle
@@ -1163,7 +1175,7 @@
                         stopOnFocus: true // Stop the timer when the toast is focused
                     }).showToast();
                 }
-                if(res.success){
+                if (res.success) {
                     Toastify({
                         text: res.success,
                         duration: 5000, // Display duration in milliseconds
@@ -1172,11 +1184,11 @@
                         backgroundColor: "#5cb85c", // Error message background color
                         stopOnFocus: true // Stop the timer when the toast is focused
                     }).showToast();
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         window.location.reload()
-                    },1000)
+                    }, 1000)
                 }
-         
+
             }
         })
     }

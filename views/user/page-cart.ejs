@@ -386,9 +386,7 @@
                                                     <td class="text-center align-middle" data-title="Quantity">
                                                         <div class="d-flex align-items-center justify-content-center">
                                                             <button class="cart-item-count mr-10"
-                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', -1)"
-                                                                <%=cartItem.items && cartItem.items.quantity===1
-                                                                ? 'disabled' : '' %>>-</button>
+                                                                onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', -1)">-</button>
                                                             <span id="qty-val<%=  cartItem.productDetails._id  %>"
                                                                 class="qty-val">
                                                                 <%= cartItem.items ? cartItem.items.quantity : 0 %>
@@ -397,10 +395,13 @@
                                                                 onclick="changeQuantity('<%= cartItem._id %>','<%= cartItem.productDetails._id %>', '<%= cartItem.items.quantity %>', 1)">+</button>
                                                         </div>
                                                     </td>
-                                                    <td class="text-right" data-title="Subtotal">
-                                                        <span id="subtotal<%=  cartItem.productDetails._id  %>">₹ <%=
+                                                    <td class="text-right" data-title="Subtotaldd">
+                                                        <span id="subtotalPrice<%= cartItem.productDetails._id %>">₹ <%=
                                                                 cartItem.subtotal %> </span>
+                                                        <input value="<%= cartItem.subtotal %>" type="hidden"
+                                                            id="subtotal<%= cartItem.productDetails._id %>">
                                                     </td>
+
                                                     <td class="action" data-title="Remove">
                                                         <a class="text-muted"
                                                             onclick="productRemove('<%= cartItem.productDetails._id %>')"><i
@@ -447,7 +448,8 @@
                                                         <td class="cart_total_label">Cart Subtotal</td>
                                                         <td class="cart_total_amount">
                                                             <span id="cartTotal1" class="font-lg fw-900 text-brand">₹
-                                                                <%= totalCartPrice %></span>
+                                                                <%= totalCartPrice %>
+                                                            </span>
                                                         </td>
                                                     </tr>
 
@@ -631,8 +633,7 @@
 
 <script>
     function changeQuantity(cartItemId, productId, quantity, delta) {
-
-        quantity = parseInt(quantity);
+      
 
         fetch(`/cart/${cartItemId}/${productId}/${delta}`, {
             method: 'PATCH',
@@ -647,50 +648,33 @@
                 return response.json();
             })
             .then(data => {
+                // Update the displayed quantity
+                const qtyVal = document.getElementById(`qty-val${productId}`);
+                qtyVal.innerText = data.requestedQuantity;
 
-                window.location.reload()
-                // Update quantity value in HTML
-                // const qtyVal = document.getElementById(`qty-val${productId}`);
-                // qtyVal.innerText = data.requestedQuantity;
+                // Update the displayed subtotal with the offer price
+                const subtotal = document.getElementById(`subtotalPrice${productId}`);
+                subtotal.innerText = '₹ ' + data.totalPrice;
 
-                // // Update product price value in HTML
-                // const productPriceElement = document.getElementById(`productPrice${productId}`);
-                // const productPriceText = productPriceElement.innerText;
-                // console.log(data.totalPrice);
+                // Update the displayed cart total
+                const cartTotal1 = document.getElementById(`cartTotal1`);
+                cartTotal1.innerHTML = '₹ ' + data.cartTotalProductPrice;
 
-                // const cartTotal1 = document.getElementById(`cartTotal1`);
-                // cartTotal1.innerText = data.totalPrice
-
-                // // Extract numeric part of product price and parse as float
-                // const productPrice = parseFloat(productPriceText.replace('₹', ''));
-
-                // // Check if productPrice is a valid number
-                // if (!isNaN(productPrice)) {
-                //     // Calculate subtotal
-                //     const subtotal = parseFloat(qtyVal.innerText) * productPrice;
-                //     // Format subtotal value in HTML
-                //     const formattedSubtotal = subtotal % 1 === 0 ? subtotal.toFixed(0) : subtotal.toFixed(2);
-                //     // Update subtotal value in HTML
-                //     const subtotalElement = document.getElementById(`subtotal${productId}`);
-                //     subtotalElement.innerText = `₹ ${formattedSubtotal}`;
-
-
-                // } else {
-                //     console.error("Product price is not a valid number");
-                // }
+                const cartTotal2 = document.getElementById(`cartTotal2`);
+                cartTotal2.innerHTML = '₹ ' + data.cartTotalProductPrice;
             })
-
             .catch(error => {
-                // Display a generic error message using SweetAlert
+                
                 Swal.fire({
-                    icon: 'warning',
+                    icon: 'error',
                     title: 'Error',
-                    text: 'Requested quantity exceeds available stock.'
+                   // text: 'Requested quantity exceeds available stock.'
                 });
                 console.error('Error:', error);
             });
     }
 </script>
+
 
 
 
