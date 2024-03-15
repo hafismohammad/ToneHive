@@ -8,6 +8,8 @@ const session = require("express-session");
 const { set } = require("mongoose");
 const Order = require("../models/orderModel");
 
+
+
 //const categoryHelper = require("../helpers/categoryHelper")
 //admin login 
 const adminLogin = (req, res) => {
@@ -116,6 +118,14 @@ console.log(topSellingCategoriesData);
 
 
 
+const showChart = async (req, res) => {
+    try {
+        const cartData = await Order.find()
+        res.render('admin/page-adminDashboard', { cartData: JSON.stringify(cartData) })
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -136,14 +146,6 @@ const userLogout = (req, res) => {
 
 
 
-// const pageNotFound = (req, res) => {
-//     try {
-
-//      res.render('admin/page-404')
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 
 
 module.exports = {
@@ -151,7 +153,7 @@ module.exports = {
     adminLogin,
     adminPost,
     userLogout,
-
+    showChart
     //  pageNotFound
 
 }

@@ -1,3 +1,5 @@
+// Import Chart.js library
+//import Chart from 'chart.js/auto';
 (function ($) {
     "use strict";
 
