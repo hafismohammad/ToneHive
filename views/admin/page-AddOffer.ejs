@@ -34,29 +34,21 @@
                     </div>
                     <div class="card-body">
                         <div class="mx-auto"> 
-                            <form  action="/admin/PostOffer" id="editForm"  method="post">
+                            <form action="/admin/PostOffer" id="editForm" method="post">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Offer Name</label>
-                                    <input type="text" name="name" placeholder="Type here" class="form-control"
-                                        id="name">
-                                    <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span>
-                                    </p>
+                                    <label for="name" class="form-label">Offer Name</label>
+                                    <input type="text" name="name" placeholder="Type here" class="form-control" id="name">
+                                    <p><span id="error1" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Starting Date</label>
-                                  
-                                        <input name="startingDate" type="date" value="02.05.2021" class="form-control">
-                                 
-                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span>
-                                    </p>
+                                    <input name="startingDate" type="date" class="form-control">
+                                    <p><span id="error2" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Ending Date</label>
-                                  
-                                        <input name="endingDate" type="date" value="02.05.2021" class="form-control">
-                                 
-                                    <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span>
-                                    </p>
+                                    <input name="endingDate" type="date" class="form-control">
+                                    <p><span id="error3" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Product</label>
@@ -74,10 +66,8 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Product Discount</label>
-                                    <input placeholder="Type here" name="productDiscount" class="form-control" id="discount"
-                                        rows="4"></input>
-                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span>
-                                    </p>
+                                    <input placeholder="Type here" name="productDiscount" class="form-control" id="productDiscount">
+                                    <p><span id="error5" style="display: none;" class="mt-15 err text-danger"></span></p>
                                 </div>
                                 
                                 <div class="mb-4">
@@ -94,17 +84,14 @@
                                     <p><span id="error6" style="display: none;" class="mt-15 err text-danger"></span>
                                     </p>
                                 </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Category Discount</label>
-                                    <input placeholder="Type here" name="categoryDiscount" class="form-control" id="discount"
-                                        rows="4"></input>
-                                    <p><span id="error7" style="display: none;" class="mt-15 err text-danger"></span>
-                                    </p>
-                                </div>
-
-                                <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add
-                                    Offer</button>
-                            </form>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Category Discount</label>
+                                <input placeholder="Type here" name="categoryDiscount" class="form-control" id="categoryDiscount">
+                                <p><span id="error7" style="display: none;" class="mt-15 err text-danger"></span></p>
+                            </div>
+                            <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add Offer</button>
+                        </form>
                         </div>
                     </div>
                 </div> <!-- card end// -->
@@ -156,3 +143,79 @@
         });
     }
 </script> -->
+
+<script>
+    const editFormId = document.getElementById("editForm");
+
+    // Function to display and hide errors with a specified timeout
+    function showErrorWithTimeout(error, errorMessage) {
+        error.style.display = "block";
+        error.innerHTML = errorMessage;
+        setTimeout(() => {
+            error.style.display = "none";
+            error.innerHTML = "";
+        }, 3000); // Timeout set to 3000 milliseconds (3 seconds)
+    }
+
+    function validateForm() {
+        const name = document.getElementById("name").value.trim();
+        const startingDate = document.querySelector("[name='startingDate']").value.trim();
+        const endingDate = document.querySelector("[name='endingDate']").value.trim();
+        const productDiscount = document.getElementById("productDiscount").value.trim();
+        const categoryDiscount = document.getElementById("categoryDiscount").value.trim();
+
+        const error1 = document.getElementById("error1");
+        const error2 = document.getElementById("error2");
+        const error3 = document.getElementById("error3");
+        const error5 = document.getElementById("error5");
+        const error7 = document.getElementById("error7");
+
+        let valid = true;
+
+        // Reset error messages
+        [error1, error2, error3, error5, error7].forEach(error => {
+            error.style.display = 'none';
+            error.innerHTML = '';
+        });
+
+        // Name validation
+        if (name === '') {
+            showErrorWithTimeout(error1, 'Please enter a valid offer name');
+            valid = false;
+        }
+
+        // Starting Date validation
+        if (startingDate === '') {
+            showErrorWithTimeout(error2, 'Please enter a valid starting date');
+            valid = false;
+        }
+
+        // Ending Date validation
+        if (endingDate === '') {
+            showErrorWithTimeout(error3, 'Please enter a valid ending date');
+            valid = false;
+        }
+
+        // Product Discount validation
+        if (productDiscount === '' || isNaN(productDiscount) || parseInt(productDiscount) < 0 || parseInt(productDiscount) > 100) {
+            showErrorWithTimeout(error5, 'Please enter a valid product discount percentage (0-100)');
+            valid = false;
+        }
+
+        // Category Discount validation
+        if (categoryDiscount === '' || isNaN(categoryDiscount) || parseInt(categoryDiscount) < 0 || parseInt(categoryDiscount) > 100) {
+            showErrorWithTimeout(error7, 'Please enter a valid category discount percentage (0-100)');
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    editFormId.addEventListener('submit', function(e) {
+        if (!validateForm()) {
+            e.preventDefault();
+        }
+    });
+</script>
+
+

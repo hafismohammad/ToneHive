@@ -4,8 +4,8 @@ const categoryModel = mongoose.Schema({
     name:{
         type:String,
         unique: true,
-        return:true
-      
+        maxlength: 20, // Limiting the name to 20 characters
+        required: true // Assuming name is required
     },
     offerPrice:{
         type:Number,
@@ -15,11 +15,8 @@ const categoryModel = mongoose.Schema({
     isList:{
         type:Boolean,
         default:false
-    },
-
-})
-//module.exports = new mongoose.model("Category",categoryModel)
-
+    }
+});
 
 const Category = mongoose.model("Category", categoryModel);
- module.exports = Category
+module.exports = Category;

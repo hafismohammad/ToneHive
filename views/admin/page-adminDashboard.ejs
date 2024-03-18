@@ -104,47 +104,83 @@
                 <div class="col-xl-8 col-lg-12">
                     <div class="card mb-4">
                         <article class="card-body">
-                            <h5 class="card-title">Sale statistics</h5>
-                            <canvas id="myChart" height="120px"></canvas>
+                            <h5 class="card-title">Monthly Sales Statistics</h5>
+                            <canvas id="monthlyChart" height="120px"></canvas>
                         </article>
                     </div>
-                   
                 </div>
-              
-          
-           
+                <div class="col-xl-4 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">order Statuses</h5>
+                            <input type="hidden" id="orderStatus">
+                            <canvas id="myChart2" height="217"></canvas>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-xl-8 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Daily Sales Statistics</h5>
+                            <canvas id="dailyChart" height="120px"></canvas>
+                        </article>
+                    </div>
+                </div>
                 <div class="col-xl-4 col-lg-12">
                     <div class="card mb-4">
                         <article class="icontext">
                             <div class="p-3">
-                                <h3 class="mb-4 card-title">Best Selling Categories</h3>
+                                <h3 class="mb-4 card-title text-center">Best Selling Categories</h3> <!-- Center align the title -->
                                 <% for(let i = 0; i < topSellingCategories.length; i++) { %>
-                                    <div class="category-item mb-2"><%= topSellingCategories[i].name %></div>
+                                    <div class="category-item mb-2 text-center"> <!-- Center align the category name -->
+                                        <%= topSellingCategories[i].name %>
+                                    </div>
                                 <% } %>
                             </div>
                         </article>
                     </div>
                 </div>
-                
-                
-        </div>     
-           
-         <div>
-            <h1>Best Selling Products</h1>
-            <div class="row">
-                <% productsData.forEach(product => { %>
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="card">
-                            <img src="/public/uploads/<%= product.image[0] %>" alt="<%= product.name %>" class="card-img-top" width="150" height="150">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= product.name %></h5>
-                            </div>
-                        </div>
-                    </div>
-                <% }); %>
             </div>
-         </div>
-       
+            
+           
+            <div>
+                <h1 class="text-center mb-4">Best Selling Products</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Image</th>
+                            <th>Product Name</th>
+                            <th>Total Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                        // Sort productsData based on topSellingProducts
+                        const sortedProducts = productsData.sort((a, b) => {
+                            // Find the totalQuantity of each product in topSellingProducts
+                            const quantityA = topSellingProducts.find(product => product._id.toString() === a._id.toString())?.totalQuantity || 0;
+                            const quantityB = topSellingProducts.find(product => product._id.toString() === b._id.toString())?.totalQuantity || 0;
+                            // Sort in descending order of totalQuantity
+                            return quantityB - quantityA;
+                        });
+            
+                        // Render sorted products
+                        sortedProducts.forEach(product => { %>
+                            <tr>
+                                <td><img src="/public/uploads/<%= product.image[0] %>" alt="<%= product.name %>" style="max-width: 100px; max-height: 100px;"></td>
+                                <td><%= product.name %></td>
+                                <td><%= topSellingProducts.find(topProduct => topProduct._id.toString() === product._id.toString())?.totalQuantity || 0 %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            
+            
+            
+            
+            
+        
         
         
         
@@ -193,21 +229,36 @@
 
 
 
-   <script>
-   window.onload = function(){
-    fetch('/admin/dashboard',{
-        method:'GET',
+<script>
+window.onload = function () {
+    fetch('/admin/showCart', {
+        method: 'post',
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({msg:"hi"})
     })
-    .then(response => {
-        response.json()
-    }).then
-    if(data){
-        
-        dataOnload(data)
-    }
-   }
- 
-   </script>
+    .then(response => response.json())
+    .then(data => {
+        if(data.monthlySalesData && data.dailySalesData && data.eachOrderStatusCount){
+            console.log(data.monthlySalesData);
+            console.log(data.dailySalesData);
+            console.log(data.eachOrderStatusCount);
+
+            // Call the chart function for line charts
+            chart(data.monthlySalesData, data.dailySalesData);
+
+            // Call a separate function for the pie chart
+            pieChart(data.eachOrderStatusCount);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+}
+
+</script>
+
 
 
 

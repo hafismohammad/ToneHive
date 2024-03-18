@@ -456,10 +456,10 @@ const orderPlace = async (req, res) => {
         console.log(error);
     }
 }
-
-const paymentSuccess = (req, res) => {
+const paymentSuccess = async (req, res) => {
     try {
-        const { paymentid, razorpayorderid, signature, orderId } = req.body;
+        const { paymentid, razorpayorderid, signature, orderId, address, paymentMethod, cartItems, totalCartPrice, cartCoupon } = req.body;
+       
         const { createHmac } = require('node:crypto');
 
         const hash = createHmac('sha256', 'XViGIX1i2HyMgTUc0xt8xAir')
@@ -470,14 +470,22 @@ const paymentSuccess = (req, res) => {
             console.log('success');
             res.status(200).json({ success: true, message: 'Payment successful' });
         } else {
-            console.log('error');
-            res.status(400).json({ success: false, message: 'Invalid payment details' });
+            console.log('Payment failed');
+          
+
+            // Redirect to viewProductDetails page with the order ID
+            res.status(200).json({ success: false, message: 'Payment failed' });
         }
     } catch (error) {
-        console.log(error);
+        console.error('Error:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
+
+
+
+
+
 
 
 

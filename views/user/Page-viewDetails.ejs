@@ -394,9 +394,14 @@
         
         <div class="row">
             <div class="col-md-12 text-right">
-                <button id="invoice" class="btn">Download Invoice</button>
+                <% orderedItems.products.forEach(element => { %>
+                    <% if(element.orderStatus === 'delivered') { %>
+                        <button id="invoice" class="btn">Download Invoice</button>
+                    <% } %>
+                <% }) %>
             </div>
         </div>
+        
     </div>
     
     <div class="mt-30 container mb-30">

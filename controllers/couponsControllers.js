@@ -70,32 +70,31 @@ const applyCoupon = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const { totalCartPrice, couponCode } = req.body;
-        // console.log(totalCartPrice)
         const coupon = await couponModel.findOne({ code: couponCode });
 
         if (coupon && coupon.isActive === 'Active') {
-            console.log(coupon.usedBy.includes(userId))
-            if (!coupon.usedBy.includes(userId)) {
+            const isCouponUsed = coupon.usedBy.includes(userId);
+
+            if (!isCouponUsed) {
                 let cart = await Cart.findOne({ userId: userId });
                 
                 if (cart) {
                     const discountAmount = (totalCartPrice * coupon.discount) / 100;
                     const discountedPrice = totalCartPrice - discountAmount;
                     cart.totalPrice = discountedPrice;
-                    cart.discountAmount = discountAmount
+                    cart.discountAmount = discountAmount;
                     cart.coupon = couponCode;
                    
                     await cart.save();
 
                     coupon.usedBy.push(userId);
                     await coupon.save();
-                    res.json({success:"Coupon applied successfully"});
+                    res.json({ success: "Coupon applied successfully" });
                 } else {
                     res.status(404).redirect("/checkout?message=Cart not found for the user");
                 }
             } else {
-                console.log("hihhh")
-                res.json({message:"This coupon is already used"});
+                res.json({ message: "This coupon is already used" });
             }
         } else {
             res.status(400).redirect("/checkout?message=Coupon is not active or invalid");
@@ -105,6 +104,7 @@ const applyCoupon = async (req, res) => {
         return res.status(500).json({ status: false, message: "Internal server error" });
     }
 }
+
 
 
 const removeCoupon = async (req, res) => {

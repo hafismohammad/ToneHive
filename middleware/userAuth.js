@@ -2,6 +2,7 @@
 const isLogin = async(req,res,next)=>{
     try {
       if(req.session.user){
+       
         res.redirect('/userHome')
       }else{
         next()

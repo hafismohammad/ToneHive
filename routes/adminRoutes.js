@@ -21,7 +21,7 @@ router.get("/logoutAdmin", adminAuth.isLogout, adminControllers.userLogout)
 //router.get("/" ,adminAuth.isLogout,adminControllers.dashboardLoad);
 router.get("/dashboard", adminAuth.isLogout, adminControllers.dashboardLoad);
 
-router.get("/showCart", adminAuth.isLogin, adminControllers.showChart)
+router.post("/showCart", adminControllers.showChart)
 
 // customers side
 router.get("/customers", customerController.customerLoad)

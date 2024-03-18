@@ -475,7 +475,7 @@
 
 
                                                 <div class="form-group">
-                                                    <% if(useCart.coupon !=null) {%>
+                                                    <% if(useCart && useCart.coupon !=null) {%>
                                                         <p class="mb-30 font-sm">Remove Coupon</p>
                                                         <button
                                                             onclick="removeCoupon('<%= userId %>','<%= totalPrice %>')"
@@ -723,7 +723,7 @@
                                                                     <td colspan="2" class="product-subtotal"><span
                                                                             id="totalAmount"
                                                                             class="font-xl text-brand fw-900">
-                                                                            <% if(useCart.coupon) {%>
+                                                                            <% if(useCart && useCart.coupon !=null) {%>
                                                                                 <%= totalPrice %>
                                                                                     <% }else{ %>
                                                                                         <%= totalCartPrice %>
@@ -1038,7 +1038,7 @@
                         "handler": function (response) {
                             console.log(response);
 
-                            verify(response, data.orderId.id)
+                            verify(response, data.orderId.id, selectedAddress, selectedPaymentMethod)
                         },
                         "prefill": {
                             "name": "Gaurav Kumar",
@@ -1055,7 +1055,7 @@
                     var rzp = new Razorpay(options)
                     rzp.open();
 
-                    function verify(response, orderId) {
+                    function verify(response, orderId, address, paymentMethod) {
                         console.log('heeeee', response, orderId);
                         fetch('/paymentSuccess', {
                             method: 'post',
@@ -1066,13 +1066,15 @@
                                 paymentid: response.razorpay_payment_id,
                                 razorpayorderid: response.razorpay_order_id,
                                 signature: response.razorpay_signature,
-                                orderId
+                                orderId: orderId,
+                                address: address,
+                                paymentMethod: paymentMethod
                             })
                         })
                             .then(response => response.json())
                             .then((data) => {
                                 if (data.success) {
-
+                                    // Payment successful, create order
                                     fetch('/placeOrder', {
                                         method: 'POST',
                                         headers: {
@@ -1081,28 +1083,45 @@
                                         body: JSON.stringify(
                                             { address: selectedAddress, paymentMethod: selectedPaymentMethod }
                                         ),
-
                                     })
-
                                         .then(response => response.json())
                                         .then(data => {
                                             console.log(data);
-                                            window.location.href = '/orderSuccess'
+                                            window.location.href = '/orderSuccess';
                                         })
                                         .catch((error) => {
                                             console.error('Error:', error);
-                                        })
+                                        });
                                 } else {
+                                    
+                                    // Payment failed, create order anyway with status 'payment pending'
+                                    fetch('/placeOrder', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify(
+                                            { address: selectedAddress, paymentMethod: selectedPaymentMethod }
+                                        ),
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            console.log(data);
+                                            alert('Payment failed. Please try again later.');
 
-                                    console.error('Payment failed:', data.error);
-
-                                    alert('Payment failed. Please try again later.');
+                                            // Redirect to viewProductDetails page with the order ID
+                                            window.location.href = `/vewProductDetails/${data.order}`;
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                        });
                                 }
                             })
                             .catch(error => {
                                 // Handle any errors that occur during the fetch operation
                                 console.error('Error:', error);
                             });
+
                     }
                 })
 
@@ -1153,6 +1172,7 @@
     watchPaymentMethod();
 
 </script>
+
 
 <script>
     function applyCoupon(userId, totalCartPrice) {

@@ -86,6 +86,7 @@ function passwordValidate(e) {
     const passwordVal = passwordid.value;
     const alpha =  /[a-zA-Z]/
     const digit = /\d/
+    const specialChar = /[!@#$%^&*()\-_=+{}[\]:;<>|./?]/;
     if(passwordVal.length < 8)
     {
         error4.style.display = "block";
@@ -96,10 +97,10 @@ function passwordValidate(e) {
             error4.innerHTML = "";
         }, 3000);
 
-    }else if(!alpha.test(passwordVal) || !digit.test(passwordVal))
+    }else if(!alpha.test(passwordVal) || !digit.test(passwordVal) || !specialChar.test(passwordVal))
     {
         error4.style.display = "block"
-        error4.innerHTML = "Should contain number and alphabets !!"
+        error4.innerHTML = "Should contain number,  alphabets and spacial characters !!"
 
         setTimeout(() => {
             error4.style.display = "none";

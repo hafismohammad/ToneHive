@@ -102,13 +102,14 @@ const dashboardLoad = async (req, res) => {
 
         // Fetch details of the top selling categories
         const topSellingCategoriesData = await Category.find({ _id: { $in: topSellingCategories.map(cat => cat._id) } });
-console.log(topSellingCategoriesData);
+
         res.render("admin/page-adminDashboard", {
             salesDetails: salesDetails,
             products: products,
             categories: categories, // Pass categories to the rendering context
             productsData: productsData,
-            topSellingCategories: topSellingCategoriesData
+            topSellingCategories: topSellingCategoriesData,
+            topSellingProducts:topSellingProducts
         });
     } catch (error) {
         console.error(error);
@@ -120,12 +121,63 @@ console.log(topSellingCategoriesData);
 
 const showChart = async (req, res) => {
     try {
-        const cartData = await Order.find()
-        res.render('admin/page-adminDashboard', { cartData: JSON.stringify(cartData) })
+       
+        if(req.body.msg){
+            // Aggregate monthly sales data
+            const monthlySalesData = await Order.aggregate([
+                {
+                    $match: { orderStatus: "delivered" } // Consider only delivered orders
+                },
+                {
+                    $group: {
+                        _id: { $month: "$createdAt" }, // Group by month
+                        totalAmount: { $sum: "$totalPrice" } // Calculate total sales amount for each month
+                    }
+                },
+                {
+                    $sort: { "_id": 1 } // Sort by month
+                }
+            ]);
+
+            // Aggregate daily sales data
+            const dailySalesData = await Order.aggregate([
+                {
+                    $match: { orderStatus: "delivered" } // Consider only delivered orders
+                },
+                {
+                    $group: {
+                        _id: { $dayOfMonth: "$createdAt" }, // Group by day of month
+                        totalAmount: { $sum: "$totalPrice" } // Calculate total sales amount for each day
+                    }
+                },
+                {
+                    $sort: { "_id": 1 } // Sort by day of month
+                }
+            ]);
+            const orderStatuses = await Order.aggregate([
+                {
+                    $group: {
+                        _id: "$orderStatus", // Group by order status
+                        count: { $sum: 1 } // Count occurrences of each status
+                    }
+                }
+            ]);
+
+            // Map order statuses to object format
+            const eachOrderStatusCount = {};
+            orderStatuses.forEach(status => {
+                eachOrderStatusCount[status._id] = status.count;
+            });
+            
+
+            res.status(200).json({ monthlySalesData, dailySalesData, eachOrderStatusCount });
+        }
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
+
 
 
 

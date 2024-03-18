@@ -299,11 +299,7 @@
                     
                     console.log(`Customer ${isBlocking ? 'blocked' : 'unblocked'} successfully.`);
                 } else {
-                    swal({
-                        title: "canceled !",
-                        text: "You clicked the button!",
-                        icon: "cancel",
-                    });
+                   console.log(error);
                 }
             });
         }
@@ -319,17 +315,16 @@
     const catName = document.getElementById("categoryName"); 
     const error1 = document.getElementById("error1");
     const myForm = document.getElementById("myForm");
-    const success = document.getElementById("success")
-    const error = document.getElementById("error")
+    const success = document.getElementById("success");
+    const error = document.getElementById("error");
 
-      setTimeout(() => {
-        success.style.display = 'none'
-      }, 2000);
+    setTimeout(() => {
+        success.style.display = 'none';
+    }, 2000);
 
-      setTimeout(() => {
-        error.style.display = 'none'
-      }, 2000);
-
+    setTimeout(() => {
+        error.style.display = 'none';
+    }, 2000);
 
     function catValidation() {
         const validCat = catName.value.trim();
@@ -344,9 +339,18 @@
             }, 3000);
 
             return false;
-        }else if(/^(-?\d+)$/.test(validCat)){
+        } else if (/^(-?\d+)$/.test(validCat)) {
             error1.style.display = "block";
             error1.innerHTML = "Please enter a category name without numbers"; 
+            
+            setTimeout(() => {
+                error1.style.display = "none";
+                error1.innerHTML = "";
+            }, 3000);
+            return false;
+        } else if (validCat.length > 20) { // Check if length is greater than 10
+            error1.style.display = "block";
+            error1.innerHTML = "Category name must be 10 characters or fewer"; 
             
             setTimeout(() => {
                 error1.style.display = "none";
@@ -358,7 +362,6 @@
         return true;
     }
 
-        
     catName.addEventListener('blur', catValidation);
 
     myForm.addEventListener("submit", function (e) {
@@ -371,4 +374,5 @@
         }
     });
 </script>
+
 

@@ -297,11 +297,11 @@
                                                             <a class="dropdown-toggle" data-bs-toggle="dropdown"
                                                                 id="dropdownAccount" aria-expanded="false">
 
-                                                                <button class="btn  btn-primary ">hey.. <%= userName %>
+                                                                <button class="btn ">hey.. <%= userName %>
                                                                 </button>
                                                                 <% } else {%>
                                                                     <a href="/login"><button
-                                                                            class="btn  btn-primary ">Login</button></a>
+                                                                            class="btn   ">Login</button></a>
                                                                     <% } %>
                                                             </a>
                                                             <div class="dropdown-menu dropdown-menu-end" <%
@@ -621,52 +621,51 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <% if(locals.userName) { %>
+                                <div class="header-action-icon-2">
+                                    <a href="/view-Wishlist">
+                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
+                                        <% if(locals.wishlistCount) {%>
+                                            <span class="pro-count blue">
+                                                <%= wishlistCount %>
+                                            </span>
+                                            <% } %>
+                                    </a>
+                                </div>
+
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
+                                        <% if(locals.cartTotalCount) {%>
+
+                                            <span class="pro-count blue">
+                                                <%= cartTotalCount %>
+                                            </span>
+                                            <% } %>
+                                    </a>
+                                </div>
+                                <% }else {%>
                                     <div class="header-action-icon-2">
-                                        <a href="/view-Wishlist">
+                                        <a href="/login">
                                             <img class="svgInject" alt="Evara"
                                                 src="assets/imgs/theme/icons/icon-heart.svg">
-                                            <% if(locals.wishlistCount) {%>
-                                                <span class="pro-count blue">
-                                                    <%= wishlistCount %>
-                                                </span>
-                                                <% } %>
+
                                         </a>
                                     </div>
 
                                     <div class="header-action-icon-2">
-                                        <a class="mini-cart-icon" href="/cart">
+                                        <a class="mini-cart-icon" href="/login">
                                             <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                            <% if(locals.cartTotalCount) {%>
 
-                                                <span class="pro-count blue">
-                                                    <%= cartTotalCount %>
-                                                </span>
-                                                <% } %>
                                         </a>
                                     </div>
-                                    <% }else {%>
-                                        <div class="header-action-icon-2">
-                                            <a href="/login">
-                                                <img class="svgInject" alt="Evara"
-                                                    src="assets/imgs/theme/icons/icon-heart.svg">
-
-                                            </a>
+                                    <% } %>
+                                        <div class="header-action-icon-2 d-block d-lg-none">
+                                            <div class="burger-icon burger-icon-white">
+                                                <span class="burger-icon-top"></span>
+                                                <span class="burger-icon-mid"></span>
+                                                <span class="burger-icon-bottom"></span>
+                                            </div>
                                         </div>
-
-                                        <div class="header-action-icon-2">
-                                            <a class="mini-cart-icon" href="/login">
-                                                <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-
-                                            </a>
-                                        </div>
-                                        <% } %>
-                            <div class="header-action-icon-2 d-block d-lg-none">
-                                <div class="burger-icon burger-icon-white">
-                                    <span class="burger-icon-top"></span>
-                                    <span class="burger-icon-mid"></span>
-                                    <span class="burger-icon-bottom"></span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
