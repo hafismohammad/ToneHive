@@ -58,7 +58,7 @@ const orderSchema = new mongoose.Schema({
             'cancelled',
             'return pending',
             'returned',
-            'payment failed'
+            'payment pending'
         ],
         default: 'pending',
     },
@@ -88,7 +88,7 @@ const orderSchema = new mongoose.Schema({
             'cancelled',
             'return pending',
             'returned',
-            'payment failed'
+            'payment pending'
         ],
         default: 'pending',
     },

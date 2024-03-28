@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ToneHive</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon"  href="/public/assets/imgs/theme/Tonehive (1).png">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
+</head>
+<body>
+    
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="card col-8 col-md-4 bg-white shadow-md p-5">
+        <div class="mb-4 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="text-danger" width="75" height="75"
+                fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm-.5-7.5a.5.5 0 0 0 1 0V7.707l2.146-2.147a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646a.5.5 0 1 0-.708.708L7.293 8 4.646 10.646a.5.5 0 0 0 .708.708L8 8.707v1.793a.5.5 0 0 0 .5.5z" />
+            </svg>
+        </div>
+        <div class="text-center">
+            <h1>Order Failed!</h1>
+            <a href="/userHome" class="btn btn-outline-danger">Continue Shopping</a>
+            <% if (lastOrder) { %>
+                <a href="/vewProductDetails/<%= lastOrder._id  %>" class="btn btn-outline-success">View Orders</a>
+            <% } %>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

@@ -140,13 +140,13 @@ const showChart = async (req, res) => {
             ]);
 
             // Aggregate daily sales data
-            const dailySalesData = await Order.aggregate([
+            const yearlySalesData = await Order.aggregate([
                 {
                     $match: { orderStatus: "delivered" } // Consider only delivered orders
                 },
                 {
                     $group: {
-                        _id: { $dayOfMonth: "$createdAt" }, // Group by day of month
+                        _id: { $year: "$createdAt" }, // Group by day of month
                         totalAmount: { $sum: "$totalPrice" } // Calculate total sales amount for each day
                     }
                 },
@@ -154,6 +154,7 @@ const showChart = async (req, res) => {
                     $sort: { "_id": 1 } // Sort by day of month
                 }
             ]);
+     console.log(yearlySalesData);
             const orderStatuses = await Order.aggregate([
                 {
                     $group: {
@@ -170,7 +171,7 @@ const showChart = async (req, res) => {
             });
             
 
-            res.status(200).json({ monthlySalesData, dailySalesData, eachOrderStatusCount });
+            res.status(200).json({ monthlySalesData, yearlySalesData, eachOrderStatusCount });
         }
     } catch (error) {
         console.log(error);

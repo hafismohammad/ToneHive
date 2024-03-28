@@ -141,7 +141,6 @@ const homeLoad = async (req, res) => {
             // Fetch products
             const products = await Products.find({ product_status: true }).populate("category");
 
-       
             // Calculate offer price for each product
             for (const product of productData) {
                 let offerPrice = parseInt(product.price); // Default to product price
@@ -175,14 +174,12 @@ const homeLoad = async (req, res) => {
 
                     if (discountedPrice > appliedDiscount) {
                         offerPrice -= discountedPrice;
-                       
                     }
                 }
 
                 // Assign the calculated offer price to the product
                 product.offerPrice = parseInt(Math.round(offerPrice));
             }
-
 
             // Fetch cart items and calculate total count
             const cartItems = await Cart.find({ userId });

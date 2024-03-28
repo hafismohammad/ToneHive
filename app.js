@@ -7,12 +7,14 @@ const flash = require('express-flash')
 const nodemailer = require("nodemailer")
 const session = require("express-session")
 const MongoDBStore = require('connect-mongodb-session')(session);
+require('dotenv').config();
 
 // Mongodb connections
-mongoose.connect("mongodb://localhost:27017/ToneHiveDBS")
-mongoose.connection.on("connected", (req, res) => {
-    console.log("Connected to mongodb");
-})
+mongoose.connect(process.env.MONGODB_URI);
+mongoose.connection.on("connected", () => {
+    console.log("Connected to MongoDB");
+});
+
 
 // Create a MongoDB session store
 const store = new MongoDBStore({

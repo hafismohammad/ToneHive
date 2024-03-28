@@ -3,6 +3,7 @@ const Cart = require('../models/cartModel')
 const Products = require('../models/productModel')
 const mongoose = require('mongoose');
 const offerModel = require('../models/offerModel')
+const wishlistModel = require("../models/wishlistModel");
 
 const { ObjectId } = mongoose.Types;
 
@@ -163,10 +164,21 @@ const cartLoad = async (req, res) => {
 
             // Calculate total cart price
             const totalCartPrice = populatedCartItems.reduce((total, cartItem) => total + cartItem.subtotal, 0);
-            return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount: cartItems.length });
+
+            // Calculate total number of items in the cart
+            const cartCount = populatedCartItems.reduce((total, cartItem) => total + cartItem.items.quantity, 0);
+           const user = await User.findById(userId)
+            // Fetch wishlist info and calculate total count
+            const wishlistInfo = await wishlistModel.find({ user });
+            let wishlistCount = 0;
+            wishlistInfo.forEach(wishlist => {
+                wishlistCount += wishlist.products.length;
+            });
+
+            return res.render("user/page-cart", { userInfo: userInfo, cartItems: populatedCartItems, totalCartPrice, cartCount, wishlistCount });
 
         } else {
-
+            // Handle case when userInfo is not found
         }
 
     } catch (error) {
@@ -174,6 +186,7 @@ const cartLoad = async (req, res) => {
         return res.status(500).send("Internal server error");
     }
 };
+
 
 
 

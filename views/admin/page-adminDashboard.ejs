@@ -7,7 +7,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>Admin Dashboard-ToneHive</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="`assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/Tonehive (1).png">
     <!-- Template CSS -->
     <link href="/public/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -121,8 +121,8 @@
                 <div class="col-xl-8 col-lg-12">
                     <div class="card mb-4">
                         <article class="card-body">
-                            <h5 class="card-title">Daily Sales Statistics</h5>
-                            <canvas id="dailyChart" height="120px"></canvas>
+                            <h5 class="card-title">Yearly Sales Statistics</h5>
+                            <canvas id="YearlyChart" height="120px"></canvas>
                         </article>
                     </div>
                 </div>
@@ -213,8 +213,8 @@
     <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
    
     <!-- Main Script -->
-    <script src="assets/js/main.js" type="text/javascript"></script>
-    <script src="assets/js/custom-chart.js" type="text/javascript"></script>
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    <script src="/public/admin-assets/js/custom-chart.js" type="text/javascript"></script>
     <script src="/public/admin-assets/js/vendors/chart.js"></script>
     <script src="/public/admin-assets/js/custom-chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -240,13 +240,13 @@ window.onload = function () {
     })
     .then(response => response.json())
     .then(data => {
-        if(data.monthlySalesData && data.dailySalesData && data.eachOrderStatusCount){
+        if(data.monthlySalesData && data.yearlySalesData && data.eachOrderStatusCount){
             console.log(data.monthlySalesData);
-            console.log(data.dailySalesData);
+            console.log(data.yearlySalesData);
             console.log(data.eachOrderStatusCount);
 
             // Call the chart function for line charts
-            chart(data.monthlySalesData, data.dailySalesData);
+            chart(data.monthlySalesData, data.yearlySalesData);
 
             // Call a separate function for the pie chart
             pieChart(data.eachOrderStatusCount);

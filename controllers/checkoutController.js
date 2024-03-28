@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const Products = require('../models/productModel');
 const couponModel = require("../models/couponModel")
 const offerModel = require("../models/offerModel")
+const wishlistModel = require("../models/wishlistModel");
 const { v4: uuidv4 } = require('uuid');
 
 const { KEY_ID, KEY_SECRET } = process.env
@@ -175,6 +176,14 @@ const checkoutLoad = async (req, res) => {
         // Calculate cart total count
         const cartCount = cartItems.length;
 
+        const user = await User.findById(userId)
+        // Fetch wishlist info and calculate total count
+        const wishlistInfo = await wishlistModel.find({ user });
+        let wishlistCount = 0;
+        wishlistInfo.forEach(wishlist => {
+            wishlistCount += wishlist.products.length;
+        });
+
         // Render the checkout page with data
         res.render("user/page-checkout", {
             userId: userId,
@@ -187,7 +196,8 @@ const checkoutLoad = async (req, res) => {
             coupons: coupons,
             cartCount: cartCount,
             message: message,
-            success: success
+            success: success,
+            wishlistCount
         });
     } catch (error) {
         console.error(error);
@@ -304,6 +314,7 @@ const placeOrderPost = async (req, res) => {
     try {
         const userId = req.session.user._id;
         const { address, paymentMethod } = req.body;
+
         const userAddressId = new mongoose.Types.ObjectId(address);
         const userInfo = await User.findOne({_id:userId,})
         // Fetch user address
@@ -370,11 +381,11 @@ const placeOrderPost = async (req, res) => {
 
             // Calculate subtotal for the product
             const subtotal = Math.round(offerPrice * cartItem.items.quantity);
-totalCartPrice += subtotal;
+            totalCartPrice += subtotal;
 
- if (paymentMethod === 'COD' && totalCartPrice < 1000) {
-            return res.status(400).json({ error: 'COD is not allowed for orders less than 1000 rupees.' });
-        }
+            if (paymentMethod === 'COD' && totalCartPrice > 1000) {
+                return res.status(400).json({ error: 'COD is not allowed for orders greater than 1000 rupees.' });
+            }
             // Update the product details with offer price and subtotal
             cartItem.productDetails[0].offerPrice = offerPrice;
             cartItem.subtotal = subtotal;
@@ -405,13 +416,24 @@ totalCartPrice += subtotal;
             await Products.updateOne({ _id: cartItem.productDetails[0]._id }, { $inc: { quantity: -cartItem.items.quantity } });
         }
 
-
         // Define order status
-        const status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
+        let status = paymentMethod === 'COD' ? 'confirmed' : 'pending';
 
         const generatedId = generateOrderId();
 
-    
+        const failureStatus = req.body.status
+        if(failureStatus){
+            status = 'payment pending'
+        }
+       // console.log(cartItems);
+        cartItems.forEach(item => {
+            item.productDetails.forEach(product => {
+                product.orderStatus = status;
+                console.log('Order status updated:', product.orderStatus);
+            });
+        });
+        
+       
 
         await Order.create({
             address: addressData.address[0],
@@ -424,7 +446,8 @@ totalCartPrice += subtotal;
                 price: item.productDetails[0].price,
                 productPrice: item.productDetails[0].offerPrice,
                 productName: item.productDetails[0].productName,
-                buyerName: item.productDetails[0].buyerName
+                buyerName: item.productDetails[0].buyerName,
+                orderStatus:status
             })),
             totalPrice:  totalCartPrice,
             couponPrice: cartCoupon ? cartCoupon.totalPrice : 0,
@@ -442,6 +465,7 @@ totalCartPrice += subtotal;
         res.status(500).json({ error: 'Failed to place the order.' });
     }
 };
+
 
 
 
@@ -467,13 +491,11 @@ const paymentSuccess = async (req, res) => {
             .digest('hex');
 
         if (hash === signature) {
-            console.log('success');
+            console.log('Payment successful');     
             res.status(200).json({ success: true, message: 'Payment successful' });
         } else {
-            console.log('Payment failed');
-          
-
-            // Redirect to viewProductDetails page with the order ID
+            console.log('Payment failed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+            
             res.status(200).json({ success: false, message: 'Payment failed' });
         }
     } catch (error) {
@@ -482,9 +504,15 @@ const paymentSuccess = async (req, res) => {
     }
 }
 
-
-
-
+const failedOrder = async (req, res) => {
+    try {
+        const userId = req.session.user._id
+        const lastOrder = await Order.findOne({ userId: userId }).sort({ createdAt: -1 })
+        res.render("user/page-orderFailure",{lastOrder:lastOrder})
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -498,5 +526,6 @@ module.exports = {
     placeOrderPost,
     orderPlace,
     createOrder,
-    paymentSuccess
+    paymentSuccess,
+    failedOrder
 }; 

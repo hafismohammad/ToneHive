@@ -1,4 +1,4 @@
-function chart(monthlySalesData, dailySalesData) {
+function chart(monthlySalesData, yearlySalesData) {
     // Fill in missing months with zero values
     const allMonths = Array.from({ length: 12 }, (_, i) => i + 1); // Array representing all months (1 to 12)
     const monthlyDataMap = new Map(monthlySalesData.map(item => [item._id, item.totalAmount]));
@@ -31,17 +31,17 @@ function chart(monthlySalesData, dailySalesData) {
     }
 
     // Daily sales chart
-    if ($('#dailyChart').length) {
-        var dailyCtx = document.getElementById('dailyChart').getContext('2d');
+    if ($('#YearlyChart').length) {
+        var dailyCtx = document.getElementById('YearlyChart').getContext('2d');
         var dailyChart = new Chart(dailyCtx, {
             type: 'line',
             data: {
-                labels: dailySalesData.map(item => item._id),
+                labels: yearlySalesData.map(item => item._id),
                 datasets: [{
-                    label: 'Daily Sales',
+                    label: 'Yearly Sales',
                     backgroundColor: 'rgba(44, 120, 220, 0.2)',
                     borderColor: 'rgba(44, 120, 220)',
-                    data: dailySalesData.map(item => item.totalAmount)
+                    data: yearlySalesData.map(item => item.totalAmount)
                 }]
             },
             options: {

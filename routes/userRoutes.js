@@ -14,7 +14,7 @@ const wishlistControllers = require("../controllers/wishlistControllers")
 const shopProductsControllers = require("../controllers/shopProducts")
 const walletControllers = require("../controllers/walletControllers")
 
-router.get("/", userControllers.gustUser)
+router.get("/" ,userAuth.isLogin,userControllers.gustUser)
 
 router.get("/login",userAuth.isLogin,userControllers.loginLoad)
 
@@ -122,7 +122,9 @@ router.post('/paymentSuccess', checkoutControllers.paymentSuccess)
 
 router.post("/wallet", userProfileController.walletPost)
 
-
+router.get("/orderFailed", checkoutControllers.failedOrder)
 // router.get("/*",userControllers.pageNotFound)
+
+router.post("/createRazorpayOrder", userProfileController.retryPayment)
 
 module.exports = router 

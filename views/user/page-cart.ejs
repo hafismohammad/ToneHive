@@ -169,61 +169,24 @@
             </div>
         </div>
     </div>
-    <header class="header-area header-style-4 header-height-2">
-        <div class="header-top header-top-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info">
-                            <ul>
-                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
-                                <li><i class="fi-rs-marker"></i><a href="page-contact.html">Our location</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-4">
-                        <div class="text-center">
-                            <div id="news-flash" class="d-inline-block">
-                                <ul>
-                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a>
-                                    </li>
-                                    <li>Supper Value Deals - Save more with coupons</li>
-                                    <li>Trendy 25silver jewelry, save up 35% off today <a
-                                            href="shop-grid-right.html">Shop now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info header-info-right">
-                            <ul>
-                                <li>
-                                    <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i
-                                            class="fi-rs-angle-small-down"></i></a>
-                                    <ul class="language-dropdown">
-                                        <li><a href="#"><img src="assets/imgs/theme/flag-fr.png" alt="">Français</a>
-                                        </li>
-                                        <li><a href="#"><img src="assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                        <li><a href="#"><img src="assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
-                                    </ul>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </div>
+    <%- include('../layouts/user/header-2') %>
+    
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" ></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
                 </div>
             </div>
-        </div>
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-                    <div class="logo logo-width-1">
-                        <!-- <a href="/userHome"><img src="assets/imgs/theme/logo-tonehive" alt="logo"></a> -->
-                        <a href="/userHome"><img src="/public/assets/imgs/theme/Tonehive (1).png" alt=></a>
-                    </div>
-                    <div class="header-right">
-                        <div class="search-style-2">
-                            <form action="/search">
+            <div class="mobile-header-content-area">
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <form action="/search">
                                 <!-- <select class="select-active">
                                     <option>All Categories</option>
                                   
@@ -231,115 +194,56 @@
                                 <input name="search" type="text" placeholder="Search for items...">
                                 <button type="submit">Search</button>
                             </form>
-                        </div>
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-                                <!-- <div class="header-action-icon-2">
-                                    <a href="#">
-                                        <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
-                                    </a>
-                                </div> -->
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/cart">
-                                        <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">
-                                            <%= cartCount %>
-                                        </span>
-                                    </a>
-                                </div>
-
-                                <style>
-                                    /* Custom CSS to adjust image size */
-                                    .dropdown-toggle img {
-                                        width: 40px;
-                                        /* Adjust the width to your desired size */
-                                        height: 40px;
-                                        /* Adjust the height to your desired size */
-                                        border-radius: 50%;
-                                        /* Optional: Make the image round */
-                                    }
-                                </style>
-
-                                <div>
-                                    <ul>
-                                        <li class="dropdown nav-item">
-                                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                                                id="dropdownAccount" aria-expanded="false">
-                                                <button class="btn  btn-primary ">hey.. <%= userInfo.name %></button>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-end"
-                                                aria-labelledby="dropdownAccount">
-                                                <a class="dropdown-item" href="/userProfile"><i
-                                                        class="material-icons md-perm_identity"></i> Profile</a>
-                                                <!-- <a class="dropdown-item" href="#address"><i class="material-icons md-settings"></i>Account Settings</a> -->
-                                                <!-- <a class="dropdown-item" href="/wallet"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
-                                                <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-              <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item text-danger" href="/logout"><i
-                                                        class="material-icons md-exit_to_app"></i>Logout</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-
-
-                            </div>
-                        </div>
+                </div>
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <div class="main-categori-wrap mobile-header-border">
+                       
                     </div>
+                    <!-- mobile menu start -->
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/userHome">Home</a>
+                                
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/shopProducts">shop</a>
+                                
+                            </li>
+                           
+                           
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/userProfile">Accounts</a>
+                                
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
+                                    href="/logout">Logout</a>
+
+                            </li>
+                            
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div>
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <div class="single-mobile-header-info mt-30">
+                        <a  href="page-contact.html"> Our location </a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="/login">Log In / Sign Up </a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="#">(+01) - 2345 - 6789 </a>
+                    </div>
+                </div>
+                <div class="mobile-social-icon">
+                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
                 </div>
             </div>
         </div>
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="#"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
-                    </div>
-                    <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categori-wrap d-none d-lg-block">
-                            <!-- <a class="categori-button-active" href="#">
-                                <span class="fi-rs-apps"></span> Browse Categories
-                            </a> -->
-
-                        </div>
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a href="/userHome">Home </a>
-                                    </li>
-                                    <!-- <li>
-                                        <a href="#">About</a>
-                                    </li> -->
-                                    <li>
-                                        <a href="/shopProducts">Shop </a>
-                                    </li>
-
-                                    <!-- <li>
-                                        <a href="#">Blog </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Pages</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Contact</a>
-                                    </li> -->
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="hotline d-none d-lg-block">
-                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-                    </div>
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%
-                    </p>
-
-                </div>
-            </div>
-        </div>
-    </header>
+    </div>
     <main class="main">
 
         <section class="mt-50 mb-50">

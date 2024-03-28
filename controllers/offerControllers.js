@@ -62,7 +62,7 @@ const postOffer = async (req, res) => {
 
 
         const offerInfo = await offerModel.create(offerObj);
-     
+    
            res.redirect("/admin/productOffer")
         // res.status(200).json({ message: "Offer created successfully", offer: offerInfo });
     } catch (error) {

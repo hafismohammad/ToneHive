@@ -409,9 +409,10 @@ const viewProducrDetails = async (req, res) => {
         cartItems.forEach(cart => {
             cartTotalCount += cart.items.length;
         });
-
-
-        res.render("user/Page-viewDetails", { orderedItems: orderedItems, userId: userId, cartTotalCount: cartTotalCount })
+       const orderDetails = await Order.findById(orderId)
+    //    console.log(orderDetails);
+       
+        res.render("user/Page-viewDetails", { orderedItems: orderedItems, userId: userId, cartTotalCount: cartTotalCount,orderDetails:orderDetails })
     } catch (error) {
         console.log(error);
     }
@@ -455,6 +456,32 @@ const walletPost = (req, res) => {
     }
 }
 
+const retryPayment = async (req, res) => {
+    try {
+        const orderId = req.body.orderId;
+
+        const orderDetails = await Order.findById(orderId);
+
+        // Update order status to 'pending' for each product
+        orderDetails.products.forEach(item => {
+            item.orderStatus = 'pending';
+        });
+    
+        orderDetails.orderStatus = 'pending';
+        // Save the updated orderDetails
+        await orderDetails.save();
+        // Calculate total amount
+        const totalAmount = orderDetails.totalPrice;
+
+        // Send response to the client with order ID and total amount
+        res.status(200).json({ orderId: orderDetails._id, totalAmount });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
 
 module.exports = {
     userProfile,
@@ -470,7 +497,8 @@ module.exports = {
     userProfileAddressDelete,
     viewProducrDetails,
     orderReturn,
-    walletPost
+    walletPost,
+    retryPayment
 
 
 }
