@@ -1,6 +1,6 @@
 const User = require("../models/userModel")
 const AddreddModel = require('../models/addressModel');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const Order = require("../models/orderModel");
 const Cart = require('../models/cartModel');
 const Products = require("../models/productModel");
