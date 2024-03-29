@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI).then(()=>{
 
 // Create a MongoDB session store
 const store = new MongoDBStore({
-  uri: "mongodb://localhost:27017/ToneHiveDBS",
+  uri: `${process.env.MONGODB_URI}/ToneHiveDBS`,
   collection: 'sessions', // the collection where sessions will be stored
   expires: 1000 * 60 * 60 * 24 * 7, // session expiration time (7 days)
 });
