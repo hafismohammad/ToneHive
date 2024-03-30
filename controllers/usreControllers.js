@@ -25,9 +25,7 @@ const securePassword = async (password) => {
 
 const gustUser = async (req, res) => {
     try {
-    
-
-        
+         
         // Define the category variable here
         const category = await Category.find({ isList: false });
         const productData = await Products.aggregate([

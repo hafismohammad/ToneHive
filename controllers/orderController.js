@@ -68,29 +68,33 @@ const orderProductView = async (req, res) => {
 
 const acceptReturn = async (req, res) => {
     try {
-        const orderId = req.params.orderId;
-        const productId = req.params.productId;
-    
-   
+        const { orderId, productId } = req.params;
+        
         const order = await Order.findById(orderId);
-        const product = order.products.find(product => product._id.toString() === productId)
-
+        if (!order) {
+            return res.status(404).json({ success: false, error: "Order not found" });
+        }
+        
+        const product = order.products.find(product => product._id.toString() === productId);
         if (!product) {
             return res.status(404).json({ success: false, error: "Product not found in the order" });
         }
-       
-            if (product.orderStatus === "delivered") {
-                product.orderStatus = "return pending";
-      
-            } else if (product.orderStatus === "return pending") {
-                product.orderStatus = "returned";
-            }
+
+        if (product.orderStatus === "delivered") {
+            product.orderStatus = "return pending";
+        } else if (product.orderStatus === "return pending") {
+            product.orderStatus = "returned";
+        }
+
         await order.save();
-        
+
+        return res.status(200).json({ success: true, message: "Return status updated successfully" });
     } catch (error) {
-        console.log(error);
+        console.error("Error accepting return:", error);
+        return res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
+
 
 const salesReports = async (req, res) => {
     try {

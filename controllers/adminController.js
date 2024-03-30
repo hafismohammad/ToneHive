@@ -25,6 +25,7 @@ const adminLogin = (req, res) => {
         console.log(error);
     }
 }
+
 const adminPost = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -154,7 +155,7 @@ const showChart = async (req, res) => {
                     $sort: { "_id": 1 } // Sort by day of month
                 }
             ]);
-     console.log(yearlySalesData);
+   
             const orderStatuses = await Order.aggregate([
                 {
                     $group: {
