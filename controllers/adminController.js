@@ -164,6 +164,7 @@ const showChart = async (req, res) => {
                     }
                 }
             ]);
+            console.log(orderStatuses);
 
             // Map order statuses to object format
             const eachOrderStatusCount = {};

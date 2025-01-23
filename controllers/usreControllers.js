@@ -10,6 +10,8 @@ const Cart = require("../models/cartModel");
 const flash = require("express-flash");
 const wishlistModel = require("../models/wishlistModel");
 const offerModel = require('../models/offerModel')
+const dotenv = require('dotenv')
+dotenv.config()
 
 const securePassword = async (password) => {
     try {
@@ -255,8 +257,8 @@ function generateRandomOtp() {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'hafismhdthaleekara764@gmail.com',
-        pass: 'ofzx kkgh klon lnht',
+        user: `${process.env.EMAIL_USER}`,
+        pass: `${process.env.EMAIL_PASS}`,
     },
 });
 
@@ -303,7 +305,7 @@ const registeredUser = async (req, res) => {
         const email = userIn.email;
 
         const mailOptions = {
-            from: 'hafismhdthaleekara764@gmail.com',
+            from: `${process.env.EMAIL_USER}`,
             to: email,
             subject: 'OTP Verification In Register Side',
             text: `Your OTP is: ${otp}`
@@ -340,12 +342,12 @@ const resendOtpNew = (req, res) => {
         const email = req.session.email
 
         const mailOptions = {
-            from: 'hafismhdthaleekara764@gmail.com',
+            from: `${process.env.EMAIL_USER}`,
             to: email,
             subject: 'OTP Verification In Register Side',
             text: `Your OTP is: ${otp}`
         };
-
+        console.log("email, otp",email, otp)
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error("Error sending OTP email", error.message);
