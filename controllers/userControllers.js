@@ -194,7 +194,7 @@ const homeLoad = async (req, res) => {
             wishlistInfo.forEach(wishlist => {
                 wishlistCount += wishlist.products.length;
             });
-
+            console.log('homeLoad', productData);
             // Render the view with data
             res.render("user/page-userHome", { userName, category, products: productData, cartTotalCount, wishlistCount, productsPrice: products });
         } else {
@@ -451,6 +451,7 @@ const productViews = async (req, res) => {
 
             // Assign the calculated offer price to the product
             productData.offerPrice = parseInt(Math.round(offerPrice));
+// console.log('productData from db**', productData);
 
             // Render the view with product data and user information
             res.render("user/page-viewProduct", { products: productData, userInfo: userInfo, cartTotalCount: cartTotalCount, wishlistCount: wishlistCount });
