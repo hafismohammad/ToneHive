@@ -150,11 +150,15 @@ const applyCoupon = async (req, res) => {
         if (coupon.isActive !== 'Active') {
             return res.status(400).json({ message: "Coupon is not active" });
         }
+console.log('coupon',coupon);
 
-        const isCouponUsed = coupon.usedBy.some(id => id.toString() === userId);
+const isCouponUsed = coupon.usedBy.some(id => id.toString() === userId.toString());
+// console.log();
+
         console.log("Has user used this coupon before?", isCouponUsed);
 
         if (isCouponUsed) {
+                console.log("User has already used this coupon");
             return res.status(400).json({ message: "This coupon has already been used" });
         }
 
@@ -166,7 +170,7 @@ const applyCoupon = async (req, res) => {
         }
 
         const cart = await Cart.findOne({ userId });
-        console.log("User cart:", cart);
+        // console.log("User cart:", cart);
 
         if (!cart) {
             return res.status(404).json({ message: "Cart not found for the user" });
