@@ -230,7 +230,54 @@
 
 
 <script>
+// FRONTEND FIX - Window Load Script
 window.onload = function () {
+    // Show loading state (optional)
+    console.log('Loading dashboard data...');
+    
+    fetch('/admin/showCart', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ msg: "hi" })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Received data:', data);
+        
+        if (data.monthlySalesData && data.yearlySalesData && data.eachOrderStatusCount) {
+            console.log('Monthly Sales Data:', data.monthlySalesData);
+            console.log('Yearly Sales Data:', data.yearlySalesData);
+            console.log('Order Status Count:', data.eachOrderStatusCount);
+
+            // Validate data before creating charts
+            if (Array.isArray(data.monthlySalesData) && Array.isArray(data.yearlySalesData)) {
+                chart(data.monthlySalesData, data.yearlySalesData);
+            } else {
+                console.error('Invalid sales data format');
+            }
+
+            if (typeof data.eachOrderStatusCount === 'object' && data.eachOrderStatusCount !== null) {
+                pieChart(data.eachOrderStatusCount);
+            } else {
+                console.error('Invalid order status data format');
+            }
+        } else {
+            console.error('Missing required data fields');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        // Optionally show error message to user
+        // showErrorMessage('Failed to load dashboard data. Please refresh the page.');
+    });
+}
     fetch('/admin/showCart', {
         method: 'post',
         headers:{
@@ -255,7 +302,7 @@ window.onload = function () {
     .catch(error => {
         console.error('Error fetching data:', error);
     });
-}
+
 
 </script>
 

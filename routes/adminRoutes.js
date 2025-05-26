@@ -48,9 +48,11 @@ router.get("/unlist-Category/:catid", adminAuth.isLogout, categoryControllers.un
 // product list 
 router.get("/products", adminAuth.isLogout, productControllers.productsLoad)
 
-router.get("/addproduct/", adminAuth.isLogout, productControllers.addProductLoad)
-
-router.post('/addproduct/', productControllers.upload.array("image", 4), productControllers.addProducts);
+// router.get("/addproduct/", adminAuth.isLogout, productControllers.addProductLoad)
+// router.post('/addproduct/', productControllers.upload.array("image", 4), productControllers.addProducts);
+router.route("/addproduct")
+  .get(adminAuth.isLogout, productControllers.addProductLoad)
+  .post(productControllers.upload.array("image", 4), productControllers.addProducts);
 
 router.patch('/list-product/:prodid', productControllers.listOrUnlistProducts);
 
@@ -70,15 +72,20 @@ router.get("/viewProductsDetails/:id", adminAuth.isLogout, orderControllers.orde
 
 router.get("/coupons",adminAuth.isLogout, couponsControllers.couponsLoad)
 
-router.get("/addCoupon", adminAuth.isLogout,couponsControllers.addCouponLoad)
-
-router.post("/addCoupon", couponsControllers.postCoupon);
+// router.get("/addCoupon", adminAuth.isLogout,couponsControllers.addCouponLoad)
+// router.post("/addCoupon", couponsControllers.postCoupon);
+router.route("/addCoupon")
+  .get(adminAuth.isLogout, couponsControllers.addCouponLoad)
+  .post(couponsControllers.postCoupon);
 
 router.delete("/deleteCoupon/:id", couponsControllers.deleteCoupon)
 
-router.get("/editCoupon/:id",adminAuth.isLogout, couponsControllers.editCouponLoad)
+// router.get("/editCoupon/:id",adminAuth.isLogout, couponsControllers.editCouponLoad)
+// router.post("/editCoupon/:id", couponsControllers.editCouponPost)
+router.route("/editCoupon/:id")
+  .get(adminAuth.isLogout, couponsControllers.editCouponLoad)
+  .post(couponsControllers.editCouponPost);
 
-router.post("/editCoupon/:id", couponsControllers.editCouponPost)
 
 router.get("/productOffer",adminAuth.isLogout, offerControllers.productOfferLoad)
 
@@ -88,9 +95,11 @@ router.post("/PostOffer", offerControllers.postOffer)
 
 router.patch("/offerStatus/:id", offerControllers.listUnlistStatus)
 
-router.get('/editOffer/:id',adminAuth.isLogout, offerControllers.editOffer)
-
-router.post("/editOffer/:id", offerControllers.editOfferPost)
+// router.get('/editOffer/:id',adminAuth.isLogout, offerControllers.editOffer)
+// router.post("/editOffer/:id", offerControllers.editOfferPost)
+router.route("/editOffer/:id")
+  .get(adminAuth.isLogout, offerControllers.editOffer)
+  .post(offerControllers.editOfferPost);
 
 router.get("/salesReport",adminAuth.isLogout, orderControllers.salesReports)
 

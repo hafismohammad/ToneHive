@@ -200,12 +200,11 @@
                                   
                                     <td class="text-center"><%= orderDetails[i].createdAt.toLocaleDateString() %></td>
                                     <td width="7%">
-                                        <% if (orderDetails[i].orderStatus == 'pending') { %>
+                                        <% if (orderDetails[i].orderStatus == 'confirmed') { %>
                                             <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-warning"><%= orderDetails[i].orderStatus %></span>
                                         <% } else if (orderDetails[i].orderStatus == 'processing') {%>
                                             <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-secondary"><%= orderDetails[i].orderStatus %></span>
-                                        <% } else if (orderDetails[i].orderStatus == 'confirmed') {%>
-                                            <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-success"><%= orderDetails[i].orderStatus %></span>
+                                      
                                         <% } else if (orderDetails[i].orderStatus == 'shipped') {%>
                                             <span id="status<%= orderDetails[i]._id %>" class="badge rounded-pill alert-info"><%= orderDetails[i].orderStatus %></span>
                                         <% } else if (orderDetails[i].orderStatus == 'outForDelivery') {%>
@@ -220,12 +219,11 @@
                                     </td>
                                     
                                     <td width="10%" style="vertical-align: middle;">
-                                        <% if (orderDetails[i].orderStatus == 'pending') { %>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','processing','confirmed')" class="btn btn-outline-primary rounded font-sm">processing</a>
+                                        <% if (orderDetails[i].orderStatus == 'confirmed') { %>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','processing','shipped')" class="btn btn-outline-primary rounded font-sm">processing</a>
                                         <% } else if (orderDetails[i].orderStatus == 'processing') { %>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','confirmed','shipped')" class="btn btn-outline-primary rounded font-sm">confirmed</a>
-                                        <% } else if (orderDetails[i].orderStatus == 'confirmed') { %>
-                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','shipped','outForDelivery')" class="btn btn-outline-primary rounded font-sm">shipped</a>
+                                            <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','shipped','outForDelivery')" class="btn btn-outline-primary rounded font-sm">shipted</a>
+                                       
                                         <% } else if (orderDetails[i].orderStatus == 'shipped') { %>
                                             <a id="changeStatus<%= orderDetails[i]._id %>" onclick="changeOrderStatus('<%= orderDetails[i].products[0].productId %>','<%= orderDetails[i]._id %>','outForDelivery','delivered')" class="btn  btn-outline-primary rounded font-sm">out for delivery</a>
                                         <% } else if (orderDetails[i].orderStatus == 'outForDelivery') { %>

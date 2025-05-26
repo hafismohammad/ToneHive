@@ -32,7 +32,7 @@
                                     <li><a href="#"><img src="assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
                                 </ul>
                             </li>
-                            <li><i class="fi-rs-user"></i><a href="page-login-register.html">Log In / Sign Up</a></li>
+                            
                         </ul>
                     </div>
                 </div>
@@ -67,17 +67,17 @@
                                 </a>
                              
                             </div>
-                            <div class="dropdown">
-                                <button class="btn dropdown-toggle" type="button" id="userProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    hey.. <%= userInfo.name %>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
-                                    <li><a class="dropdown-item" href="/userProfile">Profile</a></li>
-                                    <!-- Other dropdown items can be added here -->
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="/logout">Logout</a></li>
-                                </ul>
-                            </div>
+                           <div class="dropdown">
+    <a href="#" class="nav-link dropdown-toggle" id="userProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-user-circle" style="font-size: 40px;"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
+        <li><a class="dropdown-item" href="/userProfile">Profile</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="/logout">Logout</a></li>
+    </ul>
+</div>
+
                             
                         </div>
                     </div>

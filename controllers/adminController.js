@@ -122,49 +122,57 @@ const dashboardLoad = async (req, res) => {
 
 const showChart = async (req, res) => {
     try {
-       
         if(req.body.msg){
-            // Aggregate monthly sales data
-            const monthlySalesData = await Order.aggregate([
-                {
-                    $match: { orderStatus: "delivered" } // Consider only delivered orders
-                },
-                {
-                    $group: {
-                        _id: { $month: "$createdAt" }, // Group by month
-                        totalAmount: { $sum: "$totalPrice" } // Calculate total sales amount for each month
-                    }
-                },
-                {
-                    $sort: { "_id": 1 } // Sort by month
-                }
-            ]);
+            // Aggregate monthly sales data with proper date handling
+           const currentYear = new Date().getFullYear();
+const monthlySalesData = await Order.aggregate([
+    {
+        $match: {
+            orderStatus: "delivered",
+            createdAt: {
+                $gte: new Date(`${currentYear}-01-01`),
+                $lt: new Date(`${currentYear + 1}-01-01`)
+            }
+        }
+    },
+    {
+        $group: {
+            _id: { $month: "$createdAt" },
+            totalAmount: { $sum: "$totalPrice" }
+        }
+    },
+    { $sort: { "_id": 1 } }
+]);
 
-            // Aggregate daily sales data
+
+            // Aggregate yearly sales data
             const yearlySalesData = await Order.aggregate([
                 {
-                    $match: { orderStatus: "delivered" } // Consider only delivered orders
-                },
-                {
-                    $group: {
-                        _id: { $year: "$createdAt" }, // Group by day of month
-                        totalAmount: { $sum: "$totalPrice" } // Calculate total sales amount for each day
+                    $match: { 
+                        orderStatus: "delivered",
+                        createdAt: { $exists: true, $ne: null }
                     }
                 },
                 {
-                    $sort: { "_id": 1 } // Sort by day of month
+                    $group: {
+                        _id: { $year: "$createdAt" },
+                        totalAmount: { $sum: "$totalPrice" },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { "_id": 1 }
                 }
             ]);
    
             const orderStatuses = await Order.aggregate([
                 {
                     $group: {
-                        _id: "$orderStatus", // Group by order status
-                        count: { $sum: 1 } // Count occurrences of each status
+                        _id: "$orderStatus",
+                        count: { $sum: 1 }
                     }
                 }
             ]);
-            console.log(orderStatuses);
 
             // Map order statuses to object format
             const eachOrderStatusCount = {};
@@ -172,11 +180,20 @@ const showChart = async (req, res) => {
                 eachOrderStatusCount[status._id] = status.count;
             });
             
+            console.log('Monthly Sales Data:', monthlySalesData);
+            console.log('Yearly Sales Data:', yearlySalesData);
+            console.log('Order Status Count:', eachOrderStatusCount);
 
-            res.status(200).json({ monthlySalesData, yearlySalesData, eachOrderStatusCount });
+            res.status(200).json({ 
+                monthlySalesData, 
+                yearlySalesData, 
+                eachOrderStatusCount 
+            });
+        } else {
+            res.status(400).json({ error: "Invalid request" });
         }
     } catch (error) {
-        console.log(error);
+        console.log('Error in showChart:', error);
         res.status(500).json({ error: "Internal server error" });
     }
 }

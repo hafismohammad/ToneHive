@@ -14,6 +14,8 @@
     <meta property="og:type" content="">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/Tonehive (1).png">
     <!-- Template CSS -->
@@ -268,7 +270,7 @@
                                         <li class="dropdown nav-item">
                                             <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                                 id="dropdownAccount" aria-expanded="false">
-                                                <button class="btn  btn-primary ">hey.. <%= userId.name %></button>
+                                              <i class="fas fa-user-circle" style="font-size: 40px;"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="dropdownAccount">
@@ -450,14 +452,7 @@
                                                     <td class="text-center">
                                                         <%= element.quantity %>
                                                     </td>
-                                                    <% if (element.orderStatus==='pending' ) { %>
-
-                                                        <td class="text-center">
-                                                            <span class="badge rounded-pill  alert-dark">
-                                                                <%= element.orderStatus %>
-                                                            </span>
-                                                        </td>
-                                                        <% } %>
+                                         
                                                             <% if (element.orderStatus==='confirmed' ) { %>
 
                                                                 <td class="text-center">
@@ -610,17 +605,34 @@
                                                     <% } %>
                     </tbody>
                 </table>
-                <% orderedItems.products.forEach(product=> { %>
-                    <% if(product.orderStatus==='payment pending' ) { %>
-                        <button id="retryPaymentButton" class="btn">Retry Payment</button>
-                        <% } %>
-                            <% }) %>
-
+                
+               
+                <% if (locals.orderedItems && orderedItems.products.some(product => product.orderStatus === 'payment pending')) { %>
+                    <button id="retryPaymentButton" class="btn btn-primary">Retry Payment</button>
+                <% } %>
 
             </div>
         </div>
 
+<div class="mt-3">
+                  
+                    
+                  <% if (
+    locals.orderedItems && 
+    orderedItems.products.length > 1 && 
+    orderedItems.products.some(product => 
+        product.orderStatus !== 'delivered' && 
+        product.orderStatus !== 'return pending' && 
+        product.orderStatus !== 'cancelled' && 
+        product.orderStatus !== 'returned' && 
+        product.orderStatus !== 'payment pending')
+) { %>
+    <button onclick="cancelAllProducts('<%= orderedItems._id %>')" class="btn btn-danger">
+        Cancel All Products
+    </button>
+<% } %>
 
+                </div>
     </div>
 
 
@@ -914,7 +926,6 @@
                             },
                             body: JSON.stringify({ reason: reason }) // Send reason to server
                         })
-
                             .then(response => {
                                 if (!response.ok) {
                                     console.log('dfs');
@@ -949,9 +960,91 @@
             }
         });
     }
+
+    
 </script>
 
+<script>
+function cancelAllProducts(orderId) {
+        console.log('hitt');
+        
+        console.log('Cancel all products for order:', orderId);
+        Swal.fire({
+            title: "Cancel All Products?",
+            text: "This will cancel all eligible products in this order. This action cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes, Cancel All`,
+            cancelButtonText: 'Keep Order',
+            allowOutsideClick: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Enter cancellation reason for all products',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off',
+                        placeholder: 'Reason for cancelling all products...'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Cancel All Products',
+                    cancelButtonText: 'Keep Order',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (reason) => {
+                        console.log(reason);
+                        if (!reason) {
+                            Swal.showValidationMessage('Please provide a reason for cancellation');
+                            return false;
+                        }
+                        if (reason.length > 50) {
+                            Swal.showValidationMessage('The reason should be up to 50 characters long.');
+                            return false;
+                        }
 
+                        return fetch(`/cancelAllProducts/${orderId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ reason: reason })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(response.statusText)
+                                }
+                                return response.json()
+                            })
+                            .catch(error => {
+                                Swal.showValidationMessage(`Request failed: ${error}`)
+                            });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: `All Products Cancelled`,
+                            text: "All eligible products in this order have been cancelled successfully!",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000)
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: "Order Kept",
+                    text: "Your order remains active.",
+                    icon: "info",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }    
+</script>
 
 <script>
     function returnOrder(orderId, prodId) {

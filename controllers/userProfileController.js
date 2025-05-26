@@ -337,56 +337,182 @@ const viewOrderDetails = async (req, res) => {
     }
 }
 
+// const orderCancel = async (req, res) => {
+//     try {
+//         const userId = req.session.user._id;
+//         const orderId = req.params.orderId;
+//         const productId = req.params.productId;
+
+//         const order = await Order.findById(orderId);
+//         const product = order.products.find(product => product._id.toString() === productId);
+
+//         if (!product) {
+//             return res.status(404).json({ success: false, error: "Product not found in the order" });
+//         } else {
+//             product.orderStatus = 'cancelled';
+//         }
+
+//         await order.save();
+
+//         if (order.paymentMethod === 'Razorpay') {
+//             const wallet = await Wallet.findOne({ user: userId })
+//             if (wallet) {
+//                 wallet.balance += order.totalPrice
+//                 wallet.walletData.push({
+//                     amount: order.totalPrice,
+//                     date: Date.now(),
+//                     paymentMethod: 'Razorpay'
+//                 })
+//                 await wallet.save()
+//             } else {
+//                 const newWallet = new Wallet({
+//                     user: userId,
+//                     balance: order.totalPrice,
+//                     walletData: [{
+//                         amount: order.totalPrice,
+//                         date: Date.now(),
+//                         paymentMethod: 'Razorpay'
+//                     }]
+//                 });
+
+//                 await newWallet.save();
+//             }
+//         }
+//         res.json({ success: true });
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ success: false, error: "Internal server error" });
+//     }
+// };
+
+
+
 const orderCancel = async (req, res) => {
-    try {
-        const userId = req.session.user._id;
-        const orderId = req.params.orderId;
-        const productId = req.params.productId;
+  try {
+    const userId = req.session.user._id;
+    const orderId = req.params.orderId;
+    const productId = req.params.productId;
 
-        const order = await Order.findById(orderId);
-        const product = order.products.find(product => product._id.toString() === productId);
+    const order = await Order.findById(orderId);
+    const product = order.products.find(p => p._id.toString() === productId);
 
-        if (!product) {
-            return res.status(404).json({ success: false, error: "Product not found in the order" });
-        } else {
-            product.orderStatus = 'cancelled';
-        }
-
-        await order.save();
-
-        if (order.paymentMethod === 'Razorpay') {
-            const wallet = await Wallet.findOne({ user: userId })
-            if (wallet) {
-                wallet.balance += order.totalPrice
-                wallet.walletData.push({
-                    amount: order.totalPrice,
-                    date: Date.now(),
-                    paymentMethod: 'Razorpay'
-                })
-                await wallet.save()
-            } else {
-                const newWallet = new Wallet({
-                    user: userId,
-                    balance: order.totalPrice,
-                    walletData: [{
-                        amount: order.totalPrice,
-                        date: Date.now(),
-                        paymentMethod: 'Razorpay'
-                    }]
-                });
-
-                await newWallet.save();
-            }
-        }
-        res.json({ success: true });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, error: "Internal server error" });
+    if (!product) {
+      return res.status(404).json({ success: false, error: "Product not found in the order" });
     }
+
+    if (product.orderStatus === 'cancelled') {
+      return res.status(400).json({ success: false, error: "Product already cancelled" });
+    }
+
+    product.orderStatus = 'cancelled';
+    await order.save();
+
+    const refundAmount = product.productPrice;
+
+    if (order.paymentMethod === 'Razorpay') {
+      let wallet = await Wallet.findOne({ user: userId });
+
+      if (wallet) {
+        wallet.balance += refundAmount;
+        wallet.walletData.push({
+          amount: refundAmount,
+          date: Date.now(),
+          paymentMethod: 'Razorpay'
+        });
+        await wallet.save();
+      } else {
+        const newWallet = new Wallet({
+          user: userId,
+          balance: refundAmount,
+          walletData: [{
+            amount: refundAmount,
+            date: Date.now(),
+            paymentMethod: 'Razorpay'
+          }]
+        });
+        await newWallet.save();
+      }
+    }
+
+    res.json({ success: true });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
 };
 
+const cancelAllProduct = async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const orderId = req.params.orderId;
+    const { reason } = req.body;
 
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ success: false, error: "Order not found" });
+    }
+
+    let refundTotal = 0;
+    let productsCancelled = 0;
+
+    order.products.forEach(product => {
+      if (
+        product.orderStatus !== 'delivered' &&
+        product.orderStatus !== 'return pending' &&
+        product.orderStatus !== 'cancelled' &&
+        product.orderStatus !== 'returned' &&
+        product.orderStatus !== 'payment pending'
+      ) {
+        product.orderStatus = 'cancelled';
+        product.cancellationReason = reason || 'Cancelled by user';
+        refundTotal += product.productPrice;
+        productsCancelled++;
+      }
+    });
+
+    if (productsCancelled === 0) {
+      return res.status(400).json({ success: false, error: "No eligible products to cancel" });
+    }
+
+    await order.save();
+
+    // Process refund if payment method is Razorpay
+    if (order.paymentMethod === 'Razorpay') {
+      let wallet = await Wallet.findOne({ user: userId });
+
+      const walletEntry = {
+        amount: refundTotal,
+        date: Date.now(),
+        paymentMethod: 'Razorpay'
+      };
+
+      if (wallet) {
+        wallet.balance += refundTotal;
+        wallet.walletData.push(walletEntry);
+        await wallet.save();
+      } else {
+        const newWallet = new Wallet({
+          user: userId,
+          balance: refundTotal,
+          walletData: [walletEntry]
+        });
+        await newWallet.save();
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `${productsCancelled} product(s) cancelled and refund of ₹${refundTotal} processed.`
+    });
+
+  } catch (error) {
+    console.error("Cancel all products error:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};
 
 
 
@@ -464,10 +590,10 @@ const retryPayment = async (req, res) => {
 
         // Update order status to 'pending' for each product
         orderDetails.products.forEach(item => {
-            item.orderStatus = 'pending';
+            item.orderStatus = 'confirmed';
         });
     
-        orderDetails.orderStatus = 'pending';
+        orderDetails.orderStatus = 'confirmed';
         // Save the updated orderDetails
         await orderDetails.save();
         // Calculate total amount
@@ -498,7 +624,7 @@ module.exports = {
     viewProducrDetails,
     orderReturn,
     walletPost,
-    retryPayment
-
+    retryPayment,
+cancelAllProduct
 
 }

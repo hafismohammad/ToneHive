@@ -20,21 +20,31 @@ router.get("/login",userAuth.isLogin,userControllers.loginLoad)
 
 router.post("/login", userControllers.logedUser)
 
-router.get("/register", userAuth.isLogin,userControllers.registerLoad)
+// router.get("/register", userAuth.isLogin,userControllers.registerLoad)
 
-router.post("/register", userControllers.registeredUser)
+// router.post("/register", userControllers.registeredUser)
+
+router.route("/register")
+  .get(userAuth.isLogin, userControllers.registerLoad)
+  .post(userControllers.registeredUser);
+
 
 router.get("/userHome",userAuth.isLogout,userControllers.homeLoad)
 
 router.get("/logout",userAuth.isLogout, userControllers.userLogout)
 
-router.get("/RecoverForgottPassword",forgottPassworControl.forgotPasswordLoad)
+// router.get("/RecoverForgottPassword",forgottPassworControl.forgotPasswordLoad)
+// router.post("/RecoverForgottPassword",forgottPassworControl.forgotPasswordPost)
+router.route("/RecoverForgottPassword")
+  .get(forgottPassworControl.forgotPasswordLoad)
+  .post(forgottPassworControl.forgotPasswordPost);
 
-router.post("/RecoverForgottPassword",forgottPassworControl.forgotPasswordPost)
+// router.get("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordLoad)
+// router.post("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordPost)
+router.route("/resetPassword/:_id/:token")
+  .get(forgottPassworControl.resetPasswordLoad)
+  .post(forgottPassworControl.resetPasswordPost);
 
-router.get("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordLoad)
-
-router.post("/resetPassword/:_id/:token",forgottPassworControl.resetPasswordPost)
 
 // otp login
 router.get("/verify-otp",userAuth.isLogout,otpControllers.verifyOTPLoad)
@@ -47,9 +57,12 @@ router.get("/productView/",userControllers.productViews)
 
 router.get("/userProfile",userAuth.isLogout,userProfileController.userProfile)
 
-router.post("/userProfileAddress",userProfileController.AddressPost)
+// router.post("/userProfileAddress",userProfileController.AddressPost)
+// router.get("/userProfileAddress/:id",userAuth.isLogout,userProfileController.profileEditAddressLoad)
+router.route("/userProfileAddress/:id")
+  .get(userAuth.isLogout, userProfileController.profileEditAddressLoad);
 
-router.get("/userProfileAddress/:id",userAuth.isLogout,userProfileController.profileEditAddressLoad)
+
 
 router.post("/porfileAddress/:id",userProfileController.editProfileAddress)
 
@@ -78,9 +91,12 @@ router.get("/checkout",userAuth.isLogout,checkoutControllers.checkoutLoad)
 
 router.post("/addressPost",checkoutControllers.addAddress)
 
-router.get("/editAddress/:id",userAuth.isLogout,checkoutControllers.editAddressLoad)
+// router.get("/editAddress/:id",userAuth.isLogout,checkoutControllers.editAddressLoad)
+// router.post("/editAddress/:id",checkoutControllers.edittedAddress)
+router.route("/editAddress/:id")
+  .get(userAuth.isLogout, checkoutControllers.editAddressLoad)
+  .post(checkoutControllers.edittedAddress);
 
-router.post("/editAddress/:id",checkoutControllers.edittedAddress)
 
 //router.delete("/deleteAddress/:id", checkoutControllers.deleteAddress);
 
@@ -91,6 +107,8 @@ router.get("/orderSuccess",userAuth.isLogout,checkoutControllers.orderPlace)
 router.get("/viewDetails",userAuth.isLogout,userProfileController.viewOrderDetails)
 
 router.patch("/cancelOrder/:orderId/:productId",userProfileController.orderCancel)
+
+router.patch("/cancelAllProducts/:orderId", userProfileController.cancelAllProduct)
 
 router.patch("/returnOrder/:orderId/:productId", userProfileController.orderReturn)
 

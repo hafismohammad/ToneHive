@@ -50,7 +50,7 @@ const orderSchema = new mongoose.Schema({
        orderStatus: {
         type: String,
         enum: [
-            'pending',  
+            // 'pending',  
             'confirmed',
             'shipped',
             'outForDelivery',
@@ -60,7 +60,7 @@ const orderSchema = new mongoose.Schema({
             'returned',
             'payment pending'
         ],
-        default: 'pending',
+        default: 'confirmed',
     },
     }],
     
@@ -80,7 +80,7 @@ const orderSchema = new mongoose.Schema({
     orderStatus: {
         type: String,
         enum: [
-            'pending',
+            // 'pending',
             'confirmed',
             'shipped',
             'outForDelivery',
@@ -90,7 +90,7 @@ const orderSchema = new mongoose.Schema({
             'returned',
             'payment pending'
         ],
-        default: 'pending',
+        default: 'confirmed',
     },
     createdAt: {
         type: Date,
