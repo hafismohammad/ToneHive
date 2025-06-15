@@ -83,7 +83,8 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'hafismhdthaleekara764@gmail.com',
-        pass: 'ofzx kkgh klon lnht',
+        pass: 'bbpr psux hfuz xumz'
+        // pass: 'ofzx kkgh klon lnht',
     }
 });
 
@@ -128,7 +129,7 @@ const forgotPasswordPost = async (req, res) => {
                 id: userData._id
             };
             const token = jwt.sign(payload, secret, { expiresIn: '15m' });
-            const resetLink = `http://localhost:3000/resetPassword/${userData._id}/${token}`;
+            const resetLink = `http://localhost:3001/resetPassword/${userData._id}/${token}`;
 
             // Send reset password email
             await sendResetPasswordEmail(userData.email, resetLink);

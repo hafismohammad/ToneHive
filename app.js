@@ -100,4 +100,4 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 })
 
-app.listen(PORT, () => console.log(`Server is running on the port ${PORT} just click here http://localhost:3000`))
+app.listen(PORT, () => console.log(`Server is running on the port ${PORT} just click here http://localhost:${PORT}`))

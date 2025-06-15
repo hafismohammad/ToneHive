@@ -166,24 +166,37 @@ const checkoutLoad = async (req, res) => {
 
     // Get active coupons
     const currentDate = new Date();
+    // let coupons = await couponModel
+    //   .find({
+    //     startDate: { $lte: currentDate },
+    //     expiryDate: { $gte: currentDate },
+    //     isActive: "Active",
+    //   })
+    //   .sort({
+    //     expiryDate: 1,
+    //     discount: -1,
+    //   });
     let coupons = await couponModel
-      .find({
-        startDate: { $lte: currentDate },
-        expiryDate: { $gte: currentDate },
-        isActive: "Active",
-      })
-      .sort({
-        expiryDate: 1,
-        discount: -1,
-      });
+  .find({
+    startDate: { $lte: currentDate },
+    expiryDate: { $gte: currentDate },
+    isActive: "Active",
+    usedBy: { $ne: userId }, 
+  })
+  .sort({
+    expiryDate: 1,
+    discount: -1,
+  });
+
 
     // Ensure applied coupon is included in list even if already used
-    if (appliedCoupon) {
-      const applied = await couponModel.findOne({ code: appliedCoupon });
-      if (applied && !coupons.some((c) => c.code === applied.code)) {
-        coupons.push(applied);
-      }
-    }
+ if (appliedCoupon) {
+  const applied = await couponModel.findOne({ code: appliedCoupon });
+  if (applied && !coupons.some((c) => c.code === applied.code)) {
+    coupons.push(applied); 
+  }
+}
+
 
     // Calculate cart item count
     const cartCount = cartItems.length;
